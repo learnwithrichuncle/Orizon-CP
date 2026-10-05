@@ -23,20 +23,24 @@ function LoginField({
   placeholder: string;
 }) {
   return (
-    <label className="block">
-      <span className="mb-2 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-zinc-400">
-        {label}
-      </span>
-      <input
-        type={type}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        autoComplete={autoComplete}
-        placeholder={placeholder}
-        required
-        className="h-12 w-full rounded-sm border border-white/15 bg-white/5 px-3.5 text-[15px] text-white outline-none transition placeholder:text-zinc-600 hover:border-white/30 focus:border-white focus:bg-white/10 focus:ring-2 focus:ring-white/10"
-      />
-    </label>
+    <div className="relative text-base md:text-sm flex flex-col gap-2">
+      <div className="transition-all duration-500 ease-in-out flex flex-row gap-2 justify-between">
+        <label className="text-sm transition-colors text-white flex gap-2 items-center wrap-break-word leading-normal">
+          <span>{label}</span>
+        </label>
+      </div>
+      <div className="transition-all duration-500 ease-in-out order-1 col-span-12">
+        <input
+          type={type}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          autoComplete={autoComplete}
+          placeholder={placeholder}
+          required
+          className="flex w-full rounded-md border border-zinc-700 bg-zinc-900 placeholder:text-zinc-500 text-white focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition-colors duration-200 text-base md:text-sm leading-4 px-3 py-2 h-[34px]"
+        />
+      </div>
+    </div>
   );
 }
 
@@ -63,21 +67,17 @@ export function LoginForm() {
   return (
     <form
       onSubmit={submit}
-      className="w-full max-w-[500px]"
+      className="flex flex-col gap-4"
       aria-label="Sign in to OrizonCP"
     >
-      <div className="mb-9">
-        <div>
-          <span className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-black">
-            <AppIcon icon={Login02Icon} size={18} />
-          </span>
-          <h1 className="font-hero text-3xl tracking-[-0.05em] text-white">
-            Welcome back
-          </h1>
-        </div>
+      <div className="mb-10">
+        <h1 className="mt-8 mb-2 lg:text-3xl text-2xl font-hero tracking-tight text-white">
+          Welcome back
+        </h1>
+        <h2 className="text-sm text-zinc-400">Sign in to your account</h2>
       </div>
 
-      <div className="grid gap-y-5">
+      <div className="grid gap-y-4">
         <LoginField
           label="Email"
           type="email"
@@ -86,42 +86,38 @@ export function LoginForm() {
           autoComplete="email"
           placeholder="you@example.com"
         />
-        <LoginField
-          label="Password"
-          type="password"
-          value={password}
-          onChange={setPassword}
-          autoComplete="current-password"
-          placeholder="Enter your password"
-        />
+        <div className="relative">
+          <LoginField
+            label="Password"
+            type="password"
+            value={password}
+            onChange={setPassword}
+            autoComplete="current-password"
+            placeholder="••••••••"
+          />
+        </div>
       </div>
 
       {error ? (
         <div
           role="alert"
-          className="mt-5 border-l-2 border-white bg-white/10 px-4 py-3 text-sm text-white"
+          className="mt-2 border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-200"
         >
           {error}
         </div>
       ) : null}
 
-      <button
-        type="submit"
-        disabled={submitting}
-        className="group mt-7 flex h-14 w-full items-center justify-between rounded-sm bg-white px-5 text-left text-black shadow-[0_18px_40px_rgba(0,0,0,0.3)] transition hover:bg-zinc-200 disabled:cursor-wait disabled:opacity-60"
-      >
-        <span className="text-sm font-semibold">
-          {submitting ? "Signing in…" : "Sign in"}
-        </span>
-        <span className="grid h-8 w-8 place-items-center rounded-full bg-black/10 transition-transform group-hover:translate-x-1">
-          <AppIcon
-            icon={submitting ? ShieldUserIcon : ArrowRight02Icon}
-            size={16}
-            className={submitting ? "animate-pulse" : ""}
-          />
-        </span>
-      </button>
-
+      <div className="flex items-center relative mt-2">
+        <div className="w-full">
+          <button
+            type="submit"
+            disabled={submitting}
+            className="relative cursor-pointer space-x-2 text-center font-medium ease-[cubic-bezier(0.22,1,0.36,1)] duration-200 transition-[background-color,border-color,color,scale] border-0 bg-white text-black hover:bg-zinc-200 w-full flex items-center justify-center text-sm px-4 py-2 h-[42px] rounded-md disabled:opacity-60 disabled:cursor-wait"
+          >
+            <span className="truncate">{submitting ? "Signing in…" : "Sign in"}</span>
+          </button>
+        </div>
+      </div>
     </form>
   );
 }
