@@ -1,5 +1,5 @@
 import { Add01Icon, DatabaseImportIcon } from "@hugeicons/core-free-icons";
-import { AppIcon } from "../../components/ui/primitives";
+import { AppIcon, btn } from "../../components/ui/primitives";
 
 export function ProjectsDashboardHeader({
   projectCount,
@@ -13,24 +13,24 @@ export function ProjectsDashboardHeader({
   onImport: () => void;
 }) {
   return (
-    <header className="border-b border-white/10 pb-7">
+    <header className="border-b border-fg/10 pb-6">
       <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <h1 className="font-hero text-3xl tracking-[-0.05em] text-white sm:text-4xl">
+          <h1 className="text-3xl font-bold tracking-tight text-fg sm:text-4xl">
             Projects
           </h1>
-          <p className="mt-3 text-sm text-zinc-500">
+          <p className="mt-2 font-mono text-[11px] uppercase tracking-wider text-fg/40">
             {projectCount} project{projectCount === 1 ? "" : "s"}
-            <span className="mx-2 text-zinc-700">/</span>
+            <span className="mx-2 text-fg/20">/</span>
             {serviceCount} service{serviceCount === 1 ? "" : "s"}
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-3">
           <button
             type="button"
             onClick={onImport}
-            className="flex h-10 items-center gap-2 border border-white/15 px-3.5 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-zinc-400 transition hover:border-white/30 hover:text-white"
+            className={btn("secondary")}
           >
             <AppIcon icon={DatabaseImportIcon} size={14} />
             Import from…
@@ -38,7 +38,7 @@ export function ProjectsDashboardHeader({
           <button
             type="button"
             onClick={onCreate}
-            className="flex h-10 items-center gap-2 bg-white px-4 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-black transition hover:bg-zinc-200"
+            className={btn("primary")}
           >
             <AppIcon icon={Add01Icon} size={14} />
             New project

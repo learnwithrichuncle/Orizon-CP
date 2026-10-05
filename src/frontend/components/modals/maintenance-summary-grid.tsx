@@ -29,7 +29,7 @@ export function MaintenanceSummaryGrid({ info, loading }: { info: SystemMaintena
         detail={dockerReclaimableDetail(info)}
         percent={dockerPercent}
         percentLabel={info?.disk ? `${dockerPercent.toFixed(dockerPercent < 1 ? 1 : 0)}% of disk` : undefined}
-        tone={info?.docker.reclaimableBytes && info.docker.reclaimableBytes > 3 * 1000 ** 3 ? "amber" : "teal"}
+        tone={info?.docker.reclaimableBytes && info.docker.reclaimableBytes > 3 * 1000 ** 3 ? "warn" : "ok"}
       />
       <MaintenanceUsageBar
         label="Build artifacts"
@@ -41,7 +41,7 @@ export function MaintenanceSummaryGrid({ info, loading }: { info: SystemMaintena
         percentLabel={info?.disk && buildPath?.bytes
           ? `${buildPercent.toFixed(buildPercent < 1 ? 1 : 0)}% of disk`
           : "No usage"}
-        tone={buildPath?.bytes && buildPath.bytes > 2 * 1000 ** 3 ? "amber" : "teal"}
+        tone={buildPath?.bytes && buildPath.bytes > 2 * 1000 ** 3 ? "warn" : "ok"}
       />
     </div>
   );

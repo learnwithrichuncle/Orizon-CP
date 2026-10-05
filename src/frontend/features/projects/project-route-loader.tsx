@@ -21,21 +21,21 @@ export function ProjectRouteLoader({
           className="absolute inset-0 h-full w-full overflow-visible"
           fill="none"
         >
-          <path d={flightPath} stroke="rgba(255,255,255,0.10)" strokeWidth="1" />
+          <path d={flightPath} stroke="rgba(233,237,240,0.10)" strokeWidth="1" />
           <path
             d={flightPath}
             className="project-route-loader-path"
-            stroke="rgba(255,255,255,0.48)"
+            stroke="rgba(233,237,240,0.45)"
             strokeWidth="1"
             strokeDasharray="7 11"
           />
-          <circle cx="18" cy="96" r="3" fill="#09090b" stroke="rgba(255,255,255,0.28)" />
-          <circle cx="174" cy="54" r="3" fill="#09090b" stroke="rgba(255,255,255,0.28)" />
-          <circle cx="270" cy="67" r="3" fill="#09090b" stroke="rgba(255,255,255,0.28)" />
+          <circle cx="18" cy="96" r="3" fill="#0d0f14" stroke="rgba(233,237,240,0.3)" />
+          <circle cx="174" cy="54" r="3" fill="#0d0f14" stroke="rgba(233,237,240,0.3)" />
+          <circle cx="270" cy="67" r="3" fill="#0d0f14" stroke="rgba(233,237,240,0.3)" />
         </svg>
 
         <div
-          className="project-route-loader-plane absolute left-0 top-0 grid h-7 w-7 place-items-center text-white"
+          className="project-route-loader-plane absolute left-0 top-0 grid h-7 w-7 place-items-center text-accent"
           style={{
             offsetPath: `path("${flightPath}")`,
             offsetRotate: "auto",
@@ -46,7 +46,7 @@ export function ProjectRouteLoader({
         </div>
       </div>
 
-      <p className="mt-3 font-mono text-[9px] uppercase tracking-[0.18em] text-zinc-500">
+      <p className="mt-3 font-mono text-[9px] uppercase tracking-[0.18em] text-fg/40">
         {label}
       </p>
       <span className="sr-only">Please wait</span>
@@ -55,7 +55,7 @@ export function ProjectRouteLoader({
 
   if (fullPage) {
     return (
-      <main className="grid h-dvh place-items-center overflow-hidden bg-zinc-950 text-white">
+      <main className="grid h-dvh place-items-center overflow-hidden bg-bg text-fg">
         {loader}
       </main>
     );

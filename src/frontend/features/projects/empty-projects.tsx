@@ -4,7 +4,7 @@ import { AppIcon, shellButton, surfaceClass } from "../../components/ui/primitiv
 export function EmptyProjects({ onCreate }: { onCreate: () => void }) {
   return (
     <div className={`${surfaceClass("mx-auto max-w-3xl p-10 text-center")}`}>
-      <div className="mx-auto mb-5 grid h-14 w-14 place-items-center rounded-xl bg-neutral-950 text-white">
+      <div className="mx-auto mb-5 grid h-14 w-14 place-items-center  bg-neutral-950 text-fg">
         <AppIcon icon={FolderOpenIcon} size={24} />
       </div>
       <h2 className="text-2xl font-medium tracking-tight text-neutral-950">No projects yet</h2>

@@ -24,13 +24,13 @@ export function ProviderImportShell({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-bg/80 p-4 backdrop-blur-sm">
       <div className="mx-auto flex min-h-full items-center justify-center">
         <section
           role="dialog"
           aria-modal="true"
           aria-label={title}
-          className={`flex max-h-[min(760px,calc(100dvh-2rem))] min-h-[420px] w-full ${width} flex-col border border-white/15 bg-zinc-950 p-6 text-white shadow-[0_30px_100px_rgba(0,0,0,0.65)] sm:p-8`}
+          className={`flex max-h-[min(760px,calc(100dvh-2rem))] min-h-[420px] w-full ${width} flex-col border border-fg/15 bg-fg/5 p-6 text-fg  sm:p-8`}
         >
           <header className="flex items-start justify-between gap-5">
             <div className="flex min-w-0 items-center gap-4">
@@ -41,7 +41,7 @@ export function ProviderImportShell({
                 <h2 className="truncate pb-1 font-hero text-lg leading-[1.3] tracking-[-0.04em]">
                   {title}
                 </h2>
-                <p className="font-mono text-[8px] font-semibold uppercase tracking-[0.16em] text-zinc-500">
+                <p className="font-mono text-[8px] font-semibold uppercase tracking-[0.16em] text-fg/80">
                   {stepLabel}
                 </p>
               </div>
@@ -49,7 +49,7 @@ export function ProviderImportShell({
             <button
               type="button"
               onClick={onClose}
-              className="grid h-9 w-9 flex-none place-items-center border border-white/10 text-zinc-500 transition hover:border-white/25 hover:text-white"
+              className="grid h-9 w-9 flex-none place-items-center border border-fg/10 text-fg/80 transition hover:border-fg/25 hover:text-fg"
               aria-label={`Close ${title}`}
             >
               <AppIcon icon={Cancel01Icon} size={15} />

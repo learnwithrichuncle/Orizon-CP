@@ -1,48 +1,7 @@
-import {
-  ArrowRight02Icon,
-  Login02Icon,
-  ShieldUserIcon,
-} from "@hugeicons/core-free-icons";
 import { type FormEvent, useState } from "react";
 import { api } from "../../api";
-import { AppIcon } from "../ui/primitives";
-
-function LoginField({
-  label,
-  type,
-  value,
-  onChange,
-  autoComplete,
-  placeholder,
-}: {
-  label: string;
-  type: "email" | "password";
-  value: string;
-  onChange: (value: string) => void;
-  autoComplete: string;
-  placeholder: string;
-}) {
-  return (
-    <div className="relative text-base md:text-sm flex flex-col gap-2">
-      <div className="transition-all duration-500 ease-in-out flex flex-row gap-2 justify-between">
-        <label className="text-sm transition-colors text-white flex gap-2 items-center wrap-break-word leading-normal">
-          <span>{label}</span>
-        </label>
-      </div>
-      <div className="transition-all duration-500 ease-in-out order-1 col-span-12">
-        <input
-          type={type}
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          autoComplete={autoComplete}
-          placeholder={placeholder}
-          required
-          className="flex w-full rounded-md border border-zinc-700 bg-zinc-900 placeholder:text-zinc-500 text-white focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition-colors duration-200 text-base md:text-sm leading-4 px-3 py-2 h-[34px]"
-        />
-      </div>
-    </div>
-  );
-}
+import { BrandMark } from "../ui/brand-mark";
+import { FieldLabel, FormInput, btn } from "../ui/primitives";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -67,33 +26,45 @@ export function LoginForm() {
   return (
     <form
       onSubmit={submit}
-      className="flex flex-col gap-4"
+      className="flex flex-col gap-5 border border-fg/10 bg-fg/[0.03] p-8"
       aria-label="Sign in to OrizonCP"
     >
-      <div className="mb-10">
-        <h1 className="mt-8 mb-2 lg:text-3xl text-2xl font-hero tracking-tight text-white">
-          Welcome back
-        </h1>
-        <h2 className="text-sm text-zinc-400">Sign in to your account</h2>
+      <div className="flex items-center gap-3 border-b border-fg/10 pb-5">
+        <div className="grid h-10 w-10 place-items-center border border-accent text-accent">
+          <BrandMark className="h-5 w-5" />
+        </div>
+        <div>
+          <h1 className="text-xl font-bold tracking-tight text-fg">
+            OrizonCP
+          </h1>
+          <p className="font-mono text-[10px] uppercase tracking-wider text-fg/40">
+            Sign in to continue
+          </p>
+        </div>
       </div>
 
-      <div className="grid gap-y-4">
-        <LoginField
-          label="Email"
-          type="email"
-          value={email}
-          onChange={setEmail}
-          autoComplete="email"
-          placeholder="you@example.com"
-        />
-        <div className="relative">
-          <LoginField
-            label="Password"
+      <div className="space-y-4">
+        <div>
+          <FieldLabel>Email</FieldLabel>
+          <FormInput
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+            placeholder="admin@example.com"
+            required
+            autoFocus
+          />
+        </div>
+        <div>
+          <FieldLabel>Password</FieldLabel>
+          <FormInput
             type="password"
             value={password}
-            onChange={setPassword}
+            onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
             placeholder="••••••••"
+            required
           />
         </div>
       </div>
@@ -101,23 +72,19 @@ export function LoginForm() {
       {error ? (
         <div
           role="alert"
-          className="mt-2 border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-200"
+          className="border-l-2 border-fg bg-fg/5 px-3 py-2 text-xs font-mono text-fg"
         >
-          {error}
+          ✕ {error}
         </div>
       ) : null}
 
-      <div className="flex items-center relative mt-2">
-        <div className="w-full">
-          <button
-            type="submit"
-            disabled={submitting}
-            className="relative cursor-pointer space-x-2 text-center font-medium ease-[cubic-bezier(0.22,1,0.36,1)] duration-200 transition-[background-color,border-color,color,scale] border-0 bg-white text-black hover:bg-zinc-200 w-full flex items-center justify-center text-sm px-4 py-2 h-[42px] rounded-md disabled:opacity-60 disabled:cursor-wait"
-          >
-            <span className="truncate">{submitting ? "Signing in…" : "Sign in"}</span>
-          </button>
-        </div>
-      </div>
+      <button
+        type="submit"
+        disabled={submitting}
+        className={`w-full ${btn("primary")}`}
+      >
+        {submitting ? "Signing in…" : "Sign In"}
+      </button>
     </form>
   );
 }

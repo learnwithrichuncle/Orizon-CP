@@ -27,22 +27,22 @@ function statusTone(status: string) {
 function bannerTone(status: string) {
   if (status === "succeeded") {
     return {
-      container: "border-emerald-500/30 bg-emerald-500/10",
-      icon: "border-emerald-500/30 text-emerald-300",
-      label: "text-emerald-300"
+      container: "border-accent/30 bg-accent/10",
+      icon: "border-accent/30 text-accent",
+      label: "text-accent"
     };
   }
   if (status === "failed") {
     return {
-      container: "border-rose-500/30 bg-rose-500/10",
-      icon: "border-rose-500/30 text-rose-300",
-      label: "text-rose-300"
+      container: "border-accent/30 bg-accent/10",
+      icon: "border-accent/30 text-fg",
+      label: "text-fg"
     };
   }
   return {
-    container: "border-amber-500/30 bg-amber-500/10",
-    icon: "border-amber-500/30 text-amber-300",
-    label: "text-amber-300"
+    container: "border-accent/30 bg-accent/10",
+    icon: "border-accent/30 text-accent",
+    label: "text-accent"
   };
 }
 
@@ -60,24 +60,24 @@ export function DatabaseImportStatusBanner({ dataImport, onDismiss }: { dataImpo
     <div className={`mb-4 border px-3 py-2.5 ${tone.container}`}>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
-          <span className={`grid h-8 w-8 flex-none place-items-center border bg-black/30 ${tone.icon}`}>
+          <span className={`grid h-8 w-8 flex-none place-items-center border bg-bg/30 ${tone.icon}`}>
             <AppIcon icon={Icon} size={17} className={active ? "animate-pulse" : ""} />
           </span>
           <div className="min-w-0">
             <div className={`font-mono text-[9px] uppercase tracking-[0.16em] ${tone.label}`}>Database data import</div>
-            <div className="mt-1 truncate text-xs text-zinc-300">{details}</div>
+            <div className="mt-1 truncate text-xs text-fg/80">{details}</div>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <span className={`px-2 py-1 font-mono text-[9px] uppercase tracking-[0.16em] ${statusClass(statusTone(dataImport.status))}`}>
             {statusLabel(dataImport.status)}
           </span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-500">
+          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-fg/60">
             {formatTime(dataImport.finishedAt ?? dataImport.startedAt ?? dataImport.createdAt)}
           </span>
           <button
             type="button"
-            className="inline-flex h-7 w-7 items-center justify-center border border-white/15 text-zinc-500 transition hover:border-white/35 hover:bg-black/20 hover:text-white"
+            className="inline-flex h-7 w-7 items-center justify-center border border-fg/15 text-fg/60 transition hover:border-fg/35 hover:bg-bg/20 hover:text-fg"
             onClick={onDismiss}
             aria-label="Dismiss database import status"
             title="Dismiss"

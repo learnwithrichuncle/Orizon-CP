@@ -33,9 +33,9 @@ export function OnboardingGitHubPage({
       <OnboardingStepForm
         icon={GithubIcon}
         eyebrow="Step 03 · Source control"
-        title="Connect GitHub"
+        title="Integrate Source Control"
         badge="Optional"
-        description="Connect GitHub to enable automated deployments."
+        description="Establish CI/CD pipeline bindings for automated deployment triggers."
         error={error}
         submitting={submitting}
         nextLabel="Next: Domains"

@@ -15,7 +15,7 @@ function savedKeyLabel(keySuffix: string) {
 }
 
 const selectClass =
-  "h-11 w-full border border-zinc-700 bg-zinc-900 px-3 text-sm text-zinc-100 outline-none transition focus:border-[#4FB8B2]/60";
+  "h-11 w-full border border-fg/15 bg-bg px-3 text-sm text-fg/80 outline-none transition focus:border-[#4FB8B2]/60";
 
 export function AiProviderForm({
   provider,
@@ -66,13 +66,13 @@ export function AiProviderForm({
   const selectedModel = values.selectedModel || connection.selectedModel || provider.models[0]?.id || "";
 
   return (
-    <form onSubmit={saveCredentials} className="space-y-4 border border-zinc-800 bg-zinc-950/45 p-5">
+    <form onSubmit={saveCredentials} className="space-y-4 border border-fg/15 bg-bg/45 p-5">
       <div className="flex items-start gap-3">
-        <div className={`grid h-11 w-11 shrink-0 place-items-center border ${provider.logoFrameClass}`}>
+        <div className="grid h-11 w-11 shrink-0 place-items-center border border-fg/20 bg-fg/5">
           <img src={provider.logoUrl} alt="" className="max-h-7 max-w-8 object-contain" />
         </div>
         <div>
-          <h3 className="font-hero text-lg tracking-tight text-zinc-100">{connection.connected ? `Edit ${provider.name}` : `Connect ${provider.name}`}</h3>
+          <h3 className="font-hero text-lg tracking-tight text-fg/80">{connection.connected ? `Edit ${provider.name}` : `Connect ${provider.name}`}</h3>
         </div>
       </div>
 
@@ -112,7 +112,7 @@ export function AiProviderForm({
         </div>
       </div>
 
-      {error ? <div className="border border-rose-500/35 bg-rose-950/25 px-3 py-2 font-mono text-[10px] text-rose-200">{error}</div> : null}
+      {error ? <div className="border border-accent/30 bg-accent/10 px-3 py-2 font-mono text-[10px] text-accent">{error}</div> : null}
 
       <div className="flex flex-wrap items-center gap-2">
         <button type="submit" className={shellButton("primary")} disabled={busy}>

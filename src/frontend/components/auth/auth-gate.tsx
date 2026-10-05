@@ -9,20 +9,19 @@ import {
 } from "react";
 import { api, type AuthStatus } from "../../api";
 import { BrandMark } from "../ui/brand-mark";
-import { SkeletonBlock } from "../ui/skeleton";
 import { AuthStatusContext } from "./auth-context";
 
 function AuthLoading() {
   return (
-    <main className="grid min-h-dvh place-items-center bg-black text-white">
+    <main className="grid min-h-dvh place-items-center bg-bg text-fg">
       <div
         role="status"
         aria-label="Loading"
         className="flex items-center gap-3"
       >
         <span className="sr-only">Loading</span>
-        <div className="grid h-8 w-8 place-items-center bg-white text-black animate-pulse">
-          <BrandMark className="h-4 w-4" />
+        <div className="grid h-10 w-10 place-items-center border border-accent text-accent animate-pulse">
+          <BrandMark className="h-5 w-5" />
         </div>
       </div>
     </main>
@@ -44,8 +43,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       });
     } catch {
       startTransition(() => {
-        // Provide a fallback unauthenticated status so we can redirect to /onboarding
-        // if the API is entirely down (e.g., first run setup).
+        // Fallback unauthenticated status
         setStatus({
           setupComplete: false,
           authenticated: false,

@@ -1,19 +1,13 @@
-import { AiBrain01Icon, AlertCircleIcon, CheckmarkCircle02Icon } from "@hugeicons/core-free-icons";
+import { AiBrain01Icon, CheckmarkCircle02Icon } from "@hugeicons/core-free-icons";
 import { useEffect, useState } from "react";
 import { api, type AiSettingsStatus, type Deployment, type DeploymentFailureExplanation } from "../../api";
 import type { AiProviderId } from "../../../core/ai-providers";
 import { ModalShell } from "../../components/modals/modal-shell";
-import { AppIcon, statusClass } from "../../components/ui/primitives";
+import { AppIcon, StatusPill } from "../../components/ui/primitives";
 import { shortSha } from "../../lib/format";
 import { connectedAiProviders, initialAiProvider, modelForAiProvider } from "./ai-provider-selection";
 import { DeploymentFailureCommand } from "./deployment-failure-command";
 import { DeploymentFailureModelPicker } from "./deployment-failure-model-picker";
-
-function confidenceStatus(confidence: DeploymentFailureExplanation["confidence"]) {
-  if (confidence === "high") return "active";
-  if (confidence === "medium") return "building";
-  return "failed";
-}
 
 const loadingMessages = [
   "Reading deployment output...",
@@ -131,7 +125,6 @@ export function DeploymentFailureExplanationModal({
       onClose={onClose}
       width="max-w-3xl"
       minHeight="min-h-0"
-      variant="monochrome"
     >
       <div className="space-y-4">
         {aiProviders.length > 0 ? (
@@ -148,67 +141,64 @@ export function DeploymentFailureExplanationModal({
           <div
             role="status"
             aria-live="polite"
-            className="border border-white/10 bg-white/[0.02] px-3 py-2.5 font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-500"
+            className="border border-fg/10 bg-fg/[0.02] p-4 font-mono text-[10px] uppercase tracking-wider text-fg/50"
           >
             {loadingMessages[loadingMessageIndex]}
           </div>
         ) : null}
 
         {error ? (
-          <div className="flex items-start gap-3 border border-rose-500/35 bg-rose-500/10 px-3 py-2.5 text-xs leading-5 text-rose-200">
-            <AppIcon icon={AlertCircleIcon} size={17} className="mt-0.5 shrink-0" />
-            <div>{error}</div>
+          <div className="border-l-2 border-fg bg-fg/5 px-4 py-3 text-xs font-mono text-fg">
+            ✕ {error}
           </div>
         ) : null}
 
         {explanation ? (
           <div className="space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3 border border-white/10 bg-white/[0.02] px-3 py-2.5">
-            <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-500">
-              {explanation.providerName} / {explanation.model}
-            </div>
-            <span className={`px-2 py-1 font-mono text-[9px] uppercase tracking-[0.16em] ${statusClass(confidenceStatus(explanation.confidence))}`}>
-              {explanation.confidence} confidence
-            </span>
-          </div>
-
-          <section className="border border-white/10 p-4">
-            <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">Summary</div>
-            <p className="mt-2 text-sm leading-6 text-zinc-300">{explanation.summary}</p>
-          </section>
-
-          <section className="border border-white/10 p-4">
-            <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">Likely cause</div>
-            <p className="mt-2 text-sm leading-6 text-zinc-300">{explanation.cause}</p>
-          </section>
-
-          <section className="border border-emerald-500/30 bg-emerald-500/10 p-4">
-            <div className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.16em] text-emerald-300">
-              <AppIcon icon={CheckmarkCircle02Icon} size={13} />
-              Suggested fix
-            </div>
-            <p className="mt-2 text-sm leading-6 text-emerald-100">{explanation.suggestedFix}</p>
-          </section>
-
-          {explanation.commands.length > 0 ? (
-            <section className="border border-white/10 p-4">
-              <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">Commands / changes</div>
-              <div className="mt-3 space-y-2">
-                {explanation.commands.map((command, index) => (
-                  <DeploymentFailureCommand key={`${command}-${index}`} command={command} />
-                ))}
+            <div className="flex flex-wrap items-center justify-between gap-3 border border-fg/10 bg-fg/[0.02] px-4 py-2.5">
+              <div className="font-mono text-[9px] uppercase tracking-wider text-fg/40">
+                {explanation.providerName} / {explanation.model}
               </div>
-            </section>
-          ) : null}
+              <StatusPill status={`${explanation.confidence} confidence`} />
+            </div>
 
-          {explanation.relatedLogLines.length > 0 ? (
-            <section className="border border-white/10 p-4">
-              <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">Relevant logs</div>
-              <pre className="mt-3 max-h-44 overflow-y-auto whitespace-pre-wrap break-all border border-white/10 bg-white/[0.02] px-3 py-2 font-mono text-xs leading-5 text-zinc-400">
-                {explanation.relatedLogLines.join("\n")}
-              </pre>
+            <section className="border border-fg/10 bg-fg/[0.03] p-5">
+              <div className="font-mono text-[9px] uppercase tracking-wider text-fg/40">Summary</div>
+              <p className="mt-2 text-sm leading-6 text-fg">{explanation.summary}</p>
             </section>
-          ) : null}
+
+            <section className="border border-fg/10 bg-fg/[0.03] p-5">
+              <div className="font-mono text-[9px] uppercase tracking-wider text-fg/40">Likely cause</div>
+              <p className="mt-2 text-sm leading-6 text-fg">{explanation.cause}</p>
+            </section>
+
+            <section className="border-l-2 border-accent bg-accent/5 p-5">
+              <div className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-wider text-accent font-semibold">
+                <AppIcon icon={CheckmarkCircle02Icon} size={14} />
+                Suggested fix
+              </div>
+              <p className="mt-2 text-sm leading-6 text-fg">{explanation.suggestedFix}</p>
+            </section>
+
+            {explanation.commands.length > 0 ? (
+              <section className="border border-fg/10 bg-fg/[0.03] p-5">
+                <div className="font-mono text-[9px] uppercase tracking-wider text-fg/40">Commands / changes</div>
+                <div className="mt-3 space-y-2">
+                  {explanation.commands.map((command, index) => (
+                    <DeploymentFailureCommand key={`${command}-${index}`} command={command} />
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+            {explanation.relatedLogLines.length > 0 ? (
+              <section className="border border-fg/10 bg-fg/[0.03] p-5">
+                <div className="font-mono text-[9px] uppercase tracking-wider text-fg/40">Relevant logs</div>
+                <pre className="mt-3 max-h-44 overflow-y-auto whitespace-pre-wrap break-all border border-fg/10 bg-bg/30 p-3 font-mono text-xs leading-5 text-fg/70">
+                  {explanation.relatedLogLines.join("\n")}
+                </pre>
+              </section>
+            ) : null}
           </div>
         ) : null}
       </div>

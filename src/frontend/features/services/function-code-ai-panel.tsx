@@ -2,7 +2,7 @@ import { AiBrain01Icon, AlertCircleIcon, MagicWand01Icon } from "@hugeicons/core
 import { type FormEvent, useEffect, useState } from "react";
 import { api, type AiSettingsStatus, type FunctionCodeGeneration } from "../../api";
 import type { AiProviderId } from "../../../core/ai-providers";
-import { AppIcon, FieldLabel, shellButton } from "../../components/ui/primitives";
+import { AppIcon, FieldLabel, btn } from "../../components/ui/primitives";
 import type { FunctionRuntime } from "../../../core/service-functions";
 import { connectedAiProviders, initialAiProvider, modelForAiProvider } from "./ai-provider-selection";
 import { DeploymentFailureModelPicker } from "./deployment-failure-model-picker";
@@ -96,13 +96,13 @@ export function FunctionCodeAiPanel({
   }
 
   return (
-    <form onSubmit={generateCode} className={`flex h-full min-h-0 flex-col overflow-hidden border border-zinc-700 bg-zinc-950/95 shadow-[0_24px_80px_rgba(0,0,0,0.42)] ${className}`}>
-      <div className="space-y-3 border-b border-zinc-800 px-4 py-3">
+    <form onSubmit={generateCode} className={`flex h-full min-h-0 flex-col overflow-hidden border border-fg/20 bg-bg ${className}`}>
+      <div className="space-y-3 border-b border-fg/10 p-4">
         <div className="flex min-w-0 items-center gap-2">
-          <span className="grid h-8 w-8 place-items-center border border-zinc-800 bg-zinc-900 text-[#7fe3dd]">
-            <AppIcon icon={AiBrain01Icon} size={16} />
+          <span className="grid h-7 w-7 place-items-center border border-accent text-accent">
+            <AppIcon icon={AiBrain01Icon} size={15} />
           </span>
-          <div className="min-w-0 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-zinc-400">AI code generation</div>
+          <div className="min-w-0 font-mono text-[9px] uppercase tracking-wider text-fg/40">AI code generation</div>
         </div>
 
         {aiProviders.length > 0 ? (
@@ -115,7 +115,7 @@ export function FunctionCodeAiPanel({
             onSelect={changeProviderModel}
           />
         ) : (
-          <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-500">
+          <div className="font-mono text-[9px] uppercase tracking-wider text-fg/40">
             {loadingProviders ? "Loading AI providers" : "No AI provider connected"}
           </div>
         )}
@@ -132,28 +132,27 @@ export function FunctionCodeAiPanel({
             }}
             disabled={disabled || generating}
             placeholder="Create a JSON API that validates input and returns a response"
-            className="min-h-[180px] flex-1 resize-none border border-zinc-700 bg-zinc-900 px-3 py-2.5 text-sm leading-6 text-zinc-100 outline-none transition placeholder:text-zinc-500 focus:border-[#4FB8B2]/60 disabled:opacity-60"
+            className="min-h-[160px] flex-1 resize-none border border-fg/20 bg-transparent p-3 text-sm leading-6 text-fg outline-none transition placeholder:text-fg/30 focus:border-accent disabled:opacity-40"
           />
         </div>
         <button
           type="submit"
-          className={`${shellButton("primary")} w-full`}
+          className={`${btn("primary")} w-full`}
           disabled={disabled || generating || loadingProviders || !prompt.trim() || !selectedProviderId || !selectedModel}
         >
-          <AppIcon icon={generating ? AiBrain01Icon : MagicWand01Icon} size={16} />
-          {generating ? "Generating" : "Generate"}
+          <AppIcon icon={generating ? AiBrain01Icon : MagicWand01Icon} size={15} />
+          {generating ? "Generating…" : "Generate Code"}
         </button>
       </div>
 
       {generation ? (
-        <div className="mx-4 mb-4 border border-[#4FB8B2]/30 bg-[#4FB8B2]/10 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-[#7fe3dd]">
-          Generated with {generation.providerName} / {generation.model}
+        <div className="mx-4 mb-4 border border-accent/40 bg-accent/10 px-3 py-2 font-mono text-[9px] uppercase tracking-wider text-accent">
+          ✓ Generated with {generation.providerName} / {generation.model}
         </div>
       ) : null}
       {error ? (
-        <div className="mx-4 mb-4 flex items-start gap-2 border border-rose-500/25 bg-rose-950/20 px-3 py-2 text-sm text-rose-200">
-          <AppIcon icon={AlertCircleIcon} size={16} className="mt-0.5 shrink-0" />
-          <div>{error}</div>
+        <div className="mx-4 mb-4 border-l-2 border-fg bg-fg/5 px-3 py-2 text-xs font-mono text-fg">
+          ✕ {error}
         </div>
       ) : null}
     </form>

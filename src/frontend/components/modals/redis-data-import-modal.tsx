@@ -10,9 +10,9 @@ import { RedisImportSourcePicker } from "./redis-import-source-picker";
 type ImportMode = "railway" | "redis-url";
 type ImportPhase = "form" | "progress";
 
-const importLabelClass = "mb-1.5 block font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600";
-const importSecondaryButtonClass = "inline-flex h-9 items-center justify-center border border-white/15 px-3.5 text-sm text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white disabled:opacity-40";
-const importPrimaryButtonClass = "inline-flex h-9 items-center justify-center bg-white px-4 text-sm text-black transition hover:bg-zinc-200 disabled:opacity-40";
+const importLabelClass = "mb-1.5 block font-mono text-[9px] uppercase tracking-[0.16em] text-fg/40";
+const importSecondaryButtonClass = "inline-flex h-9 items-center justify-center border border-fg/15 px-3.5 text-sm text-fg/80 transition hover:border-fg/35 hover:bg-fg/5 hover:text-fg disabled:opacity-40";
+const importPrimaryButtonClass = "inline-flex h-9 items-center justify-center bg-fg px-4 text-sm text-bg transition hover:bg-fg/5 disabled:opacity-40";
 
 function metadataText(source: ServiceImportSource, key: string) {
   const value = source.metadata?.[key];
@@ -149,23 +149,23 @@ export function RedisDataImportModal({
         variant="monochrome"
       >
         <div className="space-y-4">
-          <div className="border border-white/10 bg-white/[0.02] p-4">
+          <div className="border border-fg/10 bg-fg/[0.02] p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">Source</div>
-                <div className="mt-1 text-xs text-zinc-200">{sourceLabel}</div>
+                <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-fg/40">Source</div>
+                <div className="mt-1 text-xs text-fg/80">{sourceLabel}</div>
               </div>
               <span className={`px-2 py-1 font-mono text-[9px] uppercase tracking-[0.16em] ${statusClass(progressStatus)}`}>
                 {progressLabel}
               </span>
             </div>
-            <div className="mt-4 h-1 overflow-hidden bg-white/10">
+            <div className="mt-4 h-1 overflow-hidden bg-fg/10">
               <div
-                className={`h-full transition-[width,background-color] duration-500 ${error ? "bg-rose-400" : result ? "bg-emerald-400" : "bg-white"}`}
+                className={`h-full transition-[width,background-color] duration-500 ${error ? "bg-accent/10" : result ? "bg-accent/10" : "bg-fg"}`}
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
-            <p className="mt-3 text-xs leading-5 text-zinc-500">
+            <p className="mt-3 text-xs leading-5 text-fg/60">
               {result
                 ? "The source RDB snapshot was loaded into this OrizonCP Redis service."
                 : error
@@ -174,16 +174,16 @@ export function RedisDataImportModal({
             </p>
           </div>
 
-          {error ? <div className="border border-rose-500/35 bg-rose-500/10 px-3 py-2.5 text-xs text-rose-200">{error}</div> : null}
+          {error ? <div className="border border-accent/30 bg-accent/10 px-3 py-2.5 text-xs text-accent">{error}</div> : null}
 
           {result ? (
-            <div className="border border-emerald-500/30 bg-emerald-500/10 px-3 py-2.5 text-xs text-emerald-200">
+            <div className="border border-accent/30 bg-accent/10 px-3 py-2.5 text-xs text-accent">
               Imported {formatBytes(result.dumpSizeBytes)} from {result.sourceLabel}
               {result.sourceVariableKey ? ` using ${result.sourceVariableKey}` : ""}.
             </div>
           ) : null}
 
-          <div className="flex justify-end gap-2 border-t border-white/10 pt-4">
+          <div className="flex justify-end gap-2 border-t border-fg/10 pt-4">
             {error ? (
               <button
                 type="button"
@@ -230,20 +230,20 @@ export function RedisDataImportModal({
         />
 
         {mode === "railway" ? (
-          <div className="space-y-3 border border-white/10 bg-white/[0.02] p-3">
+          <div className="space-y-3 border border-fg/10 bg-fg/[0.02] p-3">
             {railwaySource ? (
-              <div className="grid gap-3 text-xs text-zinc-400 sm:grid-cols-2">
+              <div className="grid gap-3 text-xs text-fg/60 sm:grid-cols-2">
                 <div>
-                  <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">Project</div>
-                  <div className="mt-1 truncate text-zinc-100">{railwayProjectName ?? railwaySource.externalProjectId ?? "Railway project"}</div>
+                  <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-fg/40">Project</div>
+                  <div className="mt-1 truncate text-fg/80">{railwayProjectName ?? railwaySource.externalProjectId ?? "Railway project"}</div>
                 </div>
                 <div>
-                  <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">Environment</div>
-                  <div className="mt-1 truncate text-zinc-100">{railwayEnvironmentName ?? railwaySource.externalEnvironmentId ?? "Railway environment"}</div>
+                  <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-fg/40">Environment</div>
+                  <div className="mt-1 truncate text-fg/80">{railwayEnvironmentName ?? railwaySource.externalEnvironmentId ?? "Railway environment"}</div>
                 </div>
               </div>
             ) : (
-              <div className="border border-amber-500/30 bg-amber-500/10 px-3 py-2.5 text-xs text-amber-200">
+              <div className="border border-accent/30 bg-accent/10 px-3 py-2.5 text-xs text-accent">
                 No saved Railway source is available.
               </div>
             )}
@@ -259,12 +259,12 @@ export function RedisDataImportModal({
                 autoComplete="new-password"
                 placeholder="rg_pat_..."
                 variant="monochrome"
-                className="!h-9 border-white/15 bg-black text-xs"
+                className="!h-9 border-fg/15 bg-bg text-xs"
               />
             </div>
           </div>
         ) : (
-          <div className="border border-white/10 bg-white/[0.02] p-3">
+          <div className="border border-fg/10 bg-fg/[0.02] p-3">
             <label htmlFor="redis-import-source-url" className={importLabelClass}>Source Redis URL</label>
             <FormInput
               id="redis-import-source-url"
@@ -275,18 +275,18 @@ export function RedisDataImportModal({
               autoComplete="new-password"
               placeholder="redis://default:password@host:6379"
               variant="monochrome"
-              className="!h-9 border-white/15 bg-black font-mono text-xs"
+              className="!h-9 border-fg/15 bg-bg font-mono text-xs"
             />
           </div>
         )}
 
-        <div className="border border-rose-500/30 bg-rose-500/10 px-3 py-2.5">
+        <div className="border border-accent/30 bg-accent/10 px-3 py-2.5">
           <Checkbox checked={confirmed} onChange={setConfirmed} disabled={busy} label="Replace existing Redis data" variant="monochrome">
-            <span className="text-xs text-rose-200">Replace all existing keys</span>
+            <span className="text-xs text-accent">Replace all existing keys</span>
           </Checkbox>
         </div>
 
-        <div className="flex items-center justify-end gap-2 border-t border-white/10 pt-4">
+        <div className="flex items-center justify-end gap-2 border-t border-fg/10 pt-4">
           <button type="button" className={importSecondaryButtonClass} onClick={closeModal} disabled={busy}>
             Cancel
           </button>

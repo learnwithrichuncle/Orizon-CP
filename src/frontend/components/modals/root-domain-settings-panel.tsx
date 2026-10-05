@@ -97,7 +97,7 @@ export function RootDomainSettingsPanel({ open }: { open: boolean }) {
   async function saveSettings(event: FormEvent) {
     event.preventDefault();
     if (!rootDomainUsesWildcard || !normalizedRootDomain) {
-      setError("Root domain must be a wildcard hostname like *.pilot.orizoncp.run.");
+      setError("Root domain must be a wildcard hostname like *.orzn.net.");
       return;
     }
     setSaving(true);
@@ -147,15 +147,15 @@ export function RootDomainSettingsPanel({ open }: { open: boolean }) {
     <section className="p-5 sm:p-7 lg:p-8">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h2 className="text-xl tracking-[-0.03em] text-white">Service domains</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-500">
+          <h2 className="text-xl tracking-[-0.03em] text-fg">Service domains</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-fg/60">
             A wildcard hostname used to generate a default URL for every service.
           </p>
           {hasSavedDomain && !editingDomain ? (
             <div className="mt-5 flex flex-wrap items-center gap-3">
-              <span className="text-lg text-zinc-100">{wildcardRootDomain(savedRootDomain)}</span>
-              <span className="inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-500">
-                <span className={`h-1.5 w-1.5 ${dnsStatus === "active" ? "bg-white" : "border border-zinc-600"}`} />
+              <span className="text-lg text-fg/80">{wildcardRootDomain(savedRootDomain)}</span>
+              <span className="inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.16em] text-fg/60">
+                <span className={`h-1.5 w-1.5 ${dnsStatus === "active" ? "bg-fg" : "border border-fg/15"}`} />
                 {dnsStatus === "active" ? "DNS active" : "DNS pending"}
               </span>
             </div>
@@ -166,7 +166,7 @@ export function RootDomainSettingsPanel({ open }: { open: boolean }) {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              className="inline-flex h-10 w-10 items-center justify-center border border-white/15 text-zinc-400 transition hover:border-white/35 hover:bg-white/[0.06] hover:text-white disabled:opacity-50"
+              className="inline-flex h-10 w-10 items-center justify-center border border-fg/15 text-fg/60 transition hover:border-fg/35 hover:bg-fg/[0.06] hover:text-fg disabled:opacity-50"
               onClick={() => {
                 setRootDomain(wildcardRootDomain(savedRootDomain));
                 setEditingDomain(true);
@@ -179,7 +179,7 @@ export function RootDomainSettingsPanel({ open }: { open: boolean }) {
             </button>
             <button
               type="button"
-              className="inline-flex h-10 w-10 items-center justify-center border border-white/15 text-zinc-500 transition hover:border-white/35 hover:bg-white/[0.06] hover:text-white disabled:opacity-50"
+              className="inline-flex h-10 w-10 items-center justify-center border border-fg/15 text-fg/60 transition hover:border-fg/35 hover:bg-fg/[0.06] hover:text-fg disabled:opacity-50"
               onClick={() => setClearDialogOpen(true)}
               disabled={saving}
               title="Delete root domain"
@@ -194,7 +194,7 @@ export function RootDomainSettingsPanel({ open }: { open: boolean }) {
       {!hasSavedDomain && !editingDomain ? (
         <button
           type="button"
-          className="mt-6 inline-flex min-h-10 w-fit items-center justify-center bg-white px-4 text-sm text-black transition hover:bg-zinc-200"
+          className="mt-6 inline-flex min-h-10 w-fit items-center justify-center bg-fg px-4 text-sm text-bg transition hover:bg-fg/5"
           onClick={() => setEditingDomain(true)}
         >
           Set root domain
@@ -210,19 +210,19 @@ export function RootDomainSettingsPanel({ open }: { open: boolean }) {
               if (rootDomainUsesWildcard) setRootDomain(wildcardRootDomain(normalizedRootDomain));
             }}
             onChange={(event) => setRootDomain(event.target.value)}
-            placeholder="*.pilot.orizoncp.run"
+            placeholder="*.orzn.net"
             required
             inputMode="url"
             autoComplete="off"
             variant="monochrome"
-            className="border-white/15 bg-white/[0.03]"
+            className="border-fg/15 bg-fg/[0.03]"
           />
           {rootDomain.trim() && !rootDomainUsesWildcard ? (
-            <p className="mt-2 text-xs leading-5 text-zinc-300">
-              Include the wildcard prefix, for example *.pilot.orizoncp.run.
+            <p className="mt-2 text-xs leading-5 text-fg/80">
+              Include the wildcard prefix, for example *.orzn.net.
             </p>
           ) : (
-            <p className="mt-2 text-xs leading-5 text-zinc-500">
+            <p className="mt-2 text-xs leading-5 text-fg/60">
               Services will use URLs like {"{slug}"}.{normalizedRootDomain || "your-domain.com"}.
             </p>
           )}
@@ -230,7 +230,7 @@ export function RootDomainSettingsPanel({ open }: { open: boolean }) {
           <div className="mt-5 flex flex-wrap items-center gap-2">
             <button
               type="submit"
-              className="inline-flex min-h-10 w-fit items-center justify-center bg-white px-4 text-sm text-black transition hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex min-h-10 w-fit items-center justify-center bg-fg px-4 text-sm text-bg transition hover:bg-fg/5 disabled:cursor-not-allowed disabled:opacity-50"
               disabled={saving || !normalizedRootDomain || !hasUnsavedChanges || !rootDomainUsesWildcard}
             >
               {saving ? "Saving..." : "Save root domain"}
@@ -238,7 +238,7 @@ export function RootDomainSettingsPanel({ open }: { open: boolean }) {
             {hasSavedDomain ? (
               <button
                 type="button"
-                className="inline-flex min-h-10 items-center justify-center border border-white/15 px-4 text-sm text-zinc-400 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white"
+                className="inline-flex min-h-10 items-center justify-center border border-fg/15 px-4 text-sm text-fg/60 transition hover:border-fg/35 hover:bg-fg/5 hover:text-fg"
                 onClick={() => {
                   setRootDomain(wildcardRootDomain(savedRootDomain));
                   setEditingDomain(false);
@@ -253,40 +253,40 @@ export function RootDomainSettingsPanel({ open }: { open: boolean }) {
       ) : null}
 
       {hasSavedDomain && !editingDomain ? (
-        <div className="mt-7 border-y border-white/10">
+        <div className="mt-7 border-y border-fg/10">
           <button
             type="button"
             className="flex w-full items-center justify-between gap-4 py-4 text-left"
             onClick={() => setInstructionsOpen((value) => !value)}
           >
             <span>
-              <span className="block text-sm text-zinc-200">DNS setup</span>
-              <span className="mt-1 block text-xs text-zinc-500">Add one wildcard A record.</span>
+              <span className="block text-sm text-fg/80">DNS setup</span>
+              <span className="mt-1 block text-xs text-fg/60">Add one wildcard A record.</span>
             </span>
-            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-500">
+            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-fg/60">
               {instructionsOpen ? "Hide" : "Show"}
             </span>
           </button>
 
           {instructionsOpen ? (
-            <div className="border-t border-white/10 pb-5">
+            <div className="border-t border-fg/10 pb-5">
               <div className="max-w-2xl font-mono text-[10px]">
-                <div className="grid grid-cols-[100px_minmax(0,1fr)] border-b border-white/10">
-                  <div className="py-3 uppercase tracking-[0.18em] text-zinc-600">Type</div>
-                  <div className="py-3 text-zinc-200">A</div>
+                <div className="grid grid-cols-[100px_minmax(0,1fr)] border-b border-fg/10">
+                  <div className="py-3 uppercase tracking-[0.18em] text-fg/40">Type</div>
+                  <div className="py-3 text-fg/80">A</div>
                 </div>
-                <div className="grid grid-cols-[100px_minmax(0,1fr)] border-b border-white/10">
-                  <div className="py-3 uppercase tracking-[0.18em] text-zinc-600">Name</div>
-                  <div className="py-3 text-zinc-200">
+                <div className="grid grid-cols-[100px_minmax(0,1fr)] border-b border-fg/10">
+                  <div className="py-3 uppercase tracking-[0.18em] text-fg/40">Name</div>
+                  <div className="py-3 text-fg/80">
                     *
-                    <span className="ml-3 text-zinc-600">{wildcardHostname}</span>
+                    <span className="ml-3 text-fg/40">{wildcardHostname}</span>
                   </div>
                 </div>
                 <div className="grid grid-cols-[100px_minmax(0,1fr)]">
-                  <div className="py-3 uppercase tracking-[0.18em] text-zinc-600">Value</div>
+                  <div className="py-3 uppercase tracking-[0.18em] text-fg/40">Value</div>
                   <div className="flex min-w-0 items-center gap-2 py-3">
-                    <span className="truncate text-zinc-200">{publicIp}</span>
-                    <button type="button" onClick={copyIp} className="shrink-0 p-0.5 text-zinc-500 transition-colors hover:text-white" title={copiedIp ? "Copied" : "Copy IP"}>
+                    <span className="truncate text-fg/80">{publicIp}</span>
+                    <button type="button" onClick={copyIp} className="shrink-0 p-0.5 text-fg/60 transition-colors hover:text-fg" title={copiedIp ? "Copied" : "Copy IP"}>
                       <AppIcon icon={copiedIp ? CopyCheckIcon : CopyIcon} size={13} />
                     </button>
                   </div>
@@ -295,7 +295,7 @@ export function RootDomainSettingsPanel({ open }: { open: boolean }) {
 
               <button
                 type="button"
-                className="mt-5 inline-flex h-10 items-center justify-center gap-2 border border-white/15 px-3.5 text-sm text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                className="mt-5 inline-flex h-10 items-center justify-center gap-2 border border-fg/15 px-3.5 text-sm text-fg/80 transition hover:border-fg/35 hover:bg-fg/5 hover:text-fg disabled:cursor-not-allowed disabled:opacity-50"
                 onClick={() => void refreshSettings()}
                 disabled={verifying}
               >
@@ -307,14 +307,14 @@ export function RootDomainSettingsPanel({ open }: { open: boolean }) {
         </div>
       ) : null}
 
-      {error ? <div className="mt-5 border-l-2 border-white bg-white/[0.06] px-4 py-3 text-sm text-zinc-200">{error}</div> : null}
+      {error ? <div className="mt-5 border-l-2 border-fg bg-fg/[0.06] px-4 py-3 text-sm text-fg/80">{error}</div> : null}
 
       {success ? (
         <div
           className={
             waitingForDns
-              ? "mt-5 flex items-center gap-2 border-l-2 border-amber-400 bg-amber-400/10 px-4 py-3 text-sm text-amber-200"
-              : "mt-5 flex items-center gap-2 border-l-2 border-emerald-400 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200"
+              ? "mt-5 flex items-center gap-2 border-l-2 border-accent/30 bg-accent/10 px-4 py-3 text-sm text-accent"
+              : "mt-5 flex items-center gap-2 border-l-2 border-accent/30 bg-accent/10 px-4 py-3 text-sm text-accent"
           }
         >
           <AppIcon icon={waitingForDns ? AlertCircleIcon : CheckmarkCircle02Icon} size={14} />

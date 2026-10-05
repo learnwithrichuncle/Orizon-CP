@@ -1,7 +1,7 @@
 import { Add01Icon, Globe02Icon } from "@hugeicons/core-free-icons";
 import { useEffect, useState } from "react";
 import { api, type DnsProviderId, type DnsProviderStatus, type Domain } from "../../api";
-import { AppIcon, FormInput } from "../../components/ui/primitives";
+import { AppIcon, FormInput, btn } from "../../components/ui/primitives";
 import { ConfirmationDialog } from "../../components/modals/confirmation-dialog";
 import { ServiceDomainRow } from "./service-domain-row";
 
@@ -96,24 +96,24 @@ export function ServiceDomainsPanel({
 
   return (
     <>
-      <section className="mx-auto w-full max-w-[1100px] overflow-hidden border border-white/10 bg-black">
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-4 py-4 sm:px-5">
+      <section className="mx-auto w-full max-w-[1100px] overflow-hidden border border-fg/10 bg-bg">
+        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-fg/10 p-5">
           <div>
-            <h2 className="text-lg tracking-[-0.03em] text-white">Domains</h2>
-            <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">
+            <h2 className="text-xl font-bold tracking-tight text-fg">Domains</h2>
+            <p className="mt-1 font-mono text-[9px] uppercase tracking-wider text-fg/40">
               {domains.length} custom {domains.length === 1 ? "domain" : "domains"}
             </p>
           </div>
           {!showAddForm ? (
             <button
               type="button"
-              className="inline-flex h-8 items-center justify-center gap-2 bg-white px-3 text-xs text-black transition hover:bg-zinc-200"
+              className={btn("primary")}
               onClick={() => {
                 setShowAddForm(true);
                 setDomainForm({ hostname: "" });
               }}
             >
-              <AppIcon icon={Add01Icon} size={13} />
+              <AppIcon icon={Add01Icon} size={14} />
               Add domain
             </button>
           ) : null}
@@ -121,7 +121,7 @@ export function ServiceDomainsPanel({
 
         {showAddForm ? (
           <form
-            className="flex flex-wrap items-end gap-2 border-b border-white/10 bg-white/[0.02] px-4 py-4 sm:px-5"
+            className="flex flex-wrap items-end gap-3 border-b border-fg/10 bg-fg/[0.02] p-5"
             onSubmit={(event) => {
               event.preventDefault();
               void doAction("domain", async () => {
@@ -132,31 +132,38 @@ export function ServiceDomainsPanel({
             }}
           >
             <label className="min-w-56 flex-1">
-              <span className="mb-1.5 block font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">Hostname</span>
+              <span className="mb-1.5 block font-mono text-[9px] uppercase tracking-wider text-fg/40">Hostname</span>
               <FormInput
                 value={domainForm.hostname}
                 onChange={(event) => setDomainForm({ hostname: event.target.value })}
                 placeholder="app.example.com"
                 required
-                variant="monochrome"
-                className="!h-9 border-white/15 bg-black font-mono text-xs"
+                className="!h-9 font-mono text-xs"
               />
             </label>
-            <button type="button" className="inline-flex h-9 items-center justify-center border border-white/15 px-3 text-xs text-zinc-400 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white" onClick={() => setShowAddForm(false)}>
+            <button
+              type="button"
+              className={btn("ghost")}
+              onClick={() => setShowAddForm(false)}
+            >
               Cancel
             </button>
-            <button type="submit" className="inline-flex h-9 items-center justify-center bg-white px-3 text-xs text-black transition hover:bg-zinc-200 disabled:opacity-40" disabled={busy === "domain"}>
+            <button
+              type="submit"
+              className={btn("primary")}
+              disabled={busy === "domain"}
+            >
               Save domain
             </button>
           </form>
         ) : null}
 
         {domains.length === 0 ? (
-          <div className="flex min-h-56 items-center justify-center p-8 text-center">
+          <div className="flex min-h-56 items-center justify-center p-8 text-center font-mono text-xs text-fg/40">
             <div>
-              <AppIcon icon={Globe02Icon} size={22} className="mx-auto text-zinc-700" />
-              <h3 className="mt-4 text-sm text-zinc-300">No custom domains</h3>
-              <p className="mt-2 text-xs text-zinc-600">Add a hostname to route traffic to this service.</p>
+              <AppIcon icon={Globe02Icon} size={22} className="mx-auto text-fg/20" />
+              <h3 className="mt-3 text-sm font-bold text-fg">No custom domains</h3>
+              <p className="mt-1 text-fg/40">Add a hostname to route traffic to this service.</p>
             </div>
           </div>
         ) : (

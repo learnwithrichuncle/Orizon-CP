@@ -14,17 +14,17 @@ export function ApiKeySecretReveal({ token, onDismiss }: { token: string; onDism
 
   return (
     <section>
-      <div className="border-l-2 border-emerald-400 bg-emerald-400/10 px-4 py-3 text-sm leading-6 text-emerald-200">
+      <div className="border-l-2 border-accent/30 bg-accent/10 px-4 py-3 text-sm leading-6 text-accent">
         This key is shown only once. Copy it and store it somewhere secure.
       </div>
 
-      <div className="mt-5 flex min-w-0 items-stretch border border-white/15 bg-white/[0.03]">
-        <code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap px-3 py-3 font-mono text-xs text-zinc-100">
+      <div className="mt-5 flex min-w-0 items-stretch border border-fg/15 bg-fg/[0.03]">
+        <code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap px-3 py-3 font-mono text-xs text-fg/80">
           {token}
         </code>
         <button
           type="button"
-          className="grid w-11 shrink-0 place-items-center border-l border-white/15 text-zinc-400 transition hover:bg-white/[0.05] hover:text-white"
+          className="grid w-11 shrink-0 place-items-center border-l border-fg/15 text-fg/60 transition hover:bg-fg/5 hover:text-fg"
           onClick={() => void copyToken()}
           title={copied ? "Copied" : "Copy"}
           aria-label={copied ? "Copied API key" : "Copy API key"}
@@ -35,7 +35,7 @@ export function ApiKeySecretReveal({ token, onDismiss }: { token: string; onDism
 
       <button
         type="button"
-        className="mt-5 inline-flex min-h-10 w-fit items-center justify-center bg-white px-4 text-sm text-black transition hover:bg-zinc-200"
+        className="mt-5 inline-flex min-h-10 w-fit items-center justify-center bg-fg px-4 text-sm text-bg transition hover:bg-fg/5"
         onClick={onDismiss}
       >
         Done

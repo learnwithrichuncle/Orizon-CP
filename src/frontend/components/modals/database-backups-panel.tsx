@@ -144,18 +144,18 @@ export function DatabaseBackupsPanel({ serviceId }: { serviceId: string }) {
 
   return (
     <>
-      <section className="mx-auto flex h-full min-h-0 w-full max-w-[1200px] flex-col overflow-hidden border border-white/10 bg-black">
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-4 py-4 sm:px-5">
+      <section className="mx-auto flex h-full min-h-0 w-full max-w-[1200px] flex-col overflow-hidden border border-fg/10 bg-bg">
+        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-fg/10 px-4 py-4 sm:px-5">
           <div>
-            <h2 className="text-lg tracking-[-0.03em] text-white">Backups</h2>
-            <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">
+            <h2 className="text-lg tracking-[-0.03em] text-fg">Backups</h2>
+            <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.16em] text-fg/40">
               {backups.length} {backups.length === 1 ? "backup" : "backups"} · {storageLabel(activeSettings.storage, r2Available)}
             </p>
           </div>
           <div className="flex items-center gap-2">
             <button
               type="button"
-              className="inline-flex h-8 w-8 items-center justify-center border border-white/15 text-zinc-500 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white disabled:opacity-40"
+              className="inline-flex h-8 w-8 items-center justify-center border border-fg/15 text-fg/60 transition hover:border-fg/35 hover:bg-fg/5 hover:text-fg disabled:opacity-40"
               onClick={openSettings}
               title="Backup settings"
               aria-label="Backup settings"
@@ -164,7 +164,7 @@ export function DatabaseBackupsPanel({ serviceId }: { serviceId: string }) {
             </button>
             <button
               type="button"
-              className="inline-flex h-8 w-8 items-center justify-center border border-white/15 text-zinc-500 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white disabled:opacity-40"
+              className="inline-flex h-8 w-8 items-center justify-center border border-fg/15 text-fg/60 transition hover:border-fg/35 hover:bg-fg/5 hover:text-fg disabled:opacity-40"
               onClick={() => void loadBackups()}
               disabled={loading || creating}
               title="Refresh backups"
@@ -174,7 +174,7 @@ export function DatabaseBackupsPanel({ serviceId }: { serviceId: string }) {
             </button>
             <button
               type="button"
-              className="inline-flex h-8 items-center justify-center gap-2 bg-white px-3 text-xs text-black transition hover:bg-zinc-200 disabled:opacity-40"
+              className="inline-flex h-8 items-center justify-center gap-2 bg-fg px-3 text-xs text-bg transition hover:bg-fg/5 disabled:opacity-40"
               onClick={() => void createBackup()}
               disabled={creating || loading}
             >
@@ -185,18 +185,18 @@ export function DatabaseBackupsPanel({ serviceId }: { serviceId: string }) {
         </header>
 
         {r2Available ? (
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-white/10 bg-white/[0.02] px-4 py-2.5 font-mono text-[9px] tracking-[0.12em] text-zinc-600 sm:px-5">
-            <span className="uppercase text-zinc-400">R2 connected</span>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-fg/10 bg-fg/[0.02] px-4 py-2.5 font-mono text-[9px] tracking-[0.12em] text-fg/40 sm:px-5">
+            <span className="uppercase text-fg/60">R2 connected</span>
             <span>{r2?.bucket}</span>
             <span className="truncate">{r2?.endpoint}</span>
           </div>
         ) : null}
 
         {error || success ? (
-          <div className="border-b border-white/10 px-4 py-3 sm:px-5">
-            {error ? <div className="border border-rose-500/30 bg-rose-500/10 px-3 py-2.5 text-xs text-rose-200">{error}</div> : null}
+          <div className="border-b border-fg/10 px-4 py-3 sm:px-5">
+            {error ? <div className="border border-accent/30 bg-accent/10 px-3 py-2.5 text-xs text-accent">{error}</div> : null}
             {success ? (
-              <div className="flex items-center gap-2 border border-emerald-500/30 bg-emerald-500/10 px-3 py-2.5 text-xs text-emerald-200">
+              <div className="flex items-center gap-2 border border-accent/30 bg-accent/10 px-3 py-2.5 text-xs text-accent">
                 <AppIcon icon={CheckmarkCircle02Icon} size={13} />
                 {success}
               </div>

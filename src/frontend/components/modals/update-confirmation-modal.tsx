@@ -1,6 +1,6 @@
 import { Refresh03Icon } from "@hugeicons/core-free-icons";
 import { SettingsDialog } from "../../features/settings/settings-dialog";
-import { AppIcon } from "../ui/primitives";
+import { AppIcon, btn } from "../ui/primitives";
 
 type UpdateConfirmationModalProps = {
   applying: boolean;
@@ -10,22 +10,33 @@ type UpdateConfirmationModalProps = {
   onConfirm: () => void;
 };
 
-export function UpdateConfirmationModal({ applying, installType, open, onCancel, onConfirm }: UpdateConfirmationModalProps) {
-  const actionLabel = installType === "image" ? "Pull latest image" : "Update OrizonCP";
+export function UpdateConfirmationModal({
+  applying,
+  installType,
+  open,
+  onCancel,
+  onConfirm
+}: UpdateConfirmationModalProps) {
+  const actionLabel = installType === "image" ? "Pull Latest Image" : "Update OrizonCP";
 
   return (
-    <SettingsDialog open={open} title={actionLabel} onClose={() => {
-      if (!applying) onCancel();
-    }} width="max-w-md">
-      <div>
-        <p className="text-sm leading-relaxed text-zinc-400">
+    <SettingsDialog
+      open={open}
+      title={actionLabel}
+      onClose={() => {
+        if (!applying) onCancel();
+      }}
+      width="max-w-md"
+    >
+      <div className="space-y-4">
+        <p className="text-sm leading-relaxed text-fg/60">
           OrizonCP may restart after the update. The dashboard can briefly disconnect.
         </p>
 
-        <div className="mt-5 flex items-center justify-end gap-2 border-t border-white/10 pt-4">
+        <div className="flex items-center justify-end gap-3 border-t border-fg/10 pt-4">
           <button
             type="button"
-            className="inline-flex h-9 items-center justify-center border border-white/15 px-3.5 text-sm text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05] disabled:opacity-50"
+            className={btn("ghost")}
             onClick={onCancel}
             disabled={applying}
           >
@@ -33,11 +44,11 @@ export function UpdateConfirmationModal({ applying, installType, open, onCancel,
           </button>
           <button
             type="button"
-            className="inline-flex h-9 items-center justify-center gap-2 bg-white px-4 text-sm text-black transition hover:bg-zinc-200 disabled:opacity-50"
+            className={btn("primary")}
             onClick={onConfirm}
             disabled={applying}
           >
-            <AppIcon icon={Refresh03Icon} size={13} className={applying ? "animate-spin" : ""} />
+            <AppIcon icon={Refresh03Icon} size={14} className={applying ? "animate-spin" : ""} />
             {applying ? "Starting..." : actionLabel}
           </button>
         </div>

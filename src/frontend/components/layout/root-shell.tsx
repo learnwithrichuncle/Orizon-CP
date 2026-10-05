@@ -4,7 +4,7 @@ import { AuthGate } from "../auth/auth-gate";
 
 export function RootShell() {
   return (
-    <div className="min-h-screen bg-neutral-100 text-neutral-950">
+    <div className="min-h-screen bg-bg text-fg font-sans">
       <AuthGate>
         <Outlet />
       </AuthGate>

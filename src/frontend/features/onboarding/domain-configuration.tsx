@@ -18,7 +18,7 @@ function DomainField({
 }) {
   return (
     <label className="block">
-      <span className="mb-2 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-zinc-400">
+      <span className="mb-2 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-fg/80">
         {label}
       </span>
       <input
@@ -28,7 +28,7 @@ function DomainField({
         placeholder={placeholder}
         spellCheck={false}
         autoCapitalize="none"
-        className="h-12 w-full bg-zinc-900 px-3.5 font-mono text-xs text-white outline-none transition placeholder:text-zinc-600 focus:bg-zinc-800"
+        className="h-12 w-full bg-fg/5 px-3.5 font-mono text-xs text-fg outline-none transition placeholder:text-fg/80 focus:bg-fg/5"
       />
     </label>
   );
@@ -69,31 +69,31 @@ export function DomainConfiguration({
           label="Dashboard domain"
           value={form.controlPlaneHostname}
           onChange={(controlPlaneHostname) => update({ controlPlaneHostname })}
-          placeholder="pilot.orizoncp.run"
+          placeholder="cp.orzn.net"
         />
         <DomainField
           label="Wildcard service domain"
           value={form.rootDomain}
           onChange={(rootDomain) => update({ rootDomain })}
-          placeholder="*.pilot.orizoncp.run"
+          placeholder="*.orzn.net"
         />
         {hasRootDomain && !rootDomainValid ? (
-          <p className="-mt-3 border-l-2 border-white px-3 text-xs leading-5 text-zinc-300">
+          <p className="-mt-3 border-l-2 border-fg px-3 text-xs leading-5 text-fg/80">
             Include the wildcard prefix, for example
             {" "}
-            <span className="font-mono text-white">
-              *.pilot.orizoncp.run
+            <span className="font-mono text-fg">
+              *.orzn.net
             </span>
             .
           </p>
         ) : null}
       </div>
 
-      <div className="flex items-center justify-between gap-4 border-y border-white/10 py-4">
-        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-zinc-500">
+      <div className="flex items-center justify-between gap-4 border-y border-fg/10 py-4">
+        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-fg/80">
           Detected server IP
         </span>
-        <span className="font-mono text-xs text-zinc-200">
+        <span className="font-mono text-xs text-fg/80">
           {publicIp || "Unavailable"}
         </span>
       </div>
@@ -113,7 +113,7 @@ export function DomainConfiguration({
       ) : null}
 
       {!hasDashboardDomain && !hasRootDomain ? (
-        <div className="border border-dashed border-white/15 px-4 py-5 text-xs leading-5 text-zinc-500">
+        <div className="border border-dashed border-fg/15 px-4 py-5 text-xs leading-5 text-fg/80">
           DNS records are optional. Setup instructions will appear here as you
           enter a dashboard or wildcard domain.
         </div>

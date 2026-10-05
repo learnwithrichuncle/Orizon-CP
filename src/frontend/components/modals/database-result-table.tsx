@@ -23,19 +23,19 @@ export function DatabaseResultTable({
   const columnNames = columnMeta.map((column) => column.name);
 
   if (columnNames.length === 0 || rows.length === 0) {
-    return <div className="border border-zinc-800 bg-zinc-950/45 px-5 py-8 text-sm text-zinc-500">{emptyLabel}</div>;
+    return <div className="border border-fg/15 bg-bg/45 px-5 py-8 text-sm text-fg/60">{emptyLabel}</div>;
   }
 
   return (
-    <div className="h-full min-h-0 overflow-auto border border-zinc-700 bg-zinc-950">
+    <div className="h-full min-h-0 overflow-auto border border-fg/15 bg-bg">
       <table className="min-w-full border-collapse text-left font-mono text-sm">
-        <thead className="sticky top-0 z-10 bg-zinc-950 text-zinc-400">
+        <thead className="sticky top-0 z-10 bg-bg text-fg/60">
           <tr>
             {columnMeta.map((column) => (
-              <th key={column.name} className="min-w-[220px] border-b border-r border-zinc-700 px-4 py-3 font-semibold">
+              <th key={column.name} className="min-w-[220px] border-b border-r border-fg/15 px-4 py-3 font-semibold">
                 <span className="block truncate">
-                  <span className="text-zinc-300">{column.name}</span>
-                  {column.type ? <span className="ml-2 text-zinc-500">{column.type}</span> : null}
+                  <span className="text-fg/80">{column.name}</span>
+                  {column.type ? <span className="ml-2 text-fg/60">{column.type}</span> : null}
                 </span>
               </th>
             ))}
@@ -43,12 +43,12 @@ export function DatabaseResultTable({
         </thead>
         <tbody>
           {rows.map((row, rowIndex) => (
-            <tr key={rowIndex} className="border-b border-zinc-800 odd:bg-zinc-950 even:bg-zinc-900/45 hover:bg-zinc-800/60">
+            <tr key={rowIndex} className="border-b border-fg/15 odd:bg-bg even:bg-bg/45 hover:bg-fg/10/60">
               {columnNames.map((column) => {
                 const value = row[column] ?? null;
                 return (
-                  <td key={column} className="min-w-[220px] max-w-[320px] border-r border-zinc-800 px-4 py-3 align-middle text-zinc-200">
-                    <span className={`block truncate ${value === null ? "text-zinc-600" : ""}`} title={displayValue(value)}>
+                  <td key={column} className="min-w-[220px] max-w-[320px] border-r border-fg/15 px-4 py-3 align-middle text-fg/80">
+                    <span className={`block truncate ${value === null ? "text-fg/40" : ""}`} title={displayValue(value)}>
                       {displayValue(value)}
                     </span>
                   </td>

@@ -49,7 +49,7 @@ export function BackupSettingsModal({
     >
       <div className="space-y-5">
         <div>
-          <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">Destination</p>
+          <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.16em] text-fg/80">Destination</p>
           <div className="grid gap-3 md:grid-cols-3">
             {([
               { value: "disk" as const, label: "Disk", cloudflare: false, disabled: false },
@@ -65,8 +65,8 @@ export function BackupSettingsModal({
                 type="button"
                 className={`flex h-14 items-center gap-2.5 px-3 text-left text-xs transition ${
                   draftStorage === option.value
-                    ? "bg-white text-black"
-                    : "border border-white/15 text-zinc-400 hover:border-white/35 hover:bg-white/[0.05] hover:text-white"
+                    ? "bg-fg text-bg"
+                    : "border border-fg/15 text-fg/80 hover:border-fg/35 hover:bg-fg/5 hover:text-fg"
                 } ${option.disabled ? "cursor-not-allowed opacity-45" : ""}`}
                 onClick={() => {
                   if (!option.disabled) onDraftStorageChange(option.value);
@@ -86,12 +86,12 @@ export function BackupSettingsModal({
             ))}
           </div>
           {showRemoteStorageOptions && !r2Connected ? (
-            <p className="mt-2 border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-200">
+            <p className="mt-2 border border-accent/30 bg-accent/10 px-3 py-2 text-xs text-accent">
               Connect R2 in{" "}
               <Link
                 to="/settings/$settingsPage"
                 params={{ settingsPage: "storage" }}
-                className="underline underline-offset-2 hover:text-amber-100"
+                className="underline underline-offset-2 hover:text-accent"
               >
                 Storage settings
               </Link>{" "}
@@ -101,18 +101,18 @@ export function BackupSettingsModal({
         </div>
 
         <div>
-          <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">Schedules</p>
-          <div className="border border-white/10">
+          <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.16em] text-fg/80">Schedules</p>
+          <div className="border border-fg/10">
             {activeSettings.schedules.map((schedule) => {
               const enabled = draftScheduleEnabled[schedule.trigger];
               return (
                 <div
                   key={schedule.trigger}
-                  className="flex w-full items-center justify-between gap-3 border-b border-white/10 px-3 py-3 text-left transition last:border-b-0 hover:bg-white/[0.03]"
+                  className="flex w-full items-center justify-between gap-3 border-b border-fg/10 px-3 py-3 text-left transition last:border-b-0 hover:bg-fg/[0.03]"
                 >
                   <span>
-                    <span className="block text-xs text-zinc-300">{triggerLabel(schedule.trigger)}</span>
-                    <span className="mt-1 block font-mono text-[9px] text-zinc-600">
+                    <span className="block text-xs text-fg/80">{triggerLabel(schedule.trigger)}</span>
+                    <span className="mt-1 block font-mono text-[9px] text-fg/80">
                       every {schedule.intervalHours === 24 ? "24 hours" : schedule.intervalHours === 168 ? "7 days" : "30 days"}, kept for {retentionLabel(schedule.retentionDays)}
                     </span>
                   </span>
@@ -127,10 +127,10 @@ export function BackupSettingsModal({
           </div>
         </div>
 
-        <div className="flex items-center justify-end gap-2 border-t border-white/10 pt-4">
+        <div className="flex items-center justify-end gap-2 border-t border-fg/10 pt-4">
           <button
             type="button"
-            className="inline-flex h-9 items-center justify-center border border-white/15 px-3.5 text-sm text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white disabled:opacity-40"
+            className="inline-flex h-9 items-center justify-center border border-fg/15 px-3.5 text-sm text-fg/80 transition hover:border-fg/35 hover:bg-fg/5 hover:text-fg disabled:opacity-40"
             onClick={onClose}
             disabled={saving}
           >
@@ -138,7 +138,7 @@ export function BackupSettingsModal({
           </button>
           <button
             type="button"
-            className="inline-flex h-9 items-center justify-center bg-white px-4 text-sm text-black transition hover:bg-zinc-200 disabled:opacity-40"
+            className="inline-flex h-9 items-center justify-center bg-fg px-4 text-sm text-bg transition hover:bg-fg/5 disabled:opacity-40"
             onClick={onSave}
             disabled={saving}
           >

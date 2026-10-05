@@ -284,17 +284,17 @@ export function ProjectPage({ projectSlug }: { projectSlug: string }) {
 
   return (
     <>
-      <main className="min-h-dvh bg-black text-white">
+      <main className="min-h-dvh bg-bg text-fg">
         <div className="grid min-h-dvh lg:grid-cols-[260px_minmax(0,1fr)]">
           <ProjectsDashboardSidebar currentUser={currentUser} tools={tools} owner={owner} />
 
-          <section className="min-w-0 bg-zinc-950">
+          <section className="min-w-0 bg-bg">
             <div className="mx-auto w-full max-w-[1680px] px-5 pb-20 pt-6 sm:px-8 lg:px-10">
               {loading || (!currentProject && !error) ? (
                 <ProjectRouteLoader label="Loading project" />
               ) : (
                 <>
-                  <header className="border-b border-white/10 pb-6">
+                  <header className="border-b border-fg/10 pb-6">
                     <ProjectPageToolbar
                       projects={projects}
                       currentProject={currentProject}
@@ -306,12 +306,12 @@ export function ProjectPage({ projectSlug }: { projectSlug: string }) {
                     <div className="mt-5 flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
                       <div className="min-w-0">
                         <div className="flex min-w-0 items-center gap-3">
-                          <h1 className="truncate text-3xl tracking-[-0.04em] text-white sm:text-4xl">
+                          <h1 className="truncate text-3xl tracking-[-0.04em] text-fg sm:text-4xl">
                             {currentProject?.name ?? projectSlug}
                           </h1>
                           <button
                             type="button"
-                            className="grid h-9 w-9 shrink-0 place-items-center border border-white/15 text-zinc-500 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white"
+                            className="grid h-9 w-9 shrink-0 place-items-center border border-fg/15 text-fg/60 transition hover:border-fg/35 hover:bg-fg/5 hover:text-fg"
                             onClick={() => {
                               setProjectEditError("");
                               setEditingProject(true);
@@ -322,7 +322,7 @@ export function ProjectPage({ projectSlug }: { projectSlug: string }) {
                             <AppIcon icon={PencilEdit02Icon} size={15} />
                           </button>
                         </div>
-                        <p className="mt-2 text-sm text-zinc-500">
+                        <p className="mt-2 text-sm text-fg/60">
                           {currentProject?.description || `${currentProject?.serviceCount ?? 0} service${currentProject?.serviceCount === 1 ? "" : "s"}`}
                         </p>
                       </div>
@@ -330,7 +330,7 @@ export function ProjectPage({ projectSlug }: { projectSlug: string }) {
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
-                          className="inline-flex h-10 items-center justify-center gap-2 bg-white px-4 text-sm text-black transition hover:bg-zinc-200 disabled:opacity-50"
+                          className="inline-flex h-10 items-center justify-center gap-2 bg-fg px-4 text-sm text-bg transition hover:bg-fg/5 disabled:opacity-50"
                           onClick={() => setCreateServiceOpen(true)}
                           disabled={!currentProject || !selectedEnvironment}
                         >
@@ -339,7 +339,7 @@ export function ProjectPage({ projectSlug }: { projectSlug: string }) {
                         </button>
                         <button
                           type="button"
-                          className="grid h-10 w-10 place-items-center border border-white/15 text-zinc-500 transition hover:border-rose-400/60 hover:bg-rose-400/10 hover:text-rose-300 disabled:opacity-50"
+                          className="grid h-10 w-10 place-items-center border border-fg/15 text-fg/60 transition hover:border-fg/20/60 hover:bg-fg/5 hover:text-fg disabled:opacity-50"
                           onClick={() => setDeleteProjectOpen(true)}
                           aria-label="Delete project"
                           disabled={!currentProject}
@@ -351,7 +351,7 @@ export function ProjectPage({ projectSlug }: { projectSlug: string }) {
                   </header>
 
                   {error ? (
-                    <div className="mt-6 border-l-2 border-rose-400 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">
+                    <div className="mt-6 border-l-2 border-fg/20 bg-fg/5 px-4 py-3 text-sm text-accent">
                       {error}
                     </div>
                   ) : null}
@@ -371,14 +371,14 @@ export function ProjectPage({ projectSlug }: { projectSlug: string }) {
                         />
 
                         {environmentServices.length === 0 ? (
-                          <section className="flex min-h-72 items-center justify-center border border-white/10 bg-black px-6 py-12 text-center">
+                          <section className="flex min-h-72 items-center justify-center border border-fg/10 bg-bg px-6 py-12 text-center">
                             <div>
-                              <AppIcon icon={CloudServerIcon} size={22} className="mx-auto text-zinc-600" />
-                              <h2 className="mt-4 text-lg text-zinc-100">No services in {selectedEnvironment.name}</h2>
-                              <p className="mt-1.5 text-sm text-zinc-600">Add a service here or move one from another environment.</p>
+                              <AppIcon icon={CloudServerIcon} size={22} className="mx-auto text-fg/40" />
+                              <h2 className="mt-4 text-lg text-fg/80">No services in {selectedEnvironment.name}</h2>
+                              <p className="mt-1.5 text-sm text-fg/40">Add a service here or move one from another environment.</p>
                               <button
                                 type="button"
-                                className="mt-5 inline-flex h-9 items-center justify-center gap-2 bg-white px-4 text-sm text-black transition hover:bg-zinc-200"
+                                className="mt-5 inline-flex h-9 items-center justify-center gap-2 bg-fg px-4 text-sm text-bg transition hover:bg-fg/5"
                                 onClick={() => setCreateServiceOpen(true)}
                               >
                                 <AppIcon icon={Add01Icon} size={14} />

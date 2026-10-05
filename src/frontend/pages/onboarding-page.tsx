@@ -221,7 +221,7 @@ export function OnboardingPage() {
       activeStep === "root-domain" &&
       !isWildcardRootDomain(form.rootDomain)
     ) {
-      return "Root domain must be a wildcard hostname like *.pilot.orizoncp.run.";
+      return "Root domain must be a wildcard hostname like *.orzn.net.";
     }
 
     if (activeStep === "backups") {

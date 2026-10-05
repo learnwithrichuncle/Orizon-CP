@@ -58,22 +58,22 @@ export function MigrationImportModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-bg/80 p-4 backdrop-blur-sm">
       <div className="mx-auto flex min-h-full items-center justify-center">
-        <div className="w-full max-w-2xl border border-white/15 bg-zinc-950 p-6 text-white shadow-[0_30px_100px_rgba(0,0,0,0.6)] sm:p-8">
-          <div className="mb-7 flex items-start justify-between gap-5 border-b border-white/10 pb-6">
+        <div className="w-full max-w-2xl border border-fg/15 bg-fg/5 p-6 text-fg  sm:p-8">
+          <div className="mb-7 flex items-start justify-between gap-5 border-b border-fg/10 pb-6">
             <div className="flex items-start gap-4">
-              <span className="grid h-10 w-10 flex-none place-items-center rounded-full bg-white text-black">
+              <span className="grid h-10 w-10 flex-none place-items-center  bg-fg text-bg">
                 <AppIcon icon={DatabaseExportIcon} size={17} />
               </span>
               <div>
-                <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-zinc-500">
+                <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-fg/80">
                   Server migration
                 </p>
                 <h2 className="mt-1.5 font-hero text-xl tracking-[-0.04em]">
                   Import existing orizoncp
                 </h2>
-                <p className="mt-2 text-xs leading-5 text-zinc-500">
+                <p className="mt-2 text-xs leading-5 text-fg/80">
                   Restore an encrypted bundle from another server.
                 </p>
               </div>
@@ -81,7 +81,7 @@ export function MigrationImportModal({
             <button
               type="button"
               onClick={onClose}
-              className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-zinc-500 transition hover:text-white"
+              className="font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-fg/80 transition hover:text-fg"
             >
               Close
             </button>
@@ -90,10 +90,10 @@ export function MigrationImportModal({
           <form onSubmit={importBundle}>
             <div className="grid gap-y-5">
               <label className="block">
-                <span className="mb-2 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-zinc-400">
+                <span className="mb-2 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-fg/80">
                   Migration bundle
                 </span>
-                <span className="flex min-h-12 cursor-pointer items-center gap-3 rounded-sm border border-white/15 bg-white/5 px-3.5 font-mono text-xs text-zinc-300 transition hover:border-white/30">
+                <span className="flex min-h-12 cursor-pointer items-center gap-3  border border-fg/15 bg-fg/5 px-3.5 font-mono text-xs text-fg/80 transition hover:border-fg/30">
                   <AppIcon icon={CloudUploadIcon} size={15} />
                   <span className="min-w-0 truncate">
                     {bundle?.name ?? "Choose .orizoncp file"}
@@ -107,7 +107,7 @@ export function MigrationImportModal({
                 </span>
               </label>
               <label className="block">
-                <span className="mb-2 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-zinc-400">
+                <span className="mb-2 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-fg/80">
                   Passphrase
                 </span>
                 <input
@@ -115,37 +115,37 @@ export function MigrationImportModal({
                   value={passphrase}
                   onChange={(event) => setPassphrase(event.target.value)}
                   autoComplete="current-password"
-                  className="h-12 w-full rounded-sm border border-white/15 bg-white/5 px-3.5 text-sm text-white outline-none transition hover:border-white/30 focus:border-white focus:bg-white/10 focus:ring-2 focus:ring-white/10"
+                  className="h-12 w-full  border border-fg/15 bg-fg/5 px-3.5 text-sm text-fg outline-none transition hover:border-fg/30 focus:border-fg focus:bg-fg/10 focus:ring-2 focus:ring-white/10"
                 />
               </label>
             </div>
 
             {error ? (
-              <div className="mt-5 border-l-2 border-white bg-white/10 px-4 py-3 text-xs text-zinc-200">
+              <div className="mt-5 border-l-2 border-fg bg-fg/10 px-4 py-3 text-xs text-fg/80">
                 {error}
               </div>
             ) : null}
             {result ? (
-              <div className="mt-5 flex items-start gap-3 border border-white/15 bg-white/10 px-4 py-3 text-xs text-zinc-200">
+              <div className="mt-5 flex items-start gap-3 border border-fg/15 bg-fg/10 px-4 py-3 text-xs text-fg/80">
                 <AppIcon icon={CheckmarkCircle02Icon} size={14} />
                 Restored {result.projects} projects, {result.services} services,
                 and {result.restoredDatabases} databases.
               </div>
             ) : null}
 
-            <div className="mt-7 flex items-center justify-end gap-3 border-t border-white/10 pt-5">
+            <div className="mt-7 flex items-center justify-end gap-3 border-t border-fg/10 pt-5">
               <button
                 type="button"
                 onClick={onClose}
                 disabled={importing}
-                className="h-11 px-4 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-zinc-400 transition hover:text-white disabled:opacity-50"
+                className="h-11 px-4 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-fg/80 transition hover:text-fg disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={importing}
-                className="flex h-11 items-center justify-center gap-2 rounded-sm bg-white px-5 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-black transition hover:bg-zinc-200 disabled:opacity-60"
+                className="flex h-11 items-center justify-center gap-2  bg-fg px-5 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-bg transition hover:bg-fg/5 disabled:opacity-60"
               >
                 <AppIcon
                   icon={

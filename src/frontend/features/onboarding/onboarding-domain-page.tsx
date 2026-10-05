@@ -33,9 +33,9 @@ export function OnboardingDomainPage({
       <OnboardingStepForm
         icon={Globe02Icon}
         eyebrow="Step 04 · Networking"
-        title="Set up your domains"
+        title="Provision Edge Routing"
         badge="Optional"
-        description="Set up your primary domain for access."
+        description="Configure DNS zones and root domain routing for cluster ingress."
         error={error}
         submitting={submitting}
         nextLabel="Next: Backups"

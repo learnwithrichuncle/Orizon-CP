@@ -14,19 +14,19 @@ const runtimeStateCopy: Record<Exclude<DatabaseRuntimeState, "ready">, { title: 
     title: "Database is deploying",
     fallback: "Data will be available once the container is running.",
     icon: DatabaseSync01Icon,
-    accent: "border-amber-500/35 bg-amber-500/10 text-amber-200"
+    accent: "border-accent/35 bg-accent/10 text-accent"
   },
   idle: {
     title: "Database is idle",
     fallback: "Deploy this service before browsing its data.",
     icon: Clock01Icon,
-    accent: "border-zinc-700 bg-zinc-900/80 text-zinc-300"
+    accent: "border-fg/15 bg-bg/80 text-fg/80"
   },
   failed: {
     title: "Database deployment failed",
     fallback: "Check the deployment logs, then retry the deployment.",
     icon: Alert02Icon,
-    accent: "border-rose-500/35 bg-rose-500/10 text-rose-200"
+    accent: "border-accent/30 bg-accent/10 text-accent"
   },
   unavailable: {
     title: "Database runtime unavailable",
@@ -45,11 +45,11 @@ export function DatabaseRuntimeStatePanel({ state, message, busy = false, onRefr
         <div className={`mb-4 grid h-10 w-10 place-items-center border ${copy.accent}`}>
           <AppIcon icon={copy.icon} size={19} className={state === "deploying" ? "animate-pulse" : ""} />
         </div>
-        <h3 className="text-sm text-zinc-100">{copy.title}</h3>
-        <p className="mt-2 text-xs leading-5 text-zinc-500">{message || copy.fallback}</p>
+        <h3 className="text-sm text-fg/80">{copy.title}</h3>
+        <p className="mt-2 text-xs leading-5 text-fg/60">{message || copy.fallback}</p>
         <button
           type="button"
-          className="mt-5 inline-flex h-8 items-center justify-center gap-2 border border-white/15 px-3 text-xs text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white disabled:opacity-40"
+          className="mt-5 inline-flex h-8 items-center justify-center gap-2 border border-fg/15 px-3 text-xs text-fg/80 transition hover:border-fg/35 hover:bg-fg/5 hover:text-fg disabled:opacity-40"
           onClick={onRefresh}
           disabled={busy}
         >

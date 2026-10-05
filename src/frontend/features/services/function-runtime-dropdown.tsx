@@ -49,7 +49,7 @@ export function FunctionRuntimeDropdown({
     <div ref={rootRef} className={`relative ${className}`}>
       <button
         type="button"
-        className="flex h-9 w-full items-center justify-between gap-3 border border-white/15 bg-black px-3 text-left text-xs text-zinc-300 outline-none transition hover:border-white/35 disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex h-9 w-full items-center justify-between gap-3 border border-fg/15 bg-bg px-3 text-left font-mono text-xs text-fg/80 outline-none transition hover:border-fg/35 disabled:cursor-not-allowed disabled:opacity-60"
         onClick={() => setOpen((current) => !current)}
         onKeyDown={(event) => {
           if (event.key === "Escape") setOpen(false);
@@ -62,30 +62,30 @@ export function FunctionRuntimeDropdown({
           <RuntimeLogo runtime={value} />
           <span className="truncate">{selectedLabel}</span>
         </span>
-        <AppIcon icon={ArrowDown01Icon} size={15} className={`shrink-0 text-zinc-400 transition ${open ? "rotate-180" : ""}`} />
+        <AppIcon icon={ArrowDown01Icon} size={15} className={`shrink-0 text-fg/60 transition ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open ? (
         <div
-          className="absolute left-0 right-0 top-full z-40 mt-2 max-h-64 overflow-y-auto border border-white/15 bg-black p-1 shadow-[0_18px_50px_rgba(0,0,0,0.55)]"
+          className="absolute left-0 right-0 top-full z-40 mt-2 max-h-64 overflow-y-auto border border-fg/15 bg-bg p-1"
           role="listbox"
         >
           {functionRuntimes.map((runtime) => {
             const active = runtime === value;
             return (
-              <button
-                key={runtime}
-                type="button"
-                className={`flex w-full items-center justify-between gap-3 px-2.5 py-2 text-left text-xs transition ${
-                  active ? "bg-white text-black" : "text-zinc-400 hover:bg-white/[0.05] hover:text-white"
-                }`}
-                onClick={() => {
-                  onChange(runtime);
-                  setOpen(false);
-                }}
-                role="option"
-                aria-selected={active}
-              >
+               <button
+                 key={runtime}
+                 type="button"
+                 className={`flex w-full items-center justify-between gap-3 px-2.5 py-2 text-left font-mono text-xs transition ${
+                   active ? "bg-fg text-bg" : "text-fg/60 hover:bg-fg/5 hover:text-fg"
+                 }`}
+                 onClick={() => {
+                   onChange(runtime);
+                   setOpen(false);
+                 }}
+                 role="option"
+                 aria-selected={active}
+               >
                 <span className="flex min-w-0 items-center gap-2">
                   <RuntimeLogo runtime={runtime} />
                   <span className="truncate">{functionRuntimeLabels[runtime]}</span>

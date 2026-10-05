@@ -55,19 +55,19 @@ export function MaintenanceSettingsPanel({ open }: { open: boolean }) {
   }
 
   const healthTone = !info
-    ? "text-zinc-500"
+    ? "text-fg/60"
     : info.alerts.some((alert) => alert.includes("90%"))
-      ? "text-rose-300"
+      ? "text-fg"
       : info.alerts.length > 0
-        ? "text-amber-300"
-        : "text-emerald-300";
+        ? "text-accent"
+        : "text-accent";
   const healthDot = !info
-    ? "bg-zinc-600"
+    ? "bg-fg/5"
     : info.alerts.some((alert) => alert.includes("90%"))
-      ? "bg-rose-400"
+      ? "bg-accent/10"
       : info.alerts.length > 0
-        ? "bg-amber-400"
-        : "bg-emerald-400";
+        ? "bg-accent/10"
+        : "bg-accent/10";
   const checkedAt = info
     ? new Date(info.checkedAt).toLocaleString([], {
         month: "short",
@@ -79,11 +79,11 @@ export function MaintenanceSettingsPanel({ open }: { open: boolean }) {
 
   return (
     <div className="mx-auto max-w-6xl space-y-4">
-      <section className="overflow-hidden border border-white/10 bg-black">
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-5 py-5 sm:px-7">
+      <section className="overflow-hidden border border-fg/10 bg-bg">
+        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-fg/10 px-5 py-5 sm:px-7">
           <div>
-            <h2 className="text-xl tracking-[-0.03em] text-white">Host health</h2>
-            <p className="mt-1.5 text-sm text-zinc-500">
+            <h2 className="text-xl tracking-[-0.03em] text-fg">Host health</h2>
+            <p className="mt-1.5 text-sm text-fg/60">
               {checkedAt
                 ? `Checked ${checkedAt} · ${info?.history.length ?? 0} history samples`
                 : "Disk, Docker, logs, and build artifacts."}
@@ -96,7 +96,7 @@ export function MaintenanceSettingsPanel({ open }: { open: boolean }) {
             </span>
             <button
               type="button"
-              className="inline-flex h-9 items-center justify-center gap-2 border border-white/15 px-3.5 text-sm text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white disabled:opacity-50"
+              className="inline-flex h-9 items-center justify-center gap-2 border border-fg/15 px-3.5 text-sm text-fg/80 transition hover:border-fg/35 hover:bg-fg/5 hover:text-fg disabled:opacity-50"
               onClick={() => void loadMaintenance()}
               disabled={loading || Boolean(cleanupMode)}
             >
@@ -108,14 +108,14 @@ export function MaintenanceSettingsPanel({ open }: { open: boolean }) {
 
         {error ? (
           <div className="px-5 py-4 sm:px-7">
-            <div className="border-l-2 border-rose-400 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">{error}</div>
+            <div className="border-l-2 border-fg/20 bg-fg/5 px-4 py-3 text-sm text-accent">{error}</div>
           </div>
         ) : null}
 
         {info?.alerts.length ? (
-          <div className="divide-y divide-amber-400/15 border-t border-amber-400/20 bg-amber-400/[0.06]">
+          <div className="divide-y divide-accent/15 border-t border-accent/20 bg-accent/10/[0.06]">
             {info.alerts.map((alert) => (
-              <div key={alert} className="flex items-center gap-2 px-5 py-3 text-sm text-amber-200 sm:px-7">
+              <div key={alert} className="flex items-center gap-2 px-5 py-3 text-sm text-accent sm:px-7">
                 <AppIcon icon={Alert02Icon} size={15} />
                 {alert}
               </div>

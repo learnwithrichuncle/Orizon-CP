@@ -12,7 +12,7 @@ export function SignOutButton({ className = "" }: { className?: string }) {
   return (
     <button
       type="button"
-      className={`inline-flex h-9 w-9 items-center justify-center border border-white/10 bg-white/5 text-zinc-500 transition-colors hover:border-white/25 hover:bg-white/10 hover:text-white ${className}`}
+      className={`inline-flex h-9 w-9 items-center justify-center border border-fg/20 bg-bg text-fg/60 transition hover:border-fg/40 hover:bg-fg/5 hover:text-fg ${className}`}
       title="Sign out"
       aria-label="Sign out"
       onClick={() => void signOut()}

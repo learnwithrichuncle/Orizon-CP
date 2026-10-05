@@ -135,12 +135,12 @@ export function DnsManagementPanel() {
   }
 
   return (
-    <section className="mx-auto max-w-5xl overflow-hidden border border-white/10 bg-black">
+    <section className="mx-auto max-w-5xl overflow-hidden border border-fg/10 bg-bg">
       <div className="grid min-h-[560px] lg:grid-cols-[260px_minmax(0,1fr)]">
-        <aside className="border-b border-white/10 bg-white/[0.02] lg:border-b-0 lg:border-r">
-          <div className="flex items-center justify-between border-b border-white/10 px-4 py-4">
-            <span className="text-sm text-white">Providers</span>
-            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-500">
+        <aside className="border-b border-fg/10 bg-fg/[0.02] lg:border-b-0 lg:border-r">
+          <div className="flex items-center justify-between border-b border-fg/10 px-4 py-4">
+            <span className="text-sm text-fg">Providers</span>
+            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-fg/60">
               {connectedProviderCount} connected
             </span>
           </div>
@@ -161,12 +161,12 @@ export function DnsManagementPanel() {
         <div className="min-w-0 p-5 sm:p-7 lg:p-8">
           {loading ? (
             <div className="space-y-5" aria-label="Loading DNS providers">
-              <div className="h-14 w-52 animate-pulse bg-white/5" />
+              <div className="h-14 w-52 animate-pulse bg-fg/5" />
               <div className="grid max-w-xl gap-4">
                 {selectedProvider.fields.map((field) => (
                   <div key={field.key} className="space-y-2">
-                    <div className="h-3 w-20 animate-pulse bg-white/5" />
-                    <div className="h-11 animate-pulse border border-white/10 bg-white/[0.03]" />
+                    <div className="h-3 w-20 animate-pulse bg-fg/5" />
+                    <div className="h-11 animate-pulse border border-fg/10 bg-fg/[0.03]" />
                   </div>
                 ))}
               </div>
@@ -174,7 +174,7 @@ export function DnsManagementPanel() {
           ) : (
             <>
               {credentialError && !editingSelectedProvider ? (
-                <div className="mb-5 border-l-2 border-white bg-white/[0.06] px-4 py-3 text-sm text-zinc-200">
+                <div className="mb-5 border-l-2 border-fg bg-fg/[0.06] px-4 py-3 text-sm text-fg/80">
                   {credentialError}
                 </div>
               ) : null}

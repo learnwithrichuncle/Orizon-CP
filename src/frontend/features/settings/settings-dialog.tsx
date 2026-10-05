@@ -18,22 +18,22 @@ export function SettingsDialog({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 p-4">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-bg/80 p-4">
       <div className="mx-auto flex min-h-full items-center justify-center">
-        <section className={`flex max-h-[calc(100vh-2rem)] w-full ${width} flex-col border border-white/15 bg-black`}>
-          <header className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3.5">
-            <h2 className="text-lg tracking-[-0.03em] text-white">{title}</h2>
+        <section className={`flex max-h-[calc(100vh-2rem)] w-full ${width} flex-col border border-fg/20 bg-bg`}>
+          <header className="flex items-center justify-between gap-4 border-b border-fg/10 px-6 py-4">
+            <h2 className="text-base font-bold tracking-tight text-fg">{title}</h2>
             <button
               type="button"
-              className="inline-flex h-9 w-9 items-center justify-center border border-white/15 text-zinc-400 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white"
+              className="text-fg/40 transition hover:text-fg"
               onClick={onClose}
               title="Close"
               aria-label="Close"
             >
-              <AppIcon icon={Cancel01Icon} size={16} />
+              <AppIcon icon={Cancel01Icon} size={18} />
             </button>
           </header>
-          <div className="min-h-0 overflow-y-auto p-4">{children}</div>
+          <div className="min-h-0 overflow-y-auto p-6">{children}</div>
         </section>
       </div>
     </div>

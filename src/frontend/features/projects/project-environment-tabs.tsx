@@ -14,11 +14,11 @@ function environmentTabTone({
   validTarget: boolean;
   activeTarget: boolean;
 }) {
-  if (activeTarget) return "scale-[1.04] border-cyan-300 bg-cyan-300 text-black shadow-[0_0_28px_rgba(103,232,249,0.28)]";
-  if (validTarget) return "animate-pulse border-dashed border-cyan-300/60 bg-cyan-300/[0.06] text-cyan-100";
-  if (source) return "border-white/10 bg-white/[0.02] text-zinc-600 opacity-50";
-  if (selected) return "border-white bg-white text-black";
-  return "border-white/15 text-zinc-400 hover:border-white/35 hover:bg-white/[0.05] hover:text-white";
+  if (activeTarget) return "border-accent bg-accent text-bg";
+  if (validTarget) return "border-dashed border-accent/60 bg-accent/10 text-accent";
+  if (source) return "border-fg/10 bg-fg/[0.02] text-fg/30 opacity-40";
+  if (selected) return "border-accent bg-accent text-bg";
+  return "border-fg/15 bg-fg/[0.03] text-fg/60 hover:border-fg/30 hover:bg-fg/5 hover:text-fg";
 }
 
 export function ProjectEnvironmentTabs({
@@ -58,10 +58,10 @@ export function ProjectEnvironmentTabs({
 
   return (
     <div className="mb-5">
-      <div className={`overflow-hidden font-mono text-[9px] uppercase tracking-[0.14em] text-cyan-300 transition-all ${draggingService ? "mb-2 max-h-8 opacity-100" : "max-h-0 opacity-0"}`}>
+      <div className={`overflow-hidden font-mono text-[9px] uppercase tracking-wider text-accent transition-all ${draggingService ? "mb-2 max-h-8 opacity-100" : "max-h-0 opacity-0"}`}>
         Drop {draggingService?.name ?? "the service"} onto another environment
       </div>
-      <div className="flex items-center gap-2 overflow-x-auto border-b border-white/10 pb-3">
+      <div className="flex items-center gap-2 overflow-x-auto border-b border-fg/10 pb-3">
         {environments.map((environment) => {
           const selected = environment.id === selectedEnvironmentId;
           const serviceCount = serviceCounts.get(environment.id) ?? 0;
@@ -74,7 +74,7 @@ export function ProjectEnvironmentTabs({
             <button
               key={environment.id}
               type="button"
-              className={`inline-flex h-9 shrink-0 items-center gap-2 border px-3 text-sm transition-all ${environmentTabTone({ selected, source, validTarget: validDropTarget, activeTarget: activeDropTarget })}`}
+              className={`inline-flex h-9 shrink-0 items-center gap-2 border px-3 font-mono text-[11px] uppercase tracking-wider transition ${environmentTabTone({ selected, source, validTarget: validDropTarget, activeTarget: activeDropTarget })}`}
               onClick={() => onSelect(environment.id)}
               onDragEnter={(event) => dragOver(event, environment.id)}
               onDragOver={(event) => dragOver(event, environment.id)}
@@ -92,11 +92,11 @@ export function ProjectEnvironmentTabs({
               <AppIcon icon={Layers01Icon} size={14} />
               {movingHere ? "Moving…" : activeDropTarget ? `Move to ${environment.name}` : environment.name}
               {environment.isDefault ? (
-                <span className={`font-mono text-[8px] uppercase tracking-[0.12em] ${selected ? "text-zinc-500" : "text-zinc-600"}`}>
+                <span className={`text-[8px] uppercase tracking-wider ${selected ? "text-bg/70" : "text-fg/40"}`}>
                   default
                 </span>
               ) : null}
-              <span className={`font-mono text-[9px] ${selected ? "text-zinc-500" : "text-zinc-600"}`}>
+              <span className={`text-[9px] ${selected ? "text-bg/70" : "text-fg/40"}`}>
                 {serviceCount}
               </span>
             </button>
@@ -105,7 +105,7 @@ export function ProjectEnvironmentTabs({
 
         <button
           type="button"
-          className="inline-flex h-9 shrink-0 items-center gap-2 border border-dashed border-white/20 px-3 text-sm text-zinc-500 transition hover:border-white/40 hover:bg-white/[0.05] hover:text-white"
+          className="inline-flex h-9 shrink-0 items-center gap-2 border border-dashed border-fg/20 px-3 font-mono text-[11px] uppercase tracking-wider text-fg/40 transition hover:border-fg/40 hover:bg-fg/5 hover:text-fg"
           onClick={onCreate}
         >
           <AppIcon icon={Add01Icon} size={14} />

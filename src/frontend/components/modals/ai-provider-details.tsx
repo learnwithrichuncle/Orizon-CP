@@ -32,10 +32,10 @@ export function AiProviderDetails({
           <img src={provider.logoUrl} alt="" className="max-h-9 max-w-11 object-contain" />
         </span>
         <div>
-          <h2 className="text-2xl tracking-[-0.03em] text-white">{provider.name}</h2>
+          <h2 className="text-2xl tracking-[-0.03em] text-fg">{provider.name}</h2>
           <div className="mt-2 flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.16em]">
-            <span className={`h-1.5 w-1.5 ${connected ? "bg-emerald-400" : "border border-zinc-600"}`} />
-            <span className={connected ? "text-emerald-300" : "text-zinc-500"}>
+            <span className={`h-1.5 w-1.5 ${connected ? "bg-accent/10" : "border border-fg/15"}`} />
+            <span className={connected ? "text-accent" : "text-fg/60"}>
               {connected ? "Connected" : "Not connected"}
             </span>
           </div>
@@ -65,13 +65,13 @@ export function AiProviderDetails({
         </div>
       </div>
 
-      <div className="mt-auto max-w-xl border-t border-white/10 pt-5">
+      <div className="mt-auto max-w-xl border-t border-fg/10 pt-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <div className="text-sm text-zinc-200">
+            <div className="text-sm text-fg/80">
               {isDefaultModel ? "Default model" : "Use as default"}
             </div>
-            <div className="mt-1 text-xs text-zinc-500">
+            <div className="mt-1 text-xs text-fg/60">
               {isDefaultModel
                 ? `${provider.name} ${model} is used by default.`
                 : "Use this provider and model for new AI requests."}
@@ -81,13 +81,13 @@ export function AiProviderDetails({
             type="button"
             className={
               isDefaultModel
-                ? "inline-flex min-h-10 w-fit items-center justify-center gap-2 border border-amber-400/40 bg-amber-400/10 px-4 text-sm text-amber-200"
-                : "inline-flex min-h-10 w-fit items-center justify-center gap-2 bg-white px-4 text-sm text-black transition hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50"
+                ? "inline-flex min-h-10 w-fit items-center justify-center gap-2 border border-accent/40 bg-accent/10 px-4 text-sm text-accent"
+                : "inline-flex min-h-10 w-fit items-center justify-center gap-2 bg-fg px-4 text-sm text-bg transition hover:bg-fg/5 disabled:cursor-not-allowed disabled:opacity-50"
             }
             onClick={onSetDefaultModel}
             disabled={updating || isDefaultModel}
           >
-            <AppIcon icon={StarIcon} size={14} className={isDefaultModel ? "fill-amber-300" : ""} />
+            <AppIcon icon={StarIcon} size={14} className={isDefaultModel ? "fill-accent" : ""} />
             {isDefaultModel ? "Default" : "Set as default"}
           </button>
         </div>

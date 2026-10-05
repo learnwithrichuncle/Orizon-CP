@@ -1,7 +1,7 @@
 import { CheckmarkCircle02Icon, FileCodeIcon } from "@hugeicons/core-free-icons";
 import { useEffect, useMemo, useState } from "react";
 import { api, type FunctionSource } from "../../api";
-import { AppIcon, FieldLabel, shellButton } from "../../components/ui/primitives";
+import { AppIcon, FieldLabel, btn } from "../../components/ui/primitives";
 import { functionRuntimeFileNames, type FunctionRuntime } from "../../../core/service-functions";
 import { FunctionCodeAiPanel } from "./function-code-ai-panel";
 import { FunctionSourceEditor } from "./function-source-editor";
@@ -63,42 +63,48 @@ export function FunctionSourcePanel({
       const result = await api.updateFunctionSource(serviceId, draft);
       nextSource = result.source;
     });
-    if (!nextSource) return;
-    setSource(nextSource);
-    setDraft({ runtime: nextSource.runtime, sourceCode: nextSource.sourceCode });
+    const updated = nextSource as FunctionSource | null;
+    if (!updated) return;
+    setSource(updated);
+    setDraft({ runtime: updated.runtime, sourceCode: updated.sourceCode });
   }
 
   if (loading) {
     return (
-      <div className="grid min-h-[420px] place-items-center border border-zinc-800 bg-zinc-950/50">
-        <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-500">Loading function source...</div>
+      <div className="grid min-h-[420px] place-items-center border border-fg/10 bg-fg/[0.02]">
+        <div className="font-mono text-[11px] uppercase tracking-wider text-fg/40">Loading function source...</div>
       </div>
     );
   }
 
   if (error) {
-    return <div className="border border-rose-500/25 bg-rose-950/20 px-4 py-3 text-sm text-rose-200">{error}</div>;
+    return <div className="border-l-2 border-fg bg-fg/5 px-4 py-3 text-xs font-mono text-fg">✕ {error}</div>;
   }
 
   return (
     <div className="flex min-h-0 flex-col space-y-5">
-      <section className="border border-zinc-800 bg-zinc-950/50 p-5">
+      <section className="border border-fg/10 bg-fg/[0.03] p-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
             <div className="flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center border border-zinc-800 bg-zinc-900 text-[#7fe3dd]">
+              <span className="grid h-10 w-10 place-items-center border border-accent text-accent">
                 <AppIcon icon={FileCodeIcon} size={20} />
               </span>
               <div className="min-w-0">
-                <h2 className="truncate font-hero text-xl font-bold tracking-tight text-zinc-100">{serviceName}</h2>
-                <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-500">
+                <h2 className="truncate text-xl font-bold tracking-tight text-fg">{serviceName}</h2>
+                <div className="mt-1 font-mono text-[10px] uppercase tracking-wider text-fg/40">
                   {functionRuntimeFileNames[draft.runtime]}
                 </div>
               </div>
             </div>
           </div>
-          <button type="button" className={shellButton("primary")} onClick={() => void saveSource()} disabled={!dirty || busy === "source"}>
-            <AppIcon icon={CheckmarkCircle02Icon} size={16} />
+          <button
+            type="button"
+            className={btn("primary")}
+            onClick={() => void saveSource()}
+            disabled={!dirty || busy === "source"}
+          >
+            <AppIcon icon={CheckmarkCircle02Icon} size={15} />
             Save source
           </button>
         </div>
@@ -115,7 +121,7 @@ export function FunctionSourcePanel({
               className="w-full min-w-[220px] md:w-64"
             />
           </div>
-          <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-500">
+          <div className="font-mono text-[10px] uppercase tracking-wider text-fg/40">
             {source?.updatedAt ? `Saved ${new Date(source.updatedAt).toLocaleString()}` : ""}
           </div>
         </div>

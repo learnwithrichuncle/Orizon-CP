@@ -6,7 +6,7 @@ import {
   Settings01Icon
 } from "@hugeicons/core-free-icons";
 import type { GitHubStatus, R2SettingsStatus, ToolCheck } from "../../api";
-import { AppIcon } from "../../components/ui/primitives";
+import { AppIcon, btn } from "../../components/ui/primitives";
 import type { SystemSettingsTab } from "../settings/settings-pages";
 
 type DomainSettingsSummary = {
@@ -23,16 +23,9 @@ type SetupTodo = {
   icon: unknown;
   title: string;
   detail: string;
-  tone: "amber" | "rose" | "cyan";
   actionLabel: string;
   onAction: () => void;
 };
-
-function todoToneClass(tone: SetupTodo["tone"]) {
-  if (tone === "rose") return "bg-white/[0.07] text-white";
-  if (tone === "amber") return "bg-white/[0.04] text-zinc-200";
-  return "bg-black/20 text-zinc-300";
-}
 
 export function SetupTodoList({
   domainSettings,
@@ -60,7 +53,6 @@ export function SetupTodoList({
       icon: Globe02Icon,
       title: "Add dashboard domain",
       detail: "Serve OrizonCP from a hostname instead of only the server IP.",
-      tone: "cyan",
       actionLabel: "Set domain",
       onAction: () => onOpenSettings("root-domain")
     });
@@ -70,7 +62,6 @@ export function SetupTodoList({
       icon: Globe02Icon,
       title: "Finish dashboard DNS",
       detail: `${dashboardHostname} is saved, but DNS has not resolved to this server yet.`,
-      tone: "amber",
       actionLabel: "View DNS",
       onAction: () => onOpenSettings("root-domain")
     });
@@ -82,7 +73,6 @@ export function SetupTodoList({
       icon: Globe02Icon,
       title: "Add wildcard root domain",
       detail: "Generate service hostnames like api.pilot.example.com automatically.",
-      tone: "cyan",
       actionLabel: "Set wildcard",
       onAction: () => onOpenSettings("root-domain")
     });
@@ -92,7 +82,6 @@ export function SetupTodoList({
       icon: Globe02Icon,
       title: "Finish wildcard DNS",
       detail: `*.${rootDomain} is saved, but the wildcard record is not active yet.`,
-      tone: "amber",
       actionLabel: "View DNS",
       onAction: () => onOpenSettings("root-domain")
     });
@@ -104,7 +93,6 @@ export function SetupTodoList({
       icon: GithubIcon,
       title: githubStatus?.mode === "app" ? "Install GitHub App" : "Connect GitHub",
       detail: githubStatus?.mode === "app" ? "The app is configured, but it is not installed on any repositories." : "Connect GitHub to browse repos, branches, and directories.",
-      tone: "amber",
       actionLabel: githubStatus?.mode === "app" && githubStatus.installUrl ? "Install app" : "Open setup",
       onAction: () => {
         if (githubStatus?.mode === "app" && githubStatus.installUrl) {
@@ -122,7 +110,6 @@ export function SetupTodoList({
       icon: CloudUploadIcon,
       title: "Connect R2 backups",
       detail: "Store R2 credentials in OrizonCP so database backups can upload.",
-      tone: "cyan",
       actionLabel: "Set storage",
       onAction: () => onOpenSettings("storage")
     });
@@ -134,7 +121,6 @@ export function SetupTodoList({
       icon: Settings01Icon,
       title: "Fix host tools",
       detail: brokenTools.map((tool) => tool.name).join(", "),
-      tone: "rose",
       actionLabel: "Open settings",
       onAction: () => onOpenSettings()
     });
@@ -143,36 +129,36 @@ export function SetupTodoList({
   if (todos.length === 0) return null;
 
   return (
-    <section className="border border-white/10 bg-black/25">
-      <div className="flex flex-wrap items-center justify-between gap-3 p-4">
+    <section className="border border-fg/10 bg-fg/[0.03]">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-5">
         <div>
-          <div className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-zinc-500">Setup checklist</div>
-          <div className="mt-1 text-sm text-zinc-300">
-            {todos.length} item{todos.length === 1 ? "" : "s"} still need attention.
+          <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg/40">Setup checklist</div>
+          <div className="mt-1 text-sm font-bold text-fg">
+            {todos.length} item{todos.length === 1 ? "" : "s"} need attention
           </div>
         </div>
-        <div className="inline-flex items-center gap-2 rounded-full border border-white/15 px-2.5 py-1.5 font-mono text-[8px] font-semibold uppercase tracking-[0.14em] text-zinc-400">
+        <div className="inline-flex items-center gap-2 border border-accent/40 bg-accent/10 px-2.5 py-1 font-mono text-[9px] font-semibold uppercase tracking-wider text-accent">
           <AppIcon icon={AlertCircleIcon} size={13} />
           Action needed
         </div>
       </div>
 
-      <ul className="border-t border-white/10">
+      <ul className="border-t border-fg/10">
         {todos.map((todo) => (
-          <li key={todo.key} className={`border-b border-white/10 last:border-b-0 ${todoToneClass(todo.tone)}`}>
-            <div className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <li key={todo.key} className="border-b border-fg/10 p-4 last:border-b-0">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex min-w-0 items-start gap-3">
-                <div className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full border border-current/20 bg-black/20">
+                <div className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center border border-fg/20 bg-fg/[0.03] text-fg/60">
                   <AppIcon icon={todo.icon} size={14} />
                 </div>
                 <div className="min-w-0">
-                  <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em]">{todo.title}</div>
-                  <p className="mt-1 text-xs leading-5 text-zinc-400">{todo.detail}</p>
+                  <div className="font-mono text-[10px] font-semibold uppercase tracking-wider text-fg">{todo.title}</div>
+                  <p className="mt-0.5 text-xs leading-5 text-fg/60">{todo.detail}</p>
                 </div>
               </div>
               <button
                 type="button"
-                className="w-fit shrink-0 border border-current/25 bg-black/20 px-2.5 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] transition hover:bg-white hover:text-black"
+                className={btn("secondary")}
                 onClick={todo.onAction}
               >
                 {todo.actionLabel}

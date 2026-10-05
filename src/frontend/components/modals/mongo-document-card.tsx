@@ -32,13 +32,13 @@ function formatMongoValue(value: unknown, type: string) {
 }
 
 function valueClass(value: unknown, type: string) {
-  if (value === null || value === undefined) return "text-zinc-600";
+  if (value === null || value === undefined) return "text-fg/40";
   if (type === "objectId") return "text-orange-400";
   if (type === "date") return "text-sky-400";
-  if (type === "array" || type === "object") return "text-violet-300";
-  if (typeof value === "number") return "text-amber-300";
+  if (type === "array" || type === "object") return "text-accent";
+  if (typeof value === "number") return "text-accent";
   if (typeof value === "boolean") return "text-fuchsia-300";
-  return "text-emerald-400";
+  return "text-accent";
 }
 
 function sourceValue(value: unknown, type: string) {
@@ -65,11 +65,11 @@ export function mongoDocumentSource(columns: DatabaseColumn[], row: DatabaseRow)
 
 function iconButtonClass(tone: "neutral" | "danger" | "success" = "neutral") {
   const toneClass = tone === "danger"
-    ? "text-rose-300 hover:border-rose-500/40 hover:bg-rose-500/10"
+    ? "text-fg hover:border-accent/30 hover:bg-accent/10"
     : tone === "success"
-      ? "text-emerald-300 hover:border-emerald-500/40 hover:bg-emerald-500/10"
-      : "text-zinc-400 hover:border-zinc-600 hover:bg-zinc-900 hover:text-zinc-100";
-  return `grid h-8 w-8 place-items-center border border-zinc-800 bg-zinc-950 transition disabled:opacity-50 ${toneClass}`;
+      ? "text-accent hover:border-accent/30 hover:bg-accent/10"
+      : "text-fg/60 hover:border-fg/15 hover:bg-bg hover:text-fg/80";
+  return `grid h-8 w-8 place-items-center border border-fg/15 bg-bg transition disabled:opacity-50 ${toneClass}`;
 }
 
 export function MongoDocumentCard({
@@ -97,11 +97,11 @@ export function MongoDocumentCard({
   }
 
   return (
-    <div className="relative border border-zinc-700 bg-zinc-950 px-4 py-4 pr-28 font-mono text-sm leading-6">
+    <div className="relative border border-fg/15 bg-bg px-4 py-4 pr-28 font-mono text-sm leading-6">
       <div className="absolute right-3 top-3 flex items-center gap-2">
         {confirmingDelete ? (
           <>
-            <span className="mr-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-400">Confirm delete?</span>
+            <span className="mr-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-fg/60">Confirm delete?</span>
             <button type="button" className={iconButtonClass("success")} onClick={() => void confirmDelete()} disabled={busy === "delete"} title="Yes" aria-label="Confirm delete">
               <AppIcon icon={CheckmarkCircle02Icon} size={14} />
             </button>
@@ -126,7 +126,7 @@ export function MongoDocumentCard({
         const value = row[key];
         return (
           <div key={key} className="grid min-w-0 grid-cols-[max-content_minmax(0,1fr)] gap-3">
-            <div className="min-w-0 truncate text-zinc-100">{key}:</div>
+            <div className="min-w-0 truncate text-fg/80">{key}:</div>
             <div className={`min-w-0 truncate ${valueClass(value, type)}`} title={formatMongoValue(value, type)}>
               {formatMongoValue(value, type)}
             </div>

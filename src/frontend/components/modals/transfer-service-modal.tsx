@@ -2,6 +2,7 @@ import { FolderOpenIcon } from "@hugeicons/core-free-icons";
 import { useEffect, useMemo, useState } from "react";
 import { api, type ProjectCard } from "../../api";
 import { Dropdown } from "../ui/dropdown";
+import { FieldLabel, btn } from "../ui/primitives";
 import { ModalShell } from "./modal-shell";
 
 type TransferServiceModalProps = {
@@ -86,22 +87,20 @@ export function TransferServiceModal({
       width="max-w-md"
       minHeight="min-h-0"
       bodyClassName="min-h-0 flex-1"
-      variant="monochrome"
     >
       <div className="space-y-4">
         <div>
-          <p className="mb-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">Destination project</p>
+          <FieldLabel>Destination project</FieldLabel>
           <Dropdown
             value={targetProjectId}
             options={projectOptions}
             onChange={setTargetProjectId}
             disabled={loading || busy || projectOptions.length === 0}
             placeholder={loading ? "Loading projects..." : "Select project"}
-            variant="monochrome"
             size="compact"
             className="[&>button]:!h-9"
           />
-          <div className="mt-2 text-xs leading-5 text-zinc-500">
+          <div className="mt-2 text-xs leading-5 text-fg/60">
             {selectedProject
               ? `${serviceName} will move to ${selectedProject.name}.`
               : projectOptions.length > 0
@@ -110,17 +109,31 @@ export function TransferServiceModal({
           </div>
         </div>
 
-        <div className="border border-white/10 bg-white/[0.02] px-3 py-2.5 text-xs leading-5 text-zinc-500">
+        <div className="border border-fg/10 bg-fg/[0.03] p-3 text-xs leading-5 text-fg/60">
           The service lands in the destination project's production environment. Deployments, variables, domains, backups, and runtime state stay with it.
         </div>
 
-        {error ? <div className="border border-rose-500/30 bg-rose-500/10 px-3 py-2.5 text-xs text-rose-200">{error}</div> : null}
+        {error ? (
+          <div className="border-l-2 border-fg bg-fg/5 px-3 py-2 text-xs font-mono text-fg">
+            ✕ {error}
+          </div>
+        ) : null}
 
-        <div className="flex flex-wrap justify-end gap-2 border-t border-white/10 pt-4">
-          <button type="button" className="inline-flex h-9 items-center justify-center border border-white/15 px-3.5 text-sm text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white disabled:opacity-40" onClick={onClose} disabled={busy}>
+        <div className="flex flex-wrap justify-end gap-3 border-t border-fg/10 pt-4">
+          <button
+            type="button"
+            className={btn("ghost")}
+            onClick={onClose}
+            disabled={busy}
+          >
             Cancel
           </button>
-          <button type="button" className="inline-flex h-9 items-center justify-center bg-white px-4 text-sm text-black transition hover:bg-zinc-200 disabled:opacity-40" onClick={() => void submitTransfer()} disabled={busy || loading || !targetProjectId}>
+          <button
+            type="button"
+            className={btn("primary")}
+            onClick={() => void submitTransfer()}
+            disabled={busy || loading || !targetProjectId}
+          >
             {busy ? "Moving…" : "Move service"}
           </button>
         </div>

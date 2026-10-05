@@ -40,7 +40,7 @@ export function SvgsPage() {
   }, [icons]);
 
   return (
-    <main className="relative min-h-dvh overflow-hidden bg-zinc-950 px-5 py-8 text-zinc-100 sm:px-8 lg:px-12">
+    <main className="relative min-h-dvh overflow-hidden bg-bg px-5 py-8 text-fg/80 sm:px-8 lg:px-12">
       <div aria-hidden className="hero-noise pointer-events-none absolute inset-0" />
       <div
         aria-hidden
@@ -48,11 +48,11 @@ export function SvgsPage() {
       />
 
       <div className="relative z-10 mx-auto flex max-w-7xl flex-col gap-8">
-        <header className="flex flex-col gap-4 border-b border-zinc-800 pb-6 md:flex-row md:items-end md:justify-between">
+        <header className="flex flex-col gap-4 border-b border-fg/15 pb-6 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.24em] text-[#7fe3dd]">Icon Gallery</p>
-            <h1 className="mt-3 font-hero text-5xl tracking-tight text-zinc-50 md:text-7xl">SVGs</h1>
-            <p className="mt-3 max-w-2xl text-sm text-zinc-400">
+            <h1 className="mt-3 font-hero text-5xl tracking-tight text-fg/80 md:text-7xl">SVGs</h1>
+            <p className="mt-3 max-w-2xl text-sm text-fg/60">
               Checked-in framework and database SVGs served by OrizonCP.
             </p>
           </div>
@@ -63,7 +63,7 @@ export function SvgsPage() {
         </header>
 
         {error ? (
-          <div className="border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">{error}</div>
+          <div className="border border-accent/30 bg-accent/10 px-4 py-3 text-sm text-accent">{error}</div>
         ) : null}
 
         <IconSection title="Frameworks" icons={groupedIcons.framework} />
@@ -76,9 +76,9 @@ export function SvgsPage() {
 function IconSection({ icons, title }: { icons: FrameworkIconAsset[]; title: string }) {
   return (
     <section className="flex flex-col gap-4">
-      <div className="flex items-center justify-between border-b border-zinc-900 pb-2">
-        <h2 className="font-hero text-2xl tracking-tight text-zinc-100">{title}</h2>
-        <span className="font-mono text-xs uppercase tracking-[0.18em] text-zinc-500">{icons.length}</span>
+      <div className="flex items-center justify-between border-b border-fg/15 pb-2">
+        <h2 className="font-hero text-2xl tracking-tight text-fg/80">{title}</h2>
+        <span className="font-mono text-xs uppercase tracking-[0.18em] text-fg/60">{icons.length}</span>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
@@ -88,15 +88,15 @@ function IconSection({ icons, title }: { icons: FrameworkIconAsset[]; title: str
             href={icon.logoUrl ?? undefined}
             target="_blank"
             rel="noreferrer"
-            className="group flex min-h-32 flex-col gap-4 border border-zinc-800 bg-zinc-950/70 p-4 transition hover:border-[#4FB8B2]/45 hover:bg-zinc-900/80"
+            className="group flex min-h-32 flex-col gap-4 border border-fg/15 bg-bg/70 p-4 transition hover:border-[#4FB8B2]/45 hover:bg-bg/80"
           >
             <div className="grid grid-cols-2 gap-2">
               <IconPreview icon={icon} tone="dark" />
               <IconPreview icon={icon} tone="light" />
             </div>
             <div className="min-w-0 text-left">
-              <div className="truncate text-sm font-semibold text-zinc-100">{icon.name}</div>
-              <div className="mt-1 truncate font-mono text-[11px] text-zinc-500">{icon.slug}.svg</div>
+              <div className="truncate text-sm font-semibold text-fg/80">{icon.name}</div>
+              <div className="mt-1 truncate font-mono text-[11px] text-fg/60">{icon.slug}.svg</div>
             </div>
           </a>
         ))}
@@ -112,8 +112,8 @@ function IconPreview({ icon, tone }: { icon: FrameworkIconAsset; tone: "dark" | 
     <div
       className={
         isDark
-          ? "grid h-16 place-items-center border border-zinc-700 bg-zinc-950 p-3"
-          : "grid h-16 place-items-center border border-zinc-300 bg-zinc-100 p-3"
+          ? "grid h-16 place-items-center border border-fg/15 bg-bg p-3"
+          : "grid h-16 place-items-center border border-fg/15 bg-fg/5 p-3"
       }
     >
       {icon.logoUrl ? (
@@ -124,7 +124,7 @@ function IconPreview({ icon, tone }: { icon: FrameworkIconAsset; tone: "dark" | 
           loading="lazy"
         />
       ) : (
-        <span className={isDark ? "font-mono text-xs text-zinc-400" : "font-mono text-xs text-zinc-600"}>
+        <span className={isDark ? "font-mono text-xs text-fg/60" : "font-mono text-xs text-fg/40"}>
           {iconFallback(icon.name)}
         </span>
       )}

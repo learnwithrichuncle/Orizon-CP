@@ -115,38 +115,38 @@ export function OnboardingSuccessPage() {
   }, [dashboardDnsActive, dashboardHostname, runtime?.publicUrl]);
 
   return (
-    <main className="relative isolate min-h-dvh overflow-hidden bg-black text-white">
+    <main className="relative isolate min-h-dvh overflow-hidden bg-bg text-fg">
       <div
         aria-hidden
         className="hero-noise pointer-events-none absolute inset-0"
       />
       <div className="relative z-10 grid min-h-dvh lg:grid-cols-[minmax(360px,0.82fr)_minmax(560px,1.18fr)]">
-        <section className="relative flex min-h-[480px] flex-col overflow-hidden border-b border-white/10 px-6 py-7 sm:px-10 lg:min-h-dvh lg:border-b-0 lg:border-r lg:px-16 lg:py-8">
+        <section className="relative flex min-h-[480px] flex-col overflow-hidden border-b border-fg/10 px-6 py-7 sm:px-10 lg:min-h-dvh lg:border-b-0 lg:border-r lg:px-16 lg:py-8">
           <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center border border-white/20 bg-white/10">
+            <span className="grid h-10 w-10 place-items-center border border-fg/20 bg-fg/10">
               <BrandMark className="h-[18px] w-[18px] brightness-0 invert" />
             </span>
             <div>
               <div className="font-hero text-sm tracking-[-0.02em]">
                 orizoncp
               </div>
-              <div className="mt-0.5 font-mono text-[8px] uppercase tracking-[0.25em] text-zinc-500">
+              <div className="mt-0.5 font-mono text-[8px] uppercase tracking-[0.25em] text-fg/60">
                 Control plane
               </div>
             </div>
           </div>
 
           <div className="relative z-10 my-auto py-16">
-            <span className="grid h-16 w-16 place-items-center bg-white text-black shadow-[0_0_60px_rgba(255,255,255,0.12)]">
+            <span className="grid h-16 w-16 place-items-center bg-fg text-bg ">
               <AppIcon icon={CheckmarkSquare02Icon} size={27} />
             </span>
-            <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-500">
+            <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.2em] text-fg/60">
               Setup complete · 05 / 05
             </p>
             <h1 className="mt-3 max-w-sm font-hero text-4xl leading-tight tracking-[-0.055em] sm:text-5xl">
               OrizonCP is ready.
             </h1>
-            <p className="mt-5 max-w-sm text-sm leading-6 text-zinc-400">
+            <p className="mt-5 max-w-sm text-sm leading-6 text-fg/60">
               Your control plane is configured and ready for its first
               deployment.
             </p>
@@ -154,36 +154,36 @@ export function OnboardingSuccessPage() {
 
           <div
             aria-hidden
-            className="pointer-events-none absolute -bottom-56 -left-40 h-[540px] w-[540px] rounded-full border border-white/[0.06]"
+            className="pointer-events-none absolute -bottom-56 -left-40 h-[540px] w-[540px] border border-fg/[0.06]"
           >
-            <span className="absolute inset-20 rounded-full border border-white/[0.08]" />
-            <span className="absolute inset-40 rounded-full border border-white/10" />
+            <span className="absolute inset-20 border border-fg/[0.08]" />
+            <span className="absolute inset-40 border border-fg/10" />
           </div>
         </section>
 
-        <section className="bg-zinc-950 px-5 py-10 sm:px-10 lg:h-dvh lg:overflow-y-auto lg:px-12 lg:py-12">
+        <section className="bg-bg px-5 py-10 sm:px-10 lg:h-dvh lg:overflow-y-auto lg:px-12 lg:py-12">
           <div className="w-full max-w-2xl">
             <div className="mb-7 flex items-end justify-between gap-4">
               <div>
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-zinc-500">
+                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-fg/60">
                   Flight check
                 </p>
                 <h2 className="mt-2 font-hero text-2xl tracking-[-0.04em]">
                   Configuration summary
                 </h2>
               </div>
-              <span className="border border-white/15 px-3 py-1.5 font-mono text-[8px] uppercase tracking-[0.14em] text-zinc-400">
+              <span className="border border-fg/15 px-3 py-1.5 font-mono text-[8px] uppercase tracking-[0.14em] text-fg/60">
                 Saved
               </span>
             </div>
 
             {error ? (
-              <div className="mb-5 border-l-2 border-white bg-white/10 px-4 py-3 text-sm text-white">
+              <div className="mb-5 border-l-2 border-fg bg-fg/10 px-4 py-3 text-sm text-fg">
                 {error}
               </div>
             ) : null}
 
-            <div className="border-t border-white/10">
+            <div className="border-t border-fg/10">
               {loading ? (
                 Array.from({ length: 6 }).map((_, index) => (
                   <OnboardingSuccessSummarySkeleton key={index} />
@@ -280,19 +280,10 @@ export function OnboardingSuccessPage() {
               type="button"
               disabled={loading}
               onClick={() => window.location.assign(dashboardUrl)}
-              className="group mt-8 flex h-14 w-full items-center justify-between bg-white px-5 text-left text-black transition hover:bg-zinc-200 disabled:opacity-50"
+              className="group mt-8 flex h-12 w-full items-center justify-between border border-accent/40 bg-accent/15 px-6 font-mono text-[11px] font-bold uppercase tracking-widest text-accent transition hover:bg-accent/25 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <span>
-                <span className="block font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">
-                  Setup saved
-                </span>
-                <span className="mt-0.5 block text-sm">
-                  Open {dashboardDnsActive ? "custom domain" : "dashboard"}
-                </span>
-              </span>
-              <span className="grid h-8 w-8 place-items-center bg-black/10 transition-transform group-hover:translate-x-1">
-                <AppIcon icon={ArrowRight02Icon} size={16} />
-              </span>
+              <span>{loading ? "Loading..." : `Open ${dashboardDnsActive ? "custom domain" : "dashboard"}`}</span>
+              <AppIcon icon={ArrowRight02Icon} size={16} className="transition-transform group-hover:translate-x-1" />
             </button>
           </div>
         </section>

@@ -7,53 +7,53 @@ import { useMemo } from "react";
 import type { FunctionRuntime } from "../../../core/service-functions";
 
 const functionSourceHighlightStyle = HighlightStyle.define([
-  { tag: tags.comment, color: "#71717a" },
-  { tag: tags.string, color: "#34d399" },
-  { tag: [tags.number, tags.bool, tags.null], color: "#f59e0b" },
-  { tag: tags.propertyName, color: "#f4f4f5" },
-  { tag: tags.keyword, color: "#e879f9" },
-  { tag: tags.function(tags.variableName), color: "#f4f4f5" },
-  { tag: tags.punctuation, color: "#71717a" }
+  { tag: tags.comment, color: "rgba(233, 237, 240, 0.4)" },
+  { tag: tags.string, color: "var(--color-accent)" },
+  { tag: [tags.number, tags.bool, tags.null], color: "var(--color-accent)" },
+  { tag: tags.propertyName, color: "var(--color-fg)" },
+  { tag: tags.keyword, color: "rgba(233, 237, 240, 0.7)" },
+  { tag: tags.function(tags.variableName), color: "var(--color-fg)" },
+  { tag: tags.punctuation, color: "rgba(233, 237, 240, 0.4)" }
 ]);
 
 const functionSourceEditorTheme = EditorView.theme(
   {
     "&": {
-      backgroundColor: "#09090b",
-      color: "#f4f4f5",
+      backgroundColor: "var(--color-bg)",
+      color: "var(--color-fg)",
       fontSize: "13px"
     },
     "&.cm-focused": {
       outline: "none"
     },
     ".cm-scroller": {
-      backgroundColor: "#09090b",
+      backgroundColor: "var(--color-bg)",
       fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace"
     },
     ".cm-content": {
       padding: "14px",
-      caretColor: "#f4f4f5",
+      caretColor: "var(--color-fg)",
       minHeight: "100%"
     },
     ".cm-line": {
       padding: "0"
     },
     ".cm-cursor": {
-      borderLeftColor: "#f4f4f5"
+      borderLeftColor: "var(--color-fg)"
     },
     ".cm-placeholder": {
-      color: "#71717a"
+      color: "rgba(233, 237, 240, 0.4)"
     },
     ".cm-selectionBackground, &.cm-focused .cm-selectionBackground": {
-      backgroundColor: "rgba(255, 255, 255, 0.14)"
+      backgroundColor: "rgba(233, 237, 240, 0.1)"
     },
     ".cm-activeLine": {
-      backgroundColor: "rgba(39, 39, 42, 0.42)"
+      backgroundColor: "rgba(233, 237, 240, 0.05)"
     },
     ".cm-gutters": {
-      borderRight: "1px solid #27272a",
-      backgroundColor: "#09090b",
-      color: "#71717a"
+      borderRight: "1px solid rgba(233, 237, 240, 0.1)",
+      backgroundColor: "var(--color-bg)",
+      color: "rgba(233, 237, 240, 0.4)"
     }
   },
   { dark: true }
@@ -98,7 +98,7 @@ export function FunctionSourceEditor({
   }, [disabled, runtime]);
 
   return (
-    <div className="overflow-hidden border border-white/15 bg-zinc-950" style={{ height }}>
+    <div className="overflow-hidden border border-fg/15 bg-bg" style={{ height }}>
       <CodeMirror
         value={value}
         height="100%"
@@ -106,7 +106,7 @@ export function FunctionSourceEditor({
         extensions={extensions}
         onChange={onChange}
         theme="dark"
-        className="bg-zinc-950 [&_.cm-content]:bg-zinc-950 [&_.cm-editor]:bg-zinc-950 [&_.cm-scroller]:bg-zinc-950"
+        className="bg-bg [&_.cm-content]:bg-bg [&_.cm-editor]:bg-bg [&_.cm-scroller]:bg-bg"
       />
     </div>
   );

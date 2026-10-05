@@ -16,26 +16,26 @@ export function MaintenanceDockerStorage({
   const reclaimableSize = info?.docker.reclaimableBytes ?? 0;
 
   return (
-    <div className="border border-white/10 bg-black">
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-white/10 px-4 py-3.5">
+    <div className="border border-fg/10 bg-bg">
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-fg/10 px-4 py-3.5">
         <div>
-          <h3 className="text-sm text-zinc-100">Docker storage</h3>
-          <p className="mt-1 text-xs text-zinc-600">
+          <h3 className="text-sm text-fg/80">Docker storage</h3>
+          <p className="mt-1 text-xs text-fg/40">
             {available ? `${formatBytes(totalSize)} tracked across ${rows.length} categories` : "Docker metrics are not available"}
           </p>
         </div>
         <div className="text-right">
-          <div className={`font-mono text-[9px] uppercase tracking-[0.16em] ${reclaimableSize > 0 ? "text-amber-300" : available ? "text-emerald-300" : "text-rose-300"}`}>
+          <div className={`font-mono text-[9px] uppercase tracking-[0.16em] ${reclaimableSize > 0 ? "text-accent" : available ? "text-accent" : "text-fg"}`}>
             {available ? `${formatBytes(reclaimableSize)} reclaimable` : "Unavailable"}
           </div>
-          <div className="mt-1 font-mono text-[9px] uppercase tracking-[0.14em] text-zinc-700">
+          <div className="mt-1 font-mono text-[9px] uppercase tracking-[0.14em] text-fg/20">
             {available ? `${rows.reduce((total, row) => total + (row.activeCount ?? 0), 0)} active objects` : info?.docker.error}
           </div>
         </div>
       </div>
 
       {rows.length > 0 ? (
-        <div className="hidden grid-cols-[130px_90px_minmax(120px,1fr)_90px_110px] gap-3 border-b border-white/10 px-4 py-2 font-mono text-[8px] uppercase tracking-[0.14em] text-zinc-700 md:grid">
+        <div className="hidden grid-cols-[130px_90px_minmax(120px,1fr)_90px_110px] gap-3 border-b border-fg/10 px-4 py-2 font-mono text-[8px] uppercase tracking-[0.14em] text-fg/20 md:grid">
           <span>Type</span>
           <span>Objects</span>
           <span>Relative size</span>
@@ -52,30 +52,30 @@ export function MaintenanceDockerStorage({
 
             return (
               <div key={row.type} className="grid gap-3 px-4 py-3 md:grid-cols-[130px_90px_minmax(120px,1fr)_90px_110px] md:items-center">
-                <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-400">{row.type}</div>
-                <div className="font-mono text-[10px] text-zinc-500">
-                  <span className="text-zinc-300">{row.activeCount ?? "—"}</span>
-                  <span className="px-1 text-zinc-700">/</span>
+                <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-fg/60">{row.type}</div>
+                <div className="font-mono text-[10px] text-fg/60">
+                  <span className="text-fg/80">{row.activeCount ?? "—"}</span>
+                  <span className="px-1 text-fg/20">/</span>
                   {row.totalCount ?? "—"}
                 </div>
-                <div className="h-1 bg-white/10">
-                  <div className="h-full bg-white/70" style={{ width: `${percent}%` }} />
+                <div className="h-1 bg-fg/10">
+                  <div className="h-full bg-fg/70" style={{ width: `${percent}%` }} />
                 </div>
-                <div className="text-left font-mono text-[10px] text-zinc-300 md:text-right">
+                <div className="text-left font-mono text-[10px] text-fg/80 md:text-right">
                   {formatBytes(row.sizeBytes)}
                 </div>
-                <div className={`text-left font-mono text-[10px] md:text-right ${reclaimable > 0 ? "text-amber-200" : "text-zinc-600"}`}>
+                <div className={`text-left font-mono text-[10px] md:text-right ${reclaimable > 0 ? "text-accent" : "text-fg/40"}`}>
                   {formatBytes(row.reclaimableBytes)}
                 </div>
               </div>
             );
           })
         ) : (
-          <div className="grid min-h-28 place-items-center px-4 py-8 text-sm text-zinc-500">{loading ? "Loading Docker usage..." : "No Docker usage data."}</div>
+          <div className="grid min-h-28 place-items-center px-4 py-8 text-sm text-fg/60">{loading ? "Loading Docker usage..." : "No Docker usage data."}</div>
         )}
       </div>
       {info?.docker.available && info.docker.reclaimableBytes > 0 ? (
-        <div className="border-t border-white/10 px-4 py-3 text-xs leading-relaxed text-zinc-600">
+        <div className="border-t border-fg/10 px-4 py-3 text-xs leading-relaxed text-fg/40">
           Reclaimable is Docker's estimate. Active services may still retain shared image layers after cleanup.
         </div>
       ) : null}

@@ -23,7 +23,7 @@ function GitHubField({
 }) {
   return (
     <label className="block">
-      <span className="mb-2 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-zinc-400">
+      <span className="mb-2 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-fg/80">
         {label}
       </span>
       <input
@@ -32,7 +32,7 @@ function GitHubField({
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         spellCheck={false}
-        className="h-12 w-full bg-zinc-900 px-3.5 font-mono text-xs text-white outline-none transition placeholder:text-zinc-600 focus:bg-zinc-800"
+        className="h-12 w-full bg-fg/5 px-3.5 font-mono text-xs text-fg outline-none transition placeholder:text-fg/80 focus:bg-fg/5"
       />
     </label>
   );
@@ -74,28 +74,28 @@ export function GitHubConfiguration({
   return (
     <div>
       {connected ? (
-        <div className="flex items-start gap-3 bg-zinc-900/50 p-4">
-          <span className="mt-0.5 grid h-7 w-7 flex-none place-items-center bg-white text-black">
+        <div className="flex items-start gap-3 bg-fg/5/50 p-4">
+          <span className="mt-0.5 grid h-7 w-7 flex-none place-items-center bg-fg text-bg">
             <AppIcon icon={CheckmarkCircle02Icon} size={14} />
           </span>
           <div>
-            <p className="text-sm font-bold text-white">GitHub connected</p>
-            <p className="mt-1 text-xs leading-5 text-zinc-400">
+            <p className="text-sm font-bold text-fg">GitHub connected</p>
+            <p className="mt-1 text-xs leading-5 text-fg/80">
               Finish onboarding, then choose repositories from system settings.
             </p>
           </div>
         </div>
       ) : (
-        <div className="bg-zinc-900/30 p-5">
+        <div className="bg-fg/5/30 p-5">
           <div className="flex items-start gap-4">
-            <span className="grid h-10 w-10 flex-none place-items-center bg-white/5 text-white">
+            <span className="grid h-10 w-10 flex-none place-items-center bg-fg/5 text-fg">
               <AppIcon icon={GithubIcon} size={18} />
             </span>
             <div>
-              <p className="text-sm font-bold text-white">
+              <p className="text-sm font-bold text-fg">
                 Create a GitHub App automatically
               </p>
-              <p className="mt-1.5 text-xs leading-5 text-zinc-500">
+              <p className="mt-1.5 text-xs leading-5 text-fg/80">
                 Automatically generate and configure credentials.
               </p>
             </div>
@@ -104,7 +104,7 @@ export function GitHubConfiguration({
             type="button"
             onClick={() => void connect()}
             disabled={connecting}
-            className="mt-5 flex h-12 w-full items-center justify-center gap-2 bg-white font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-black transition hover:bg-zinc-200 disabled:opacity-60"
+            className="mt-5 flex h-12 w-full items-center justify-center gap-2 bg-fg font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-bg transition hover:bg-fg/5 disabled:opacity-60"
           >
             <AppIcon icon={GithubIcon} size={15} />
             {connecting ? "Connecting…" : "Connect GitHub"}
@@ -113,23 +113,23 @@ export function GitHubConfiguration({
       )}
 
       {error ? (
-        <div className="mt-4 border-l-2 border-white bg-white/10 px-4 py-3 text-xs text-zinc-200">
+        <div className="mt-4 border-l-2 border-fg bg-fg/10 px-4 py-3 text-xs text-fg/80">
           {error}
         </div>
       ) : null}
 
       <div className="my-6 flex items-center gap-3">
-        <span className="h-px flex-1 bg-white/10" />
-        <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-zinc-600">
+        <span className="h-px flex-1 bg-fg/10" />
+        <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-fg/80">
           Or
         </span>
-        <span className="h-px flex-1 bg-white/10" />
+        <span className="h-px flex-1 bg-fg/10" />
       </div>
 
       <button
         type="button"
         onClick={() => setManualOpen((open) => !open)}
-        className="flex items-center gap-2 font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-zinc-400 transition hover:text-white"
+        className="flex items-center gap-2 font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-fg/80 transition hover:text-fg"
       >
         <AppIcon icon={LinkSquare02Icon} size={13} />
         {manualOpen ? "Hide manual credentials" : "Enter credentials manually"}
@@ -167,7 +167,7 @@ export function GitHubConfiguration({
             onChange={(githubAppSlug) => update({ githubAppSlug })}
           />
           <label className="block">
-            <span className="mb-2 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-zinc-400">
+            <span className="mb-2 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-fg/80">
               App private key
             </span>
             <textarea
@@ -177,14 +177,14 @@ export function GitHubConfiguration({
               }
               placeholder="-----BEGIN PRIVATE KEY-----"
               spellCheck={false}
-              className="min-h-32 w-full resize-y bg-zinc-900 px-3.5 py-3 font-mono text-xs text-white outline-none transition placeholder:text-zinc-600 focus:bg-zinc-800"
+              className="min-h-32 w-full resize-y bg-fg/5 px-3.5 py-3 font-mono text-xs text-fg outline-none transition placeholder:text-fg/80 focus:bg-fg/5"
             />
           </label>
           <a
             href="https://github.com/settings/apps/new"
             target="_blank"
             rel="noreferrer"
-            className="flex h-11 items-center justify-center gap-2 border border-zinc-800 bg-zinc-900/50 font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+            className="flex h-11 items-center justify-center gap-2 border border-fg/15 bg-fg/5/50 font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-fg/80 transition hover:bg-fg/5 hover:text-fg"
           >
             <AppIcon icon={LinkSquare02Icon} size={13} />
             Open GitHub App settings

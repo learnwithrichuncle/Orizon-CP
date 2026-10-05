@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { AddSquareIcon } from "@hugeicons/core-free-icons";
 import type { ToolCheck } from "../../api";
 import { BrandMark } from "../ui/brand-mark";
-import { AppIcon, shellButton } from "../ui/primitives";
+import { AppIcon, btn } from "../ui/primitives";
 
 export function RootHeader({
   tools,
@@ -12,29 +12,32 @@ export function RootHeader({
   onCreateProject?: () => void;
 }) {
   return (
-    <header className="border-b border-neutral-200 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-5 py-4 md:px-8">
+    <header className="border-b border-fg/10 bg-bg">
+      <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-4 px-6">
         <Link to="/" className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#4FB8B2]/10 text-[#4FB8B2]">
-            <BrandMark />
+          <div className="grid h-8 w-8 place-items-center border border-accent text-accent">
+            <BrandMark className="h-4 w-4" />
           </div>
           <div>
-            <div className="text-base font-medium tracking-tight text-neutral-950">OrizonCP</div>
-            <div className="text-sm text-neutral-500">projects, services, domains</div>
+            <div className="text-sm font-bold tracking-tight text-fg">OrizonCP</div>
+            <div className="font-mono text-[10px] uppercase tracking-wider text-fg/40">Control Plane</div>
           </div>
         </Link>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <div className="hidden items-center gap-2 md:flex">
             {tools.slice(0, 4).map((tool) => (
-              <div key={tool.name} className="inline-flex items-center gap-2 rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm text-neutral-600">
-                <span className={`h-2 w-2 rounded-full ${tool.ok ? "bg-neutral-950" : "bg-neutral-300"}`} />
+              <div
+                key={tool.name}
+                className="inline-flex items-center gap-2 border border-fg/10 bg-fg/[0.03] px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-fg/60"
+              >
+                <span className={`h-1.5 w-1.5 ${tool.ok ? "bg-accent" : "border border-fg/40"}`} />
                 {tool.name}
               </div>
             ))}
           </div>
           {onCreateProject ? (
-            <button type="button" className={shellButton("primary")} onClick={onCreateProject}>
-              <AppIcon icon={AddSquareIcon} size={16} />
+            <button type="button" className={btn("primary")} onClick={onCreateProject}>
+              <AppIcon icon={AddSquareIcon} size={15} />
               New project
             </button>
           ) : null}

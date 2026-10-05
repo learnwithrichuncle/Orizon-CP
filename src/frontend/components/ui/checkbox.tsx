@@ -7,8 +7,7 @@ export function Checkbox({
   disabled = false,
   children,
   className = "",
-  boxClassName = "",
-  variant = "default"
+  boxClassName = ""
 }: {
   checked: boolean;
   label: string;
@@ -19,17 +18,8 @@ export function Checkbox({
   boxClassName?: string;
   variant?: "default" | "monochrome";
 }) {
-  const checkedClass =
-    variant === "monochrome"
-      ? "border-white bg-white text-black"
-      : "border-[#4FB8B2] bg-[#4FB8B2] text-zinc-950";
-  const focusClass =
-    variant === "monochrome"
-      ? "peer-focus-visible:ring-white/40"
-      : "peer-focus-visible:ring-[#4FB8B2]/50";
-
   return (
-    <label className={`group inline-flex select-none items-center gap-2 ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${className}`}>
+    <label className={`group inline-flex select-none items-center gap-2 ${disabled ? "cursor-not-allowed opacity-40" : "cursor-pointer"} ${className}`}>
       <input
         type="checkbox"
         checked={checked}
@@ -40,10 +30,10 @@ export function Checkbox({
       />
       <span
         aria-hidden="true"
-        className={`grid h-4 w-4 place-items-center border transition peer-focus-visible:ring-2 ${focusClass} ${
+        className={`grid h-4 w-4 place-items-center border transition peer-focus-visible:ring-1 peer-focus-visible:ring-accent ${
           checked
-            ? checkedClass
-            : "border-zinc-700 bg-zinc-950 text-transparent group-hover:border-zinc-500 group-hover:bg-zinc-900"
+            ? "border-accent bg-accent text-bg"
+            : "border-fg/20 bg-transparent text-transparent group-hover:border-fg/40 group-hover:bg-fg/5"
         } ${boxClassName}`}
       >
         <span className={`h-1.5 w-2.5 -rotate-45 border-b-2 border-l-2 border-current transition ${checked ? "scale-100 opacity-100" : "scale-50 opacity-0"}`} />

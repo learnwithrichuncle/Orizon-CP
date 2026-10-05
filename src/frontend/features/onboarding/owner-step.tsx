@@ -17,7 +17,7 @@ function OwnerField({
 }) {
   return (
     <label className="block">
-      <span className="mb-2 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-zinc-400">
+      <span className="mb-2 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-fg/80">
         {label}
       </span>
       <input
@@ -27,7 +27,7 @@ function OwnerField({
         required
         autoComplete={autoComplete}
         placeholder={placeholder}
-        className="h-12 w-full bg-zinc-900 px-3.5 text-[15px] text-white outline-none transition placeholder:text-zinc-600 focus:bg-zinc-800"
+        className="h-12 w-full bg-fg/5 px-3.5 text-[15px] text-fg outline-none transition placeholder:text-fg/80 focus:bg-fg/5"
       />
     </label>
   );

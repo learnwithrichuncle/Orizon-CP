@@ -8,17 +8,25 @@ const runtimeModeOptions: Array<{ value: RuntimeMode; label: string; icon: unkno
   { value: "worker", label: "Worker", icon: WorkflowSquare07Icon }
 ];
 
-export function RuntimeModeControl({ value, onChange, disabled = false }: { value: RuntimeMode; onChange: (mode: RuntimeMode) => void; disabled?: boolean }) {
+export function RuntimeModeControl({
+  value,
+  onChange,
+  disabled = false
+}: {
+  value: RuntimeMode;
+  onChange: (mode: RuntimeMode) => void;
+  disabled?: boolean;
+}) {
   return (
     <div className="inline-grid w-full max-w-sm grid-cols-2 gap-2">
       {runtimeModeOptions.map((mode) => (
         <button
           key={mode.value}
           type="button"
-          className={`inline-flex h-9 min-w-0 items-center justify-center gap-2 px-3 text-xs transition disabled:opacity-40 ${
+          className={`inline-flex h-9 min-w-0 items-center justify-center gap-2 px-3 font-mono text-[11px] uppercase tracking-wider transition disabled:opacity-40 ${
             value === mode.value
-              ? "bg-white text-black"
-              : "border border-white/15 text-zinc-400 hover:border-white/35 hover:bg-white/[0.05] hover:text-white"
+              ? "bg-accent text-bg font-semibold"
+              : "border border-fg/20 text-fg/60 hover:border-fg/40 hover:bg-fg/5 hover:text-fg"
           }`}
           disabled={disabled}
           onClick={() => onChange(mode.value)}

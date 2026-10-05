@@ -3,7 +3,7 @@ import { useState } from "react";
 import type { ClipboardEvent } from "react";
 import { api, type EnvVar } from "../../api";
 import { AutocompleteInput } from "../../components/ui/autocomplete-input";
-import { AppIcon, FormInput } from "../../components/ui/primitives";
+import { AppIcon, FormInput, btn } from "../../components/ui/primitives";
 import { EnvVarRow } from "../../components/modals/env-var-row";
 import { EnvPasteDialog } from "./env-paste-dialog";
 import { EnvPlainTextEditor } from "./env-plain-text-editor";
@@ -66,30 +66,29 @@ export function ServiceVariablesPanel({
   }
 
   return (
-    <section className="mx-auto max-w-5xl overflow-hidden border border-white/10 bg-black">
-      <header className="flex flex-col gap-4 border-b border-white/10 px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
+    <section className="mx-auto max-w-5xl overflow-hidden border border-fg/10 bg-bg">
+      <header className="flex flex-col gap-4 border-b border-fg/10 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-xl tracking-[-0.03em] text-white">Variables</h2>
-          <p className="mt-1.5 text-sm text-zinc-500">
+          <h2 className="text-xl font-bold tracking-tight text-fg">Variables</h2>
+          <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-fg/40">
             {env.length} {env.length === 1 ? "variable" : "variables"}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {!plainTextOpen ? (
             <div className="relative min-w-52 flex-1 sm:flex-none">
-              <AppIcon icon={Search01Icon} size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" />
+              <AppIcon icon={Search01Icon} size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-fg/40" />
               <FormInput
                 value={envSearch}
                 onChange={(event) => setEnvSearch(event.target.value)}
                 placeholder="Search"
-                variant="monochrome"
-                className="!h-9 w-full border-white/15 bg-white/[0.03] pl-9 text-sm sm:w-56"
+                className="!h-9 w-full pl-9 font-mono text-xs sm:w-56"
               />
             </div>
           ) : null}
           <button
             type="button"
-            className="inline-flex h-9 items-center justify-center gap-2 border border-white/15 px-3.5 text-sm text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white disabled:opacity-50"
+            className={btn("secondary")}
             onClick={() => {
               setNewEnvOpen(false);
               setPlainTextOpen((current) => !current);
@@ -97,13 +96,13 @@ export function ServiceVariablesPanel({
             disabled={busy === "env"}
           >
             <AppIcon icon={PencilEdit02Icon} size={14} />
-            {plainTextOpen ? "List view" : "Edit as plain"}
+            {plainTextOpen ? "List view" : "Edit plain"}
           </button>
           {!plainTextOpen ? (
             <>
               <button
                 type="button"
-                className="inline-flex h-9 items-center justify-center gap-2 border border-white/15 px-3.5 text-sm text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white"
+                className={btn("secondary")}
                 onClick={() => setPasteOpen(true)}
               >
                 <AppIcon icon={CopyIcon} size={14} />
@@ -111,7 +110,7 @@ export function ServiceVariablesPanel({
               </button>
               <button
                 type="button"
-                className="inline-flex h-9 items-center justify-center gap-2 bg-white px-3.5 text-sm text-black transition hover:bg-zinc-200"
+                className={btn("primary")}
                 onClick={() => setNewEnvOpen((current) => !current)}
               >
                 <AppIcon icon={Add01Icon} size={14} />
@@ -134,7 +133,7 @@ export function ServiceVariablesPanel({
 
       {!plainTextOpen && newEnvOpen ? (
         <form
-          className="border-b border-white/10 bg-white/[0.02] p-4 sm:px-5"
+          className="border-b border-fg/10 bg-fg/[0.02] p-4 sm:px-5"
           autoComplete="off"
           onSubmit={(event) => {
             event.preventDefault();
@@ -146,8 +145,8 @@ export function ServiceVariablesPanel({
           }}
         >
           <div className="grid gap-3 lg:grid-cols-[minmax(180px,0.8fr)_minmax(260px,1.4fr)_auto] lg:items-end">
-            <div className="space-y-1.5">
-              <label htmlFor="new-variable-key" className="block text-xs text-zinc-500">Key</label>
+            <div className="space-y-1">
+              <label htmlFor="new-variable-key" className="block font-mono text-[9px] uppercase tracking-wider text-fg/40">Key</label>
               <FormInput
                 id="new-variable-key"
                 value={envForm.key}
@@ -156,12 +155,11 @@ export function ServiceVariablesPanel({
                 placeholder="KEY"
                 autoComplete="off"
                 required
-                variant="monochrome"
-                className="!h-9 border-white/15 bg-black font-mono text-xs uppercase"
+                className="!h-9 font-mono text-xs uppercase"
               />
             </div>
-            <div className="space-y-1.5">
-              <label htmlFor="new-variable-value" className="block text-xs text-zinc-500">Value</label>
+            <div className="space-y-1">
+              <label htmlFor="new-variable-value" className="block font-mono text-[9px] uppercase tracking-wider text-fg/40">Value</label>
               <AutocompleteInput
                 id="new-variable-value"
                 type="text"
@@ -171,21 +169,20 @@ export function ServiceVariablesPanel({
                 suggestions={suggestions}
                 placeholder="VALUE"
                 autoComplete="off"
-                variant="monochrome"
-                className="!h-9 border-white/15 bg-black font-mono text-xs"
+                className="!h-9 font-mono text-xs"
               />
             </div>
             <div className="flex items-center gap-2">
               <button
                 type="submit"
-                className="inline-flex h-9 items-center justify-center bg-white px-3.5 text-sm text-black transition hover:bg-zinc-200 disabled:opacity-50"
+                className={btn("primary")}
                 disabled={busy === "env"}
               >
                 Save
               </button>
               <button
                 type="button"
-                className="inline-flex h-9 items-center justify-center border border-white/15 px-3.5 text-sm text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05]"
+                className={btn("ghost")}
                 onClick={() => setNewEnvOpen(false)}
               >
                 Cancel
@@ -198,15 +195,15 @@ export function ServiceVariablesPanel({
       {!plainTextOpen ? (
         <div>
           {filteredEnv.length > 0 ? (
-            <div className="hidden grid-cols-[minmax(180px,0.8fr)_minmax(260px,1.4fr)_104px] gap-4 border-b border-white/10 bg-white/[0.02] px-5 py-2.5 font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600 lg:grid">
+            <div className="hidden grid-cols-[minmax(180px,0.8fr)_minmax(260px,1.4fr)_104px] gap-4 border-b border-fg/10 bg-fg/[0.02] px-5 py-2.5 font-mono text-[9px] uppercase tracking-wider text-fg/40 lg:grid">
               <span>Key</span>
               <span>Value</span>
               <span className="text-right">Actions</span>
             </div>
           ) : null}
           {filteredEnv.length === 0 ? (
-            <div className="px-5 py-12 text-center text-sm text-zinc-600">
-              {envSearch ? "No matching variables" : "No variables"}
+            <div className="px-5 py-12 text-center font-mono text-xs text-fg/40">
+              {envSearch ? "No matching variables" : "No variables configured"}
             </div>
           ) : (
             filteredEnv.map((item) => (

@@ -20,10 +20,10 @@ function RuntimeField({
   return (
     <label className="block">
       <span className="mb-2 flex items-center justify-between gap-3">
-        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-zinc-300">
+        <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-fg/80">
           {label}
         </span>
-        <span className="font-mono text-[8px] uppercase tracking-[0.12em] text-zinc-600">
+        <span className="font-mono text-[8px] uppercase tracking-[0.12em] text-fg/80">
           {envName}
         </span>
       </span>
@@ -34,7 +34,7 @@ function RuntimeField({
         placeholder={placeholder}
         required={required}
         spellCheck={false}
-        className="h-12 w-full bg-zinc-900 px-3.5 font-mono text-xs text-white outline-none transition placeholder:text-zinc-600 focus:bg-zinc-800"
+        className="h-12 w-full bg-fg/5 px-3.5 font-mono text-xs text-fg outline-none transition placeholder:text-fg/80 focus:bg-fg/5"
       />
     </label>
   );
@@ -51,10 +51,10 @@ export function RuntimeConfigurationFields({
     <div className="space-y-9">
       <section>
         <div className="mb-5 flex items-center gap-3">
-          <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-zinc-500">
+          <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-fg/80">
             Core runtime
           </span>
-          <span className="h-px flex-1 bg-white/10" />
+          <span className="h-px flex-1 bg-fg/10" />
         </div>
         <div className="grid gap-y-5">
           <RuntimeField
@@ -92,10 +92,10 @@ export function RuntimeConfigurationFields({
 
       <section>
         <div className="mb-5 flex items-center gap-3">
-          <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-zinc-500">
+          <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] text-fg/80">
             Build &amp; routing
           </span>
-          <span className="h-px flex-1 bg-white/10" />
+          <span className="h-px flex-1 bg-fg/10" />
         </div>
         <div className="grid gap-y-5">
           <RuntimeField
@@ -136,12 +136,12 @@ export function RuntimeConfigurationFields({
         </div>
       </section>
 
-      <label className="flex cursor-pointer items-start justify-between gap-5 border-y border-white/10 py-5">
+      <label className="flex cursor-pointer items-start justify-between gap-5 border-y border-fg/10 py-5">
         <span>
-          <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-200">
+          <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-fg/80">
             Dry-run deployments
           </span>
-          <span className="mt-1.5 block max-w-sm text-xs leading-5 text-zinc-500">
+          <span className="mt-1.5 block max-w-sm text-xs leading-5 text-fg/80">
             Rehearse host setup without creating real deployments.
           </span>
         </span>
@@ -149,7 +149,7 @@ export function RuntimeConfigurationFields({
           type="checkbox"
           checked={form.deployDryRun}
           onChange={(event) => update({ deployDryRun: event.target.checked })}
-          className="mt-1 h-4 w-4 flex-none appearance-none border border-zinc-600 bg-transparent transition checked:bg-white checked:border-white"
+          className="mt-1 h-4 w-4 flex-none appearance-none border border-fg/15 bg-transparent transition checked:bg-fg checked:border-fg"
         />
       </label>
     </div>

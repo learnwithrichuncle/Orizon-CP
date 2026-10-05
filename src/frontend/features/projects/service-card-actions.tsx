@@ -60,51 +60,51 @@ export function ServiceCardActions({
     >
       <button
         type="button"
-        className="grid h-8 w-8 place-items-center border border-white/10 text-zinc-500 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white"
+        className="grid h-8 w-8 place-items-center border border-fg/20 bg-bg text-fg/60 transition hover:border-fg/40 hover:bg-fg/5 hover:text-fg"
         onClick={() => setOpen((current) => !current)}
         aria-label={`${serviceName} options`}
         aria-haspopup="menu"
         aria-expanded={open}
       >
-        <AppIcon icon={MoreVerticalIcon} size={16} />
+        <AppIcon icon={MoreVerticalIcon} size={15} />
       </button>
 
       {open ? (
         <div
-          className="absolute bottom-full right-0 z-50 mb-2 w-52 border border-white/15 bg-black p-1 shadow-[0_18px_50px_rgba(0,0,0,0.65)]"
+          className="absolute bottom-full right-0 z-50 mb-2 w-48 border border-fg/20 bg-bg p-1"
           role="menu"
         >
-          <div className="border-b border-white/10 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.14em] text-zinc-600">
+          <div className="border-b border-fg/10 px-3 py-1.5 font-mono text-[9px] uppercase tracking-wider text-fg/40">
             {environment.name}
           </div>
           <button
             type="button"
-            className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-xs text-zinc-300 transition hover:bg-white/[0.07] hover:text-white"
+            className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-xs text-fg transition hover:bg-fg/5"
             onClick={() => runAction(onOpen)}
             role="menuitem"
           >
-            <AppIcon icon={ArrowRight02Icon} size={14} className="text-zinc-500" />
+            <AppIcon icon={ArrowRight02Icon} size={14} className="text-fg/40" />
             Open service
           </button>
           {canVisit ? (
             <button
               type="button"
-              className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-xs text-zinc-300 transition hover:bg-white/[0.07] hover:text-white"
+              className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-xs text-fg transition hover:bg-fg/5"
               onClick={() => runAction(onVisit)}
               role="menuitem"
             >
-              <AppIcon icon={ArrowUpRight02Icon} size={14} className="text-zinc-500" />
+              <AppIcon icon={ArrowUpRight02Icon} size={14} className="text-fg/40" />
               Visit service
             </button>
           ) : null}
           <button
             type="button"
-            className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-xs text-zinc-300 transition hover:bg-white/[0.07] hover:text-white disabled:cursor-not-allowed disabled:text-zinc-700"
+            className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-xs text-fg transition hover:bg-fg/5 disabled:cursor-not-allowed disabled:opacity-30"
             onClick={() => runAction(onMoveEnvironment)}
             disabled={!canMoveEnvironment}
             role="menuitem"
           >
-            <AppIcon icon={FolderTransferIcon} size={14} className="text-zinc-500" />
+            <AppIcon icon={FolderTransferIcon} size={14} className="text-fg/40" />
             Move environment
           </button>
         </div>

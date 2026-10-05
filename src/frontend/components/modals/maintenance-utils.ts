@@ -11,9 +11,9 @@ export const safeCleanupTargets = [
 ] satisfies MaintenanceCleanupTarget[];
 
 export function diskTone(percent: number) {
-  if (percent >= 90) return "rose" as const;
-  if (percent >= 80) return "amber" as const;
-  return "teal" as const;
+  if (percent >= 90) return "critical" as const;
+  if (percent >= 80) return "warn" as const;
+  return "ok" as const;
 }
 
 export function healthLabel(info: SystemMaintenanceInfo | null) {

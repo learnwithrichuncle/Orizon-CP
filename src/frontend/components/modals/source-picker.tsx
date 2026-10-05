@@ -33,34 +33,34 @@ export function SourcePickerModal({ open, query, repos, loading, error, onClose,
     >
       <div className="space-y-3">
         <div className="relative">
-          <AppIcon icon={Search01Icon} size={14} className="pointer-events-none absolute left-3 top-[11px] text-zinc-600" />
+          <AppIcon icon={Search01Icon} size={14} className="pointer-events-none absolute left-3 top-[11px] text-fg/40" />
           <FormInput
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
             placeholder="Search repositories"
             variant="monochrome"
-            className="!h-9 border-white/15 bg-black pl-9 text-xs"
+            className="!h-9 border-fg/15 bg-bg pl-9 text-xs"
           />
         </div>
 
-        {error ? <div className="border border-rose-500/30 bg-rose-500/10 px-3 py-2.5 text-xs text-rose-200">{error}</div> : null}
+        {error ? <div className="border border-accent/30 bg-accent/10 px-3 py-2.5 text-xs text-accent">{error}</div> : null}
 
-        <div className="max-h-[380px] overflow-auto border border-white/10 bg-black">
+        <div className="max-h-[380px] overflow-auto border border-fg/10 bg-bg">
           {repos.length === 0 ? (
-            <div className="px-3 py-6 text-center text-xs text-zinc-500">{loading ? "Loading repositories…" : "No repositories found."}</div>
+            <div className="px-3 py-6 text-center text-xs text-fg/60">{loading ? "Loading repositories…" : "No repositories found."}</div>
           ) : (
             sortedRepos.map((repo) => (
               <button
                 key={repo.id}
                 type="button"
-                className="group flex w-full items-center justify-between gap-4 border-b border-white/10 px-3 py-3 text-left transition last:border-b-0 hover:bg-white/[0.05]"
+                className="group flex w-full items-center justify-between gap-4 border-b border-fg/10 px-3 py-3 text-left transition last:border-b-0 hover:bg-fg/5"
                 onClick={() => onSelect(repo)}
               >
                 <div className="min-w-0">
-                  <div className="truncate text-sm text-zinc-200 group-hover:text-white">{repo.name}</div>
-                  <div className="mt-0.5 truncate font-mono text-[9px] tracking-[0.08em] text-zinc-600">{repo.fullName}</div>
+                  <div className="truncate text-sm text-fg/80 group-hover:text-fg">{repo.name}</div>
+                  <div className="mt-0.5 truncate font-mono text-[9px] tracking-[0.08em] text-fg/40">{repo.fullName}</div>
                 </div>
-                <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-zinc-600 group-hover:text-zinc-300">Select</span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-fg/40 group-hover:text-fg/80">Select</span>
               </button>
             ))
           )}

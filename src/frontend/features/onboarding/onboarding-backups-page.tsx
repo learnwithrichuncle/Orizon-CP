@@ -33,9 +33,9 @@ export function OnboardingBackupsPage({
       <OnboardingStepForm
         icon={CloudUploadIcon}
         eyebrow="Step 05 · Resilience"
-        title="Plan your backups"
+        title="Configure Disaster Recovery"
         badge="Final step"
-        description="Configure S3-compatible storage for database backups."
+        description="Provision S3-compatible object storage layer for automated database snapshots."
         error={error}
         submitting={submitting}
         nextLabel="Finish onboarding"

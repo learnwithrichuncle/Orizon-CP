@@ -1,5 +1,6 @@
 import type { DnsProviderId, DnsProviderStatus } from "../../api";
 import { dnsProviders } from "../../components/modals/dns-management-data";
+import { btn } from "../../components/ui/primitives";
 
 export function DomainDnsProviderActions({
   providers,
@@ -22,7 +23,7 @@ export function DomainDnsProviderActions({
           <button
             key={provider.id}
             type="button"
-            className="inline-flex h-8 items-center justify-center gap-2 border border-white/15 px-3 text-xs text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white disabled:opacity-40"
+            className={btn("secondary")}
             disabled={Boolean(busyProviderId)}
             onClick={() => onApply(provider.id)}
           >

@@ -137,16 +137,16 @@ export function ServicePage({
 
   if (error) {
     return (
-      <main className="min-h-dvh bg-black text-white">
+      <main className="min-h-dvh bg-bg text-fg">
         <div className="grid min-h-dvh lg:grid-cols-[260px_minmax(0,1fr)]">
           <ProjectsDashboardSidebar currentUser={currentUser} tools={tools} owner={owner} />
-          <section className="grid min-h-dvh place-items-center bg-zinc-950 px-5 py-12">
-            <div className="w-full max-w-lg border border-white/10 bg-black p-5">
-              <h1 className="text-lg text-zinc-100">Could not load service</h1>
-              <p className="mt-2 text-sm text-rose-200">{error}</p>
+          <section className="grid min-h-dvh place-items-center bg-bg px-5 py-12">
+            <div className="w-full max-w-lg border border-fg/10 bg-bg p-5">
+              <h1 className="text-lg text-fg/80">Could not load service</h1>
+              <p className="mt-2 text-sm text-accent">{error}</p>
               <button
                 type="button"
-                className="mt-5 inline-flex h-9 items-center justify-center gap-2 border border-white/15 px-3.5 text-sm text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05]"
+                className="mt-5 inline-flex h-9 items-center justify-center gap-2 border border-fg/15 px-3.5 text-sm text-fg/80 transition hover:border-fg/35 hover:bg-fg/5"
                 onClick={navigateToProject}
               >
                 <AppIcon icon={ArrowLeft01Icon} size={15} />
@@ -165,20 +165,20 @@ export function ServicePage({
 
   if (!service) {
     return (
-      <main className="min-h-dvh bg-black text-white">
+      <main className="min-h-dvh bg-bg text-fg">
         <div className="grid min-h-dvh lg:grid-cols-[260px_minmax(0,1fr)]">
           <ProjectsDashboardSidebar currentUser={currentUser} tools={tools} owner={owner} />
-          <section className="grid min-h-dvh place-items-center bg-zinc-950 px-5 py-12">
-            <div className="w-full max-w-lg border border-white/10 bg-black p-5">
-              <AppIcon icon={CloudServerIcon} size={20} className="text-zinc-600" />
-              <h1 className="mt-4 text-lg text-zinc-100">Service not found</h1>
-              <p className="mt-2 text-sm leading-6 text-zinc-500">
-                There is no service named <span className="font-mono text-zinc-300">{serviceSlug}</span> in this project.
+          <section className="grid min-h-dvh place-items-center bg-bg px-5 py-12">
+            <div className="w-full max-w-lg border border-fg/10 bg-bg p-5">
+              <AppIcon icon={CloudServerIcon} size={20} className="text-fg/40" />
+              <h1 className="mt-4 text-lg text-fg/80">Service not found</h1>
+              <p className="mt-2 text-sm leading-6 text-fg/60">
+                There is no service named <span className="font-mono text-fg/80">{serviceSlug}</span> in this project.
               </p>
               <Link
                 to="/$projectSlug"
                 params={{ projectSlug }}
-                className="mt-5 inline-flex h-9 items-center justify-center gap-2 border border-white/15 px-3.5 text-sm text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05]"
+                className="mt-5 inline-flex h-9 items-center justify-center gap-2 border border-fg/15 px-3.5 text-sm text-fg/80 transition hover:border-fg/35 hover:bg-fg/5"
               >
                 <AppIcon icon={ArrowLeft01Icon} size={15} />
                 Back to project

@@ -43,23 +43,23 @@ export function OnboardingRuntimePage({
       >
         <div className="mb-9 flex items-start justify-between gap-5">
           <div>
-            <div className="mb-4 inline-flex h-10 w-10 items-center justify-center bg-white text-black">
+            <div className="mb-4 inline-flex h-10 w-10 items-center justify-center bg-fg text-bg">
               <AppIcon icon={Settings01Icon} size={18} />
             </div>
-            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-400">
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-fg/80">
               Step 02 · Environment
             </p>
-            <h2 className="mt-2 font-hero text-2xl tracking-[-0.04em] text-white sm:text-3xl">
-              Configure the runtime
+            <h2 className="mt-2 font-hero text-2xl tracking-[-0.04em] text-fg sm:text-3xl">
+              Initialize Host Environment
             </h2>
           </div>
-          <span className="mt-1 bg-white/10 px-3 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-zinc-300">
+          <span className="mt-1 bg-fg/10 px-3 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-fg/80">
             Host settings
           </span>
         </div>
 
-        <p className="mb-8 max-w-md text-sm leading-6 text-zinc-400">
-          Configure local paths and routing behavior.
+        <p className="mb-8 max-w-md text-sm leading-6 text-fg/80">
+          Define core orchestration paths and internal network routing parameters.
         </p>
 
         <RuntimeConfigurationFields form={form} update={update} />
@@ -67,7 +67,7 @@ export function OnboardingRuntimePage({
         {error ? (
           <div
             role="alert"
-            className="mt-6 border-l-2 border-white bg-white/10 px-4 py-3 text-sm text-white"
+            className="mt-6 border-l-2 border-fg bg-fg/10 px-4 py-3 text-sm text-fg"
           >
             {error}
           </div>
@@ -78,7 +78,7 @@ export function OnboardingRuntimePage({
             type="button"
             disabled={submitting}
             onClick={onBack}
-            className="grid h-14 w-14 flex-none place-items-center bg-zinc-900 text-zinc-400 transition hover:bg-zinc-800 hover:text-white disabled:opacity-50"
+            className="grid h-14 w-14 flex-none place-items-center bg-fg/5 text-fg/80 transition hover:bg-fg/5 hover:text-fg disabled:opacity-50"
             aria-label="Back to owner account"
           >
             <AppIcon icon={ArrowLeft01Icon} size={17} />
@@ -86,17 +86,17 @@ export function OnboardingRuntimePage({
           <button
             type="submit"
             disabled={submitting}
-            className="group flex h-14 flex-1 items-center justify-between bg-white px-5 text-left text-black transition hover:bg-zinc-200 disabled:cursor-wait disabled:opacity-60"
+            className="group flex h-14 flex-1 items-center justify-between bg-fg px-5 text-left text-bg transition hover:bg-fg/5 disabled:cursor-wait disabled:opacity-60"
           >
             <span>
-              <span className="block font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-600">
+              <span className="block font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-fg/80">
                 Next: GitHub
               </span>
               <span className="mt-0.5 block text-sm font-bold">
                 Save runtime &amp; continue
               </span>
             </span>
-            <span className="grid h-8 w-8 place-items-center bg-black/10 transition-transform group-hover:translate-x-1">
+            <span className="grid h-8 w-8 place-items-center bg-bg/10 transition-transform group-hover:translate-x-1">
               <AppIcon icon={ArrowRight02Icon} size={16} />
             </span>
           </button>

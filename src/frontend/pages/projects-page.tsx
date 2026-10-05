@@ -232,7 +232,7 @@ export function ProjectsPage() {
 
   return (
     <>
-      <main className="relative min-h-dvh bg-black text-white">
+      <main className="relative min-h-dvh bg-bg text-fg">
         <div className="grid min-h-dvh lg:grid-cols-[260px_minmax(0,1fr)]">
           <ProjectsDashboardSidebar
             currentUser={currentUser}
@@ -240,7 +240,7 @@ export function ProjectsPage() {
             owner={owner}
           />
 
-          <section className="relative min-w-0 bg-zinc-950">
+          <section className="relative min-w-0 bg-bg">
             <div
               aria-hidden
               className="hero-noise pointer-events-none absolute inset-0"
@@ -259,7 +259,7 @@ export function ProjectsPage() {
               />
 
               {error ? (
-                <div className="mt-6 border-l-2 border-white bg-white/10 px-4 py-3 text-sm text-white">
+                <div className="mt-6 border-l-2 border-fg bg-fg/10 px-4 py-3 text-sm text-fg">
                   {error}
                 </div>
               ) : null}

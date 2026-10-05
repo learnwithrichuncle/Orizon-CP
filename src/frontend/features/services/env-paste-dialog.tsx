@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { SettingsDialog } from "../settings/settings-dialog";
+import { btn } from "../../components/ui/primitives";
 import { parseEnvText, type ParsedEnvEntry } from "./env-text-parser";
 
 export function EnvPasteDialog({
@@ -35,8 +36,9 @@ export function EnvPasteDialog({
           if (entries.length === 0 || busy) return;
           void onImport(entries);
         }}
+        className="space-y-4"
       >
-        <label htmlFor="env-paste-value" className="block text-xs text-zinc-500">
+        <label htmlFor="env-paste-value" className="block font-mono text-[9px] uppercase tracking-wider text-fg/40">
           Environment variables
         </label>
         <textarea
@@ -47,10 +49,10 @@ export function EnvPasteDialog({
           autoFocus
           spellCheck={false}
           disabled={busy}
-          className="mt-2 h-64 w-full resize-none border border-white/15 bg-white/[0.03] p-3 font-mono text-xs leading-6 text-zinc-200 outline-none transition placeholder:text-zinc-700 focus:border-white focus:ring-2 focus:ring-white/10 disabled:opacity-50"
+          className="h-64 w-full resize-none border border-fg/20 bg-bg/30 p-3 font-mono text-xs leading-6 text-fg outline-none transition placeholder:text-fg/30 focus:border-accent disabled:opacity-40"
         />
 
-        <div className="mt-3 min-h-5 text-xs text-zinc-500">
+        <div className="min-h-5 font-mono text-xs text-fg/40">
           {text.trim()
             ? entries.length > 0
               ? `${entries.length} valid ${entries.length === 1 ? "variable" : "variables"} detected`
@@ -58,10 +60,10 @@ export function EnvPasteDialog({
             : "Paste the contents of a .env file"}
         </div>
 
-        <div className="mt-5 flex items-center justify-end gap-2 border-t border-white/10 pt-4">
+        <div className="flex items-center justify-end gap-3 border-t border-fg/10 pt-4">
           <button
             type="button"
-            className="inline-flex h-9 items-center justify-center border border-white/15 px-3.5 text-sm text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05] disabled:opacity-50"
+            className={btn("ghost")}
             onClick={onClose}
             disabled={busy}
           >
@@ -69,7 +71,7 @@ export function EnvPasteDialog({
           </button>
           <button
             type="submit"
-            className="inline-flex h-9 items-center justify-center bg-white px-4 text-sm text-black transition hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50"
+            className={btn("primary")}
             disabled={busy || entries.length === 0}
           >
             {busy ? "Importing…" : `Import ${entries.length || ""}`.trim()}

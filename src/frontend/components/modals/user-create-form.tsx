@@ -37,7 +37,7 @@ export function UserCreateForm({ creating, onCreate }: UserCreateFormProps) {
   return (
     <form onSubmit={submit} className="space-y-4">
       <div className="space-y-1.5">
-        <label htmlFor="new-user-email" className="block text-xs text-zinc-400">
+        <label htmlFor="new-user-email" className="block text-xs text-fg/60">
           Email
         </label>
         <FormInput
@@ -49,12 +49,12 @@ export function UserCreateForm({ creating, onCreate }: UserCreateFormProps) {
           disabled={creating}
           autoComplete="email"
           variant="monochrome"
-          className="!h-9 border-white/15 bg-white/[0.03] text-sm"
+          className="!h-9 border-fg/15 bg-fg/[0.03] text-sm"
         />
       </div>
 
       <div className="space-y-1.5">
-        <label htmlFor="new-user-password" className="block text-xs text-zinc-400">
+        <label htmlFor="new-user-password" className="block text-xs text-fg/60">
           Password
         </label>
         <FormInput
@@ -66,16 +66,16 @@ export function UserCreateForm({ creating, onCreate }: UserCreateFormProps) {
           disabled={creating}
           autoComplete="new-password"
           variant="monochrome"
-          className="!h-9 border-white/15 bg-white/[0.03] text-sm"
+          className="!h-9 border-fg/15 bg-fg/[0.03] text-sm"
         />
       </div>
 
-      {error ? <div className="border-l-2 border-rose-400 bg-rose-400/10 px-3 py-2.5 text-xs text-rose-200">{error}</div> : null}
+      {error ? <div className="border-l-2 border-fg/20 bg-fg/5 px-3 py-2.5 text-xs text-accent">{error}</div> : null}
 
-      <div className="flex justify-end border-t border-white/10 pt-4">
+      <div className="flex justify-end border-t border-fg/10 pt-4">
         <button
           type="submit"
-          className="inline-flex h-9 items-center justify-center bg-white px-4 text-sm text-black transition hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex h-9 items-center justify-center bg-fg px-4 text-sm text-bg transition hover:bg-fg/5 disabled:cursor-not-allowed disabled:opacity-50"
           disabled={creating}
         >
           {creating ? "Adding..." : "Add user"}

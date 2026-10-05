@@ -1,6 +1,4 @@
 import {
-  Alert02Icon,
-  CheckmarkCircle02Icon,
   Clock01Icon,
   DatabaseIcon,
   FunctionIcon,
@@ -11,7 +9,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import type { Deployment, Domain, EnvVar, Service } from "../../api";
 import { DeployPlaneIcon } from "../../components/icons/deploy-plane-icon";
-import { AppIcon, FrameworkMark } from "../../components/ui/primitives";
+import { AppIcon, FrameworkMark, StatusPill, btn } from "../../components/ui/primitives";
 import { deploymentIsPending, displayDeploymentStatus } from "../../lib/deployment-status";
 import { formatRelativeTime, formatTime, shortSha } from "../../lib/format";
 import { formatBuildDuration } from "./service-format";
@@ -130,49 +128,31 @@ function warningItems({
 function OverviewStat({ label, value, meta }: OverviewStatProps) {
   return (
     <div className="min-w-0 py-1">
-      <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">{label}</div>
-      <div className="mt-1.5 truncate text-sm text-zinc-200">{value}</div>
-      {meta ? <div className="mt-1 truncate text-xs text-zinc-600">{meta}</div> : null}
+      <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-fg/40">{label}</div>
+      <div className="mt-1 truncate text-sm font-bold text-fg">{value}</div>
+      {meta ? <div className="mt-0.5 truncate font-mono text-[10px] text-fg/40">{meta}</div> : null}
     </div>
   );
 }
 
 function SectionHeader({ icon, title, meta }: { icon: unknown; title: string; meta?: string }) {
   return (
-    <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3.5">
-      <div className="flex min-w-0 items-center gap-2">
-        <AppIcon icon={icon} size={15} className="text-zinc-500" />
-        <h3 className="truncate text-sm text-zinc-200">{title}</h3>
+    <div className="flex items-center justify-between gap-3 border-b border-fg/10 px-5 py-3.5">
+      <div className="flex min-w-0 items-center gap-2.5">
+        <AppIcon icon={icon} size={15} className="text-fg/40" />
+        <h3 className="truncate text-sm font-bold text-fg">{title}</h3>
       </div>
-      {meta ? <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.14em] text-zinc-600">{meta}</span> : null}
+      {meta ? <span className="shrink-0 font-mono text-[9px] uppercase tracking-wider text-fg/40">{meta}</span> : null}
     </div>
   );
 }
 
 function DefinitionRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="grid gap-2 border-b border-white/10 py-2.5 last:border-b-0 sm:grid-cols-[130px_minmax(0,1fr)]">
-      <div className="text-xs text-zinc-600">{label}</div>
-      <div className="min-w-0 truncate font-mono text-xs text-zinc-200">{value}</div>
+    <div className="grid gap-2 border-b border-fg/10 py-2.5 last:border-b-0 sm:grid-cols-[130px_minmax(0,1fr)]">
+      <div className="font-mono text-xs text-fg/40">{label}</div>
+      <div className="min-w-0 truncate font-mono text-xs text-fg">{value}</div>
     </div>
-  );
-}
-
-function StatusIndicator({ status }: { status: string }) {
-  const tone =
-    status === "active" || status === "running" || status === "deployed" || status === "success"
-      ? { text: "text-emerald-300", dot: "bg-emerald-400" }
-      : status === "building" || status === "queued"
-        ? { text: "text-amber-300", dot: "animate-pulse bg-amber-400" }
-        : status === "failed" || status === "crashed"
-          ? { text: "text-rose-300", dot: "bg-rose-400" }
-          : { text: "text-zinc-500", dot: "bg-zinc-600" };
-
-  return (
-    <span className={`inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.14em] ${tone.text}`}>
-      <span className={`h-1.5 w-1.5 ${tone.dot}`} />
-      {status}
-    </span>
   );
 }
 
@@ -206,30 +186,30 @@ export function ServiceOverviewPanel({
   const linkedServices = pageServices.filter((candidate) => candidate.id !== service.id && linkedSlugs.has(candidate.slug));
 
   return (
-    <div className="space-y-4 pb-6">
-      <section className="overflow-hidden border border-white/10 bg-black">
-        <header className="flex flex-col gap-4 border-b border-white/10 px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
+    <div className="space-y-6 pb-6">
+      <section className="border border-fg/10 bg-fg/[0.03]">
+        <header className="flex flex-col gap-4 border-b border-fg/10 p-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex min-w-0 items-center gap-3">
-            <div className="grid h-10 w-10 shrink-0 place-items-center border border-white/15 bg-white/[0.03] p-2">
-              <FrameworkMark framework={service.framework} size={22} fallback={<AppIcon icon={isDatabase ? DatabaseIcon : isFunction ? FunctionIcon : isDockerImage ? PackageIcon : GithubIcon} size={19} className="text-zinc-300" />} />
+            <div className="grid h-10 w-10 shrink-0 place-items-center border border-fg/15 bg-fg/[0.03] p-2">
+              <FrameworkMark framework={service.framework} size={22} fallback={<AppIcon icon={isDatabase ? DatabaseIcon : isFunction ? FunctionIcon : isDockerImage ? PackageIcon : GithubIcon} size={19} className="text-fg/60" />} />
             </div>
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-3">
-                <h2 className="truncate text-xl tracking-[-0.03em] text-zinc-100">{service.name}</h2>
-                <StatusIndicator status={displayDeploymentStatus(service.status)} />
+                <h2 className="truncate text-xl font-bold tracking-tight text-fg">{service.name}</h2>
+                <StatusPill status={displayDeploymentStatus(service.status)} />
               </div>
               {link.href ? (
-                <a className="mt-1 block truncate text-xs text-zinc-500 transition hover:text-white" href={link.href} target="_blank" rel="noreferrer">
+                <a className="mt-1 block truncate text-xs text-fg/60 transition hover:text-fg" href={link.href} target="_blank" rel="noreferrer">
                   {link.label}
                 </a>
               ) : (
-                <div className="mt-1 truncate font-mono text-[10px] text-zinc-600">{link.label}</div>
+                <div className="mt-1 truncate font-mono text-[10px] text-fg/40">{link.label}</div>
               )}
             </div>
           </div>
           <button
             type="button"
-            className="inline-flex h-9 w-fit items-center justify-center gap-2 bg-white px-4 text-sm text-black transition hover:bg-zinc-200 disabled:opacity-50"
+            className={btn("primary")}
             onClick={onDeploy}
             disabled={busy === "deploy"}
           >
@@ -238,51 +218,49 @@ export function ServiceOverviewPanel({
           </button>
         </header>
 
-        <div className="grid gap-x-6 gap-y-4 px-5 py-4 sm:grid-cols-2 xl:grid-cols-4">
-              <OverviewStat label="Source" value={sourceLabel} meta={sourceMeta} />
-              <OverviewStat label="Last deploy" value={service.lastDeployedAt ? formatRelativeTime(service.lastDeployedAt) : "Never"} meta={formatTime(service.lastDeployedAt)} />
-              <OverviewStat label="Environment" value={`${env.length} variable${env.length === 1 ? "" : "s"}`} meta={env.length ? "Configured for deploy" : "No variables yet"} />
-              <OverviewStat
-                label={isDatabase ? "Engine" : isWorker ? "Mode" : "App port"}
-                value={isDatabase ? databaseEngine || "database" : isWorker ? "Worker" : String(service.internalPort)}
-                meta={isDatabase ? `Internal ${service.internalPort}` : isWorker ? "Process health" : `Host ${service.hostPort}`}
-              />
+        <div className="grid gap-x-6 gap-y-4 p-5 sm:grid-cols-2 xl:grid-cols-4">
+          <OverviewStat label="Source" value={sourceLabel} meta={sourceMeta} />
+          <OverviewStat label="Last deploy" value={service.lastDeployedAt ? formatRelativeTime(service.lastDeployedAt) : "Never"} meta={formatTime(service.lastDeployedAt)} />
+          <OverviewStat label="Environment" value={`${env.length} variable${env.length === 1 ? "" : "s"}`} meta={env.length ? "Configured for deploy" : "No variables yet"} />
+          <OverviewStat
+            label={isDatabase ? "Engine" : isWorker ? "Mode" : "App port"}
+            value={isDatabase ? databaseEngine || "database" : isWorker ? "Worker" : String(service.internalPort)}
+            meta={isDatabase ? `Internal ${service.internalPort}` : isWorker ? "Process health" : `Host ${service.hostPort}`}
+          />
         </div>
       </section>
 
       {warnings.length > 0 ? (
-        <section className="border-l-2 border-amber-400 bg-amber-400/[0.08] px-4 py-3">
+        <section className="border-l-2 border-fg bg-fg/5 p-4">
           <div className="grid gap-2 md:grid-cols-2">
             {warnings.map((warning) => (
-              <div key={warning} className="flex items-center gap-2 text-sm text-amber-200">
-                <AppIcon icon={Alert02Icon} size={14} className="shrink-0 text-amber-300" />
-                <span>{warning}</span>
+              <div key={warning} className="flex items-center gap-2 font-mono text-xs text-fg">
+                <span>✕ {warning}</span>
               </div>
             ))}
           </div>
         </section>
       ) : (
-        <section className="border-l-2 border-emerald-400 bg-emerald-400/[0.07] px-4 py-3">
-          <div className="flex items-center gap-2 text-sm text-emerald-200">
-            <AppIcon icon={CheckmarkCircle02Icon} size={15} className="text-emerald-300" />
-            <span>Service health looks good.</span>
+        <section className="border-l-2 border-accent bg-accent/5 p-4">
+          <div className="flex items-center gap-2 font-mono text-xs text-accent">
+            <span>✓ Service health looks good</span>
           </div>
         </section>
       )}
 
-      <section className="border border-white/10 bg-black">
+      <section className="border border-fg/10 bg-fg/[0.03]">
         <SectionHeader icon={PackageIcon} title="Latest Deployment" meta={latestStatus} />
         {latestDeployment ? (
           <div>
-            <div className="grid gap-x-6 gap-y-4 px-4 py-4 sm:grid-cols-3">
+            <div className="grid gap-x-6 gap-y-4 p-5 sm:grid-cols-3">
               <OverviewStat label="Status" value={latestStatus} meta={latestDeployment.trigger} />
               <OverviewStat label={isDockerImage ? "Image" : "Commit"} value={isDockerImage ? latestDeployment.imageTag ?? sourceLabel : shortSha(latestDeployment.commitSha)} meta={isDockerImage ? latestDeployment.trigger : latestDeployment.imageTag ?? "image pending"} />
               <OverviewStat label="Duration" value={latestDuration ?? "Unknown"} meta={formatTime(latestDeployment.createdAt)} />
             </div>
-            <div className="flex flex-wrap gap-2 border-t border-white/10 px-4 py-3">
+            <div className="flex flex-wrap gap-2 border-t border-fg/10 p-4">
               <button
                 type="button"
-                className="inline-flex h-8 items-center justify-center border border-white/15 px-3 text-xs text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05]"
+                className={btn("secondary")}
                 onClick={() => onTabChange("deployments")}
               >
                 View deploy output
@@ -290,7 +268,7 @@ export function ServiceOverviewPanel({
               {latestDeployment.status === "failed" ? (
                 <button
                   type="button"
-                  className="inline-flex h-8 items-center justify-center bg-white px-3 text-xs text-black transition hover:bg-zinc-200 disabled:opacity-50"
+                  className={btn("primary")}
                   onClick={onDeploy}
                   disabled={busy === "deploy"}
                 >
@@ -300,26 +278,26 @@ export function ServiceOverviewPanel({
             </div>
           </div>
         ) : (
-          <div className="px-4 py-8 text-center text-sm text-zinc-600">No deployments yet.</div>
+          <div className="p-8 text-center font-mono text-xs text-fg/40">No deployments yet.</div>
         )}
       </section>
 
-      <div className="grid gap-4 xl:grid-cols-3">
-        <section className="border border-white/10 bg-black">
+      <div className="grid gap-6 xl:grid-cols-3">
+        <section className="border border-fg/10 bg-fg/[0.03]">
           <SectionHeader icon={VariableIcon} title="Environment Readiness" />
-          <div className="space-y-3 p-4">
+          <div className="space-y-4 p-5">
             <OverviewStat label="Configured" value={`${env.length} variable${env.length === 1 ? "" : "s"}`} meta={env.length ? `${env.filter((item) => item.hasValue).length} with values` : "No variables yet"} />
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {env.slice(0, 8).map((item) => (
-                <span key={item.id} className="border border-white/10 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.1em] text-zinc-400">
+                <span key={item.id} className="border border-fg/10 bg-bg px-2 py-1 font-mono text-[9px] uppercase tracking-wider text-fg/60">
                   {item.key}
                 </span>
               ))}
-              {env.length > 8 ? <span className="border border-white/10 px-2 py-1 font-mono text-[9px] text-zinc-500">+{env.length - 8}</span> : null}
+              {env.length > 8 ? <span className="border border-fg/10 bg-bg px-2 py-1 font-mono text-[9px] text-fg/40">+{env.length - 8}</span> : null}
             </div>
             <button
               type="button"
-              className="inline-flex h-8 items-center justify-center border border-white/15 px-3 text-xs text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05]"
+              className={btn("secondary")}
               onClick={() => onTabChange("environment")}
             >
               Edit variables
@@ -327,77 +305,77 @@ export function ServiceOverviewPanel({
           </div>
         </section>
 
-        <section className="border border-white/10 bg-black">
+        <section className="border border-fg/10 bg-fg/[0.03]">
           <SectionHeader icon={Settings01Icon} title="Runtime Config" />
-          <div className="px-4 py-1.5">
-          {isDatabase ? (
-            <div>
-              <DefinitionRow label="Engine" value={databaseEngine || "database"} />
-              <DefinitionRow label="Internal port" value={String(service.internalPort)} />
-              <DefinitionRow label="Host port" value={String(service.hostPort)} />
-              <DefinitionRow label="Public access" value={service.databasePublicEnabled ? "Enabled" : "Disabled"} />
-            </div>
-          ) : isDockerImage ? (
-            <div>
-              <DefinitionRow label="Mode" value={isWorker ? "Background worker" : "Web service"} />
-              <DefinitionRow label="Docker image" value={sourceLabel} />
-              {!isWorker ? <DefinitionRow label="Internal port" value={String(service.internalPort)} /> : null}
-              {!isWorker ? <DefinitionRow label="Host port" value={String(service.hostPort)} /> : null}
-            </div>
-          ) : (
-            <div>
-              <DefinitionRow label="Mode" value={isDatabase ? "Database" : isWorker ? "Background worker" : "Web service"} />
-              <DefinitionRow label="Root directory" value={rootDir} />
-              {!isDatabase ? <DefinitionRow label="Builder" value={buildMethodLabel(service)} /> : null}
-              <DefinitionRow label="Install" value={valueOrAuto(service.installCommand)} />
-              <DefinitionRow label="Prebuild" value={service.prebuildCommand?.trim() || "none"} />
-              <DefinitionRow label="Build" value={valueOrAuto(service.buildCommand)} />
-              <DefinitionRow label="Start" value={valueOrAuto(service.startCommand)} />
-              {!isWorker ? <DefinitionRow label="Static output" value={valueOrAuto(service.staticOutput)} /> : null}
-            </div>
-          )}
+          <div className="px-5 py-2">
+            {isDatabase ? (
+              <div>
+                <DefinitionRow label="Engine" value={databaseEngine || "database"} />
+                <DefinitionRow label="Internal port" value={String(service.internalPort)} />
+                <DefinitionRow label="Host port" value={String(service.hostPort)} />
+                <DefinitionRow label="Public access" value={service.databasePublicEnabled ? "Enabled" : "Disabled"} />
+              </div>
+            ) : isDockerImage ? (
+              <div>
+                <DefinitionRow label="Mode" value={isWorker ? "Background worker" : "Web service"} />
+                <DefinitionRow label="Docker image" value={sourceLabel} />
+                {!isWorker ? <DefinitionRow label="Internal port" value={String(service.internalPort)} /> : null}
+                {!isWorker ? <DefinitionRow label="Host port" value={String(service.hostPort)} /> : null}
+              </div>
+            ) : (
+              <div>
+                <DefinitionRow label="Mode" value={isDatabase ? "Database" : isWorker ? "Background worker" : "Web service"} />
+                <DefinitionRow label="Root directory" value={rootDir} />
+                {!isDatabase ? <DefinitionRow label="Builder" value={buildMethodLabel(service)} /> : null}
+                <DefinitionRow label="Install" value={valueOrAuto(service.installCommand)} />
+                <DefinitionRow label="Prebuild" value={service.prebuildCommand?.trim() || "none"} />
+                <DefinitionRow label="Build" value={valueOrAuto(service.buildCommand)} />
+                <DefinitionRow label="Start" value={valueOrAuto(service.startCommand)} />
+                {!isWorker ? <DefinitionRow label="Static output" value={valueOrAuto(service.staticOutput)} /> : null}
+              </div>
+            )}
           </div>
         </section>
 
-        <section className="border border-white/10 bg-black">
+        <section className="border border-fg/10 bg-fg/[0.03]">
           <SectionHeader icon={DatabaseIcon} title="Linked Services" meta={`${linkedServices.length}`} />
           {linkedServices.length > 0 ? (
-            <div className="divide-y divide-white/10 px-4">
+            <div className="divide-y divide-fg/10 px-5">
               {linkedServices.map((linkedService) => (
                 <div key={linkedService.id} className="flex items-center justify-between gap-3 py-3">
                   <div className="flex min-w-0 items-center gap-2">
-                    <span className="grid h-7 w-7 shrink-0 place-items-center p-1.5">
-                      <FrameworkMark framework={linkedService.framework} size={16} fallback={<AppIcon icon={DatabaseIcon} size={14} className="text-zinc-400" />} />
+                    <span className="grid h-6 w-6 shrink-0 place-items-center p-1">
+                      <FrameworkMark framework={linkedService.framework} size={15} fallback={<AppIcon icon={DatabaseIcon} size={14} className="text-fg/40" />} />
                     </span>
-                    <span className="truncate text-sm text-zinc-200">{linkedService.name}</span>
+                    <span className="truncate text-sm font-medium text-fg">{linkedService.name}</span>
                   </div>
-                  <StatusIndicator status={displayDeploymentStatus(linkedService.status)} />
+                  <StatusPill status={displayDeploymentStatus(linkedService.status)} />
                 </div>
               ))}
             </div>
           ) : (
-            <div className="p-4 text-sm leading-6 text-zinc-600">
-              No <code className="font-mono text-zinc-400">{"${service.variable}"}</code> references detected in this service’s variables.
+            <div className="p-5 font-mono text-xs leading-6 text-fg/40">
+              No <code className="text-fg/60">{"${service.variable}"}</code> references detected.
             </div>
           )}
         </section>
       </div>
 
-      <section className="border border-white/10 bg-black">
+      <section className="border border-fg/10 bg-fg/[0.03]">
         <SectionHeader icon={Clock01Icon} title="Recent Activity" meta={`${deployments.length} deployments`} />
         {deployments.length > 0 ? (
-          <div className="divide-y divide-white/10 px-4">
+          <div className="divide-y divide-fg/10 px-5">
             {deployments.slice(0, 5).map((deployment) => (
-              <div key={deployment.id} className="grid gap-3 py-3 md:grid-cols-[120px_minmax(0,1fr)_120px_110px] md:items-center">
-                <StatusIndicator status={displayDeploymentStatus(deployment.status)} />
-                <div className="min-w-0 truncate font-mono text-xs text-zinc-300">{isDockerImage ? deployment.imageTag ?? sourceLabel : shortSha(deployment.commitSha)}</div>
-                <div className="font-mono text-xs text-zinc-500">{deployment.trigger}</div>
-                <div className="font-mono text-xs text-zinc-500">{formatRelativeTime(deployment.createdAt)}</div>
+              <div key={deployment.id} className="grid gap-3 py-3 md:grid-cols-[140px_minmax(0,1fr)_120px_110px] md:items-center">
+                <StatusPill status={displayDeploymentStatus(deployment.status)} />
+                <div className="min-w-0 truncate font-mono text-xs text-fg">{isDockerImage ? deployment.imageTag ?? sourceLabel : shortSha(deployment.commitSha)}</div>
+                <div className="font-mono text-xs text-fg/40">{deployment.trigger}</div>
+                <div className="font-mono text-xs text-fg/40">{formatRelativeTime(deployment.createdAt)}</div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="px-4 py-8 text-center text-sm text-zinc-600">No deployment activity yet.</div>
+          <div className="p-8 text-center font-mono text-xs text-fg/40">No deployment activity yet.</div>
         )}
       </section>
     </div>

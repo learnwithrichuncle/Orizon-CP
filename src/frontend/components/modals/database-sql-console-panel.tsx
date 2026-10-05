@@ -29,10 +29,10 @@ export function DatabaseSqlConsolePanel({ serviceId }: { serviceId: string }) {
 
   return (
     <form className="flex h-full min-h-0 flex-col gap-4" onSubmit={runQuery}>
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-800 pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-fg/15 pb-4">
         <div>
-          <h3 className="font-hero text-xl text-zinc-100">Console</h3>
-          <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500">
+          <h3 className="font-hero text-xl text-fg/80">Console</h3>
+          <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-fg/60">
             Run SQL against the selected database container
           </div>
         </div>
@@ -44,17 +44,17 @@ export function DatabaseSqlConsolePanel({ serviceId }: { serviceId: string }) {
 
       <SqlEditor value={sql} onChange={setSql} disabled={busy} />
 
-      {error ? <div className="border border-rose-500/30 bg-rose-950/25 px-4 py-3 text-sm text-rose-200">{error}</div> : null}
+      {error ? <div className="border border-accent/30 bg-accent/10 px-4 py-3 text-sm text-accent">{error}</div> : null}
 
       {result ? (
         <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden">
-          <div className="flex flex-wrap items-center gap-3 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500">
+          <div className="flex flex-wrap items-center gap-3 font-mono text-[10px] uppercase tracking-[0.18em] text-fg/60">
             <span>{result.rowCount} rows</span>
             <span>{result.elapsedMs}ms</span>
             <span>{result.engine}</span>
           </div>
           {result.message ? (
-            <pre className="max-h-32 overflow-auto border border-zinc-800 bg-zinc-950/70 p-3 font-mono text-xs whitespace-pre-wrap text-zinc-300">
+            <pre className="max-h-32 overflow-auto border border-fg/15 bg-bg/70 p-3 font-mono text-xs whitespace-pre-wrap text-fg/80">
               {result.message}
             </pre>
           ) : null}
@@ -63,7 +63,7 @@ export function DatabaseSqlConsolePanel({ serviceId }: { serviceId: string }) {
           </div>
         </div>
       ) : (
-        <div className="border border-zinc-800 bg-zinc-950/45 px-5 py-8 text-sm text-zinc-500">
+        <div className="border border-fg/15 bg-bg/45 px-5 py-8 text-sm text-fg/60">
           Results will appear here after a query runs.
         </div>
       )}

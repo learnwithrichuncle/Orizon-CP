@@ -69,11 +69,11 @@ export function EnvironmentVariableSuggestions({
   }
 
   return (
-    <div className="space-y-3 border border-white/10 p-3">
-      <div className="text-xs text-zinc-500">{promptForGroups(groups)}</div>
+    <div className="space-y-3 border border-fg/10 p-3">
+      <div className="text-xs text-fg/80">{promptForGroups(groups)}</div>
       <div className="space-y-2">
         {rows.length === 0 ? (
-          <div className="border border-white/10 px-3 py-3 text-xs text-zinc-500">No suggested variables selected.</div>
+          <div className="border border-fg/10 px-3 py-3 text-xs text-fg/80">No suggested variables selected.</div>
         ) : (
           rows.map((row) => (
             <div key={row.id} className="grid gap-2 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.8fr)_32px] lg:items-center">
@@ -83,7 +83,7 @@ export function EnvironmentVariableSuggestions({
                 placeholder="KEY"
                 autoComplete="off"
                 variant="monochrome"
-                className="!h-9 border-white/15 bg-black font-mono text-xs uppercase tracking-[0.04em]"
+                className="!h-9 border-fg/15 bg-bg font-mono text-xs uppercase tracking-[0.04em]"
               />
               <FormInput
                 value={row.value}
@@ -91,11 +91,11 @@ export function EnvironmentVariableSuggestions({
                 placeholder="VALUE"
                 autoComplete="new-password"
                 variant="monochrome"
-                className="!h-9 border-white/15 bg-black font-mono text-xs"
+                className="!h-9 border-fg/15 bg-bg font-mono text-xs"
               />
               <button
                 type="button"
-                className="inline-flex h-9 w-9 items-center justify-center text-zinc-600 transition hover:bg-rose-500/10 hover:text-rose-300"
+                className="inline-flex h-9 w-9 items-center justify-center text-fg/80 transition hover:bg-accent/10 hover:text-accent"
                 onClick={() => removeRow(row.id)}
                 aria-label={`Remove ${row.key || "suggested variable"}`}
               >
@@ -106,7 +106,7 @@ export function EnvironmentVariableSuggestions({
         )}
       </div>
       <div className="flex justify-end">
-        <button type="button" className="inline-flex h-8 items-center justify-center bg-white px-3 text-xs text-black transition hover:bg-zinc-200 disabled:opacity-40" onClick={addRows} disabled={rows.length === 0}>
+        <button type="button" className="inline-flex h-8 items-center justify-center bg-fg px-3 text-xs text-bg transition hover:bg-fg/5 disabled:opacity-40" onClick={addRows} disabled={rows.length === 0}>
           Add
         </button>
       </div>

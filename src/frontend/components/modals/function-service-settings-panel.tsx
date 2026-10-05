@@ -1,8 +1,8 @@
 import { FormInput } from "../ui/primitives";
 import { RuntimeModeControl, type RuntimeMode } from "../ui/runtime-mode-control";
 
-const settingsLabelClass = "mb-1.5 block font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600";
-const settingsInputClass = "!h-9 border-white/15 bg-black text-xs";
+const settingsLabelClass = "mb-1.5 block font-mono text-[9px] uppercase tracking-[0.16em] text-fg/40";
+const settingsInputClass = "!h-9 border-fg/15 bg-bg text-xs";
 
 type FunctionServiceSettings = {
   name: string;

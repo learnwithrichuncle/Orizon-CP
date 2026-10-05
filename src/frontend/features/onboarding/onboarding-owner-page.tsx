@@ -34,32 +34,32 @@ export function OnboardingOwnerPage({
       >
         <div className="mb-9 flex items-start justify-between gap-5">
           <div>
-            <div className="mb-4 inline-flex h-10 w-10 items-center justify-center bg-white text-black">
+            <div className="mb-4 inline-flex h-10 w-10 items-center justify-center bg-fg text-bg">
               <AppIcon icon={ShieldUserIcon} size={18} />
             </div>
-            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-400">
+            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-fg/80">
               Step 01 · Identity
             </p>
-            <h2 className="mt-2 font-hero text-2xl tracking-[-0.04em] text-white sm:text-3xl">
-              Create the owner account
+            <h2 className="mt-2 font-hero text-2xl tracking-[-0.04em] text-fg sm:text-3xl">
+              Provision Administrator Identity
             </h2>
           </div>
-          <span className="mt-1 bg-white/10 px-3 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-zinc-300">
+          <span className="mt-1 bg-fg/10 px-3 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-fg/80">
             Required
           </span>
         </div>
 
-        <p className="mb-8 max-w-md text-sm leading-6 text-zinc-400">
-          Set up the primary admin account for your workspace.
+        <p className="mb-8 max-w-md text-sm leading-6 text-fg/80">
+          Initialize root cryptographic identity and establish primary permissions for this control plane instance.
         </p>
 
         <OwnerStep form={form} update={update} />
 
-        <div className="mt-7 flex items-start gap-3 bg-zinc-900/50 p-4">
-          <span className="mt-0.5 grid h-7 w-7 flex-none place-items-center bg-zinc-800 text-zinc-300">
+        <div className="mt-7 flex items-start gap-3 bg-fg/5/50 p-4">
+          <span className="mt-0.5 grid h-7 w-7 flex-none place-items-center bg-fg/5 text-fg/80">
             <AppIcon icon={ShieldUserIcon} size={14} />
           </span>
-          <p className="text-xs leading-5 text-zinc-400">
+          <p className="text-xs leading-5 text-fg/80">
             Credentials are encrypted and stored locally.
           </p>
         </div>
@@ -67,7 +67,7 @@ export function OnboardingOwnerPage({
         {error ? (
           <div
             role="alert"
-            className="mt-5 border-l-2 border-white bg-white/10 px-4 py-3 text-sm text-white"
+            className="mt-5 border-l-2 border-fg bg-fg/10 px-4 py-3 text-sm text-fg"
           >
             {error}
           </div>
@@ -76,17 +76,17 @@ export function OnboardingOwnerPage({
         <button
           type="submit"
           disabled={submitting}
-          className="group mt-7 flex h-14 w-full items-center justify-between bg-white px-5 text-left text-black transition hover:bg-zinc-200 disabled:cursor-wait disabled:opacity-60"
+          className="group mt-7 flex h-14 w-full items-center justify-between bg-fg px-5 text-left text-bg transition hover:bg-fg/5 disabled:cursor-wait disabled:opacity-60"
         >
           <span>
-            <span className="block font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-600">
+            <span className="block font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-fg/80">
               Next: Runtime
             </span>
             <span className="mt-0.5 block text-sm font-bold">
               Save owner &amp; continue
             </span>
           </span>
-          <span className="grid h-8 w-8 place-items-center bg-black/10 transition-transform group-hover:translate-x-1">
+          <span className="grid h-8 w-8 place-items-center bg-bg/10 transition-transform group-hover:translate-x-1">
             <AppIcon icon={ArrowRight02Icon} size={16} />
           </span>
         </button>

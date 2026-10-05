@@ -15,7 +15,6 @@ export function Dropdown({
   disabled = false,
   placeholder = "Select...",
   className = "",
-  variant = "default",
   size = "default",
   placement = "bottom"
 }: {
@@ -47,10 +46,10 @@ export function Dropdown({
     <div ref={rootRef} className={`relative ${className}`}>
       <button
         type="button"
-        className={`flex w-full items-center justify-between border bg-zinc-900 text-left text-zinc-100 outline-none transition hover:border-zinc-500 focus:border-white disabled:cursor-not-allowed disabled:opacity-60 ${
+        className={`flex w-full items-center justify-between border bg-bg text-left text-fg outline-none transition hover:border-fg/40 focus:border-accent disabled:cursor-not-allowed disabled:opacity-40 ${
           compact
-            ? "h-8 gap-2 border-white/15 bg-black px-2.5 text-xs"
-            : "h-11 gap-3 border-zinc-700 px-3 text-sm"
+            ? "h-8 gap-2 border-fg/20 px-2.5 text-xs"
+            : "h-11 gap-3 border-fg/20 px-3 text-sm"
         }`}
         onClick={() => setOpen((current) => !current)}
         onKeyDown={(event) => {
@@ -60,38 +59,36 @@ export function Dropdown({
         aria-haspopup="listbox"
         aria-expanded={open}
       >
-        <span className={`min-w-0 truncate ${selected ? "" : "text-zinc-500"}`}>{selected?.label ?? placeholder}</span>
-        <AppIcon icon={ArrowDown01Icon} size={compact ? 12 : 15} className={`shrink-0 text-zinc-400 transition ${open ? "rotate-180" : ""}`} />
+        <span className={`min-w-0 truncate ${selected ? "text-fg" : "text-fg/40"}`}>{selected?.label ?? placeholder}</span>
+        <AppIcon icon={ArrowDown01Icon} size={compact ? 12 : 15} className={`shrink-0 text-fg/40 transition ${open ? "rotate-180" : ""}`} />
       </button>
       {open ? (
         <div
-          className={`absolute left-0 right-0 z-40 max-h-64 overflow-y-auto border border-white/15 bg-zinc-950 shadow-[0_18px_50px_rgba(0,0,0,0.45)] ${
+          className={`absolute left-0 right-0 z-40 max-h-64 overflow-y-auto border border-fg/20 bg-bg ${
             placement === "top"
               ? compact
                 ? "bottom-full mb-1 p-1"
-                : "bottom-full mb-2 p-1.5"
+                : "bottom-full mb-2 p-1"
               : compact
                 ? "top-full mt-1 p-1"
-                : "top-full mt-2 p-1.5"
+                : "top-full mt-2 p-1"
           }`}
           role="listbox"
         >
           {options.length === 0 ? (
-            <div className="px-2.5 py-2 text-sm text-zinc-500">No options</div>
+            <div className="px-2.5 py-2 text-xs text-fg/40 font-mono">No options</div>
           ) : options.map((option) => {
             const active = option.value === value;
             return (
               <button
                 key={option.value}
                 type="button"
-                className={`block w-full text-left transition disabled:cursor-not-allowed disabled:text-zinc-700 ${
+                className={`block w-full text-left transition disabled:cursor-not-allowed disabled:text-fg/30 ${
                   compact ? "px-2 py-1.5 text-xs" : "px-2.5 py-2 text-sm"
                 } ${
                   active
-                    ? variant === "monochrome"
-                      ? "bg-white text-black"
-                      : "bg-[#4FB8B2]/15 text-[#7fe3dd]"
-                    : "text-zinc-300 hover:bg-zinc-900 hover:text-white"
+                    ? "bg-accent text-bg font-medium"
+                    : "text-fg hover:bg-fg/5"
                 }`}
                 onClick={() => {
                   onChange(option.value);
