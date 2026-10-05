@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently -k -n api,web -c cyan,magenta \"npm:dev:server\" \"npm:dev:client\"",
-    "dev:server": "tsx watch src/server/index.ts",
+    "dev:server": "tsx watch src/backend/index.ts",
     "dev:client": "vite --host 0.0.0.0",
     "download:framework-icons": "tsx scripts/download-framework-icons.ts --force",
     "build": "vite build && tsc -p tsconfig.server.json",
-    "start": "NODE_ENV=production node dist/server/index.js",
+    "start": "NODE_ENV=production node dist/backend/index.js",
     "publish:image": "docker buildx build --platform linux/amd64,linux/arm64 --build-arg ORIZONCP_COMMIT_SHA=$(git rev-parse HEAD) -t ghcr.io/learnwithrichuncle/orizon-cp:latest --push .",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.server.json --noEmit"
   },

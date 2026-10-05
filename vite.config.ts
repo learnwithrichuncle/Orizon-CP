@@ -9,14 +9,14 @@ export default defineConfig({
   plugins: [
     tanstackRouter({
       target: "react",
-      routesDirectory: "./src/client/routes",
-      generatedRouteTree: "./src/client/routeTree.gen.ts"
+      routesDirectory: "./src/frontend/routes",
+      generatedRouteTree: "./src/frontend/routeTree.gen.ts"
     }),
     tailwindcss(),
     react()
   ],
   build: {
-    outDir: "dist/client",
+    outDir: "dist/frontend",
     emptyOutDir: true
   },
   server: {

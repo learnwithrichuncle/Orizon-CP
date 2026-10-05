@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
-import { DATABASE_ICON_CATALOG, FRAMEWORK_ICON_CATALOG, type FrameworkIconCatalogEntry } from "../src/server/framework-icon-catalog.js";
+import { DATABASE_ICON_CATALOG, FRAMEWORK_ICON_CATALOG, type FrameworkIconCatalogEntry } from "../src/backend/framework-icon-catalog.js";
 
 type SvglRoute = string | { dark?: string; light?: string };
 
@@ -22,7 +22,7 @@ type DownloadResult = {
 const args = new Set(process.argv.slice(2));
 const checkOnly = args.has("--check");
 const force = args.has("--force");
-const outputDir = resolve("src/server/assets/framework-icons");
+const outputDir = resolve("src/backend/assets/framework-icons");
 const maxIconBytes = 350_000;
 
 function normalizeSlug(value: string) {

@@ -48,11 +48,11 @@ WORKDIR /app
 COPY --from=builder /app/package.json /app/package-lock.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/src/server/assets ./src/server/assets
+COPY --from=builder /app/src/backend/assets ./src/backend/assets
 
 RUN mkdir -p /data
 
 VOLUME ["/data"]
 EXPOSE 4310
 
-CMD ["node", "dist/server/index.js"]
+CMD ["node", "dist/backend/index.js"]

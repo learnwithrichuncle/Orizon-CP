@@ -282,7 +282,7 @@ WorkingDirectory=$APP_DIR
 Environment=NODE_ENV=production
 Environment=ORIZONCP_ENV_PATH=$INSTALL_DIR/.env
 EnvironmentFile=-$INSTALL_DIR/.env
-ExecStart=/usr/bin/env node dist/server/index.js
+ExecStart=/usr/bin/env node dist/backend/index.js
 Restart=always
 RestartSec=3
 KillSignal=SIGTERM
