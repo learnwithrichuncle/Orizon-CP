@@ -35,7 +35,7 @@ export function OnboardingGitHubPage({
         eyebrow="Step 03 · Source control"
         title="Connect GitHub"
         badge="Optional"
-        description="Connect a GitHub App for repository access and automatic deployments, or skip this for now."
+        description="Connect GitHub to enable automated deployments."
         error={error}
         submitting={submitting}
         nextLabel="Next: Domains"

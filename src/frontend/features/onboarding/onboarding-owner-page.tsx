@@ -50,8 +50,7 @@ export function OnboardingOwnerPage({
         </div>
 
         <p className="mb-8 max-w-md text-sm leading-6 text-zinc-400">
-          This is the primary administrator for your Orizon CP instance. You
-          can invite more people once setup is complete.
+          Set up the primary admin account for your workspace.
         </p>
 
         <OwnerStep form={form} update={update} />
@@ -61,8 +60,7 @@ export function OnboardingOwnerPage({
             <AppIcon icon={ShieldUserIcon} size={14} />
           </span>
           <p className="text-xs leading-5 text-zinc-400">
-            Your credentials stay on this server. Orizon CP never sends them
-            to an external service.
+            Credentials are encrypted and stored locally.
           </p>
         </div>
 

@@ -35,7 +35,7 @@ export function OnboardingDomainPage({
         eyebrow="Step 04 · Networking"
         title="Set up your domains"
         badge="Optional"
-        description="Give the dashboard its own hostname and use a wildcard domain for every service OrizonCP deploys."
+        description="Set up your primary domain for access."
         error={error}
         submitting={submitting}
         nextLabel="Next: Backups"

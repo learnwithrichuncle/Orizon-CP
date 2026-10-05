@@ -59,8 +59,7 @@ export function OnboardingRuntimePage({
         </div>
 
         <p className="mb-8 max-w-md text-sm leading-6 text-zinc-400">
-          These settings define where Orizon CP stores data, builds services,
-          and routes traffic on this server.
+          Configure local paths and routing behavior.
         </p>
 
         <RuntimeConfigurationFields form={form} update={update} />

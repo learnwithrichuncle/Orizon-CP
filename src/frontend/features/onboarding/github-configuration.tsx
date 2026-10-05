@@ -96,8 +96,7 @@ export function GitHubConfiguration({
                 Create a GitHub App automatically
               </p>
               <p className="mt-1.5 text-xs leading-5 text-zinc-500">
-                Orizon CP fills every credential and returns you here when the
-                GitHub App is ready.
+                Automatically generate and configure credentials.
               </p>
             </div>
           </div>

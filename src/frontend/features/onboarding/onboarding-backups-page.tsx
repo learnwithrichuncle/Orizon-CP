@@ -35,7 +35,7 @@ export function OnboardingBackupsPage({
         eyebrow="Step 05 · Resilience"
         title="Plan your backups"
         badge="Final step"
-        description="Choose default backup schedules for new databases and optionally connect Cloudflare R2 for remote storage."
+        description="Configure S3-compatible storage for database backups."
         error={error}
         submitting={submitting}
         nextLabel="Finish onboarding"
