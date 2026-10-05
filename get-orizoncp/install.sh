@@ -5,7 +5,7 @@ cd /
 
 INSTALL_DIR="${ORIZONCP_HOME:-/opt/orizoncp}"
 APP_DIR="$INSTALL_DIR/source"
-REPO_URL="${ORIZONCP_REPO_URL:-https://github.com/xt42io/aeroplane.git}"
+REPO_URL="${ORIZONCP_REPO_URL:-https://github.com/learnwithrichuncle/Orizon-CP.git}"
 REPO_BRANCH="${ORIZONCP_REPO_BRANCH:-main}"
 PORT="${ORIZONCP_PORT:-4310}"
 
