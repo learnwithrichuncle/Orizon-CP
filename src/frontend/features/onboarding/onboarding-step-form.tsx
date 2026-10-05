@@ -43,7 +43,7 @@ export function OnboardingStepForm({
     >
       <div className="mb-9 flex items-start justify-between gap-5">
         <div>
-          <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-black">
+          <div className="mb-4 inline-flex h-10 w-10 items-center justify-center bg-white text-black">
             <AppIcon icon={icon} size={18} />
           </div>
           <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-400">
@@ -53,7 +53,7 @@ export function OnboardingStepForm({
             {title}
           </h2>
         </div>
-        <span className="mt-1 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-zinc-400">
+        <span className="mt-1 bg-white/10 px-3 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.14em] text-zinc-300">
           {badge}
         </span>
       </div>
@@ -79,7 +79,7 @@ export function OnboardingStepForm({
             type="button"
             disabled={submitting}
             onClick={onBack}
-            className="grid h-14 w-14 flex-none place-items-center rounded-sm border border-white/15 text-zinc-400 transition hover:border-white/30 hover:text-white disabled:opacity-50"
+            className="grid h-14 w-14 flex-none place-items-center bg-zinc-900 text-zinc-400 transition hover:bg-zinc-800 hover:text-white disabled:opacity-50"
             aria-label="Previous onboarding step"
           >
             <AppIcon icon={ArrowLeft01Icon} size={17} />
@@ -88,17 +88,17 @@ export function OnboardingStepForm({
         <button
           type="submit"
           disabled={submitting}
-          className="group flex h-14 flex-1 items-center justify-between rounded-sm bg-white px-5 text-left text-black shadow-[0_18px_40px_rgba(0,0,0,0.3)] transition hover:bg-zinc-200 disabled:cursor-wait disabled:opacity-60"
+          className="group flex h-14 flex-1 items-center justify-between bg-white px-5 text-left text-black transition hover:bg-zinc-200 disabled:cursor-wait disabled:opacity-60"
         >
           <span>
-            <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-zinc-600">
+            <span className="block font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-600">
               {nextLabel}
             </span>
-            <span className="mt-0.5 block text-sm font-semibold">
+            <span className="mt-0.5 block text-sm font-bold">
               {submitting ? "Saving…" : actionLabel}
             </span>
           </span>
-          <span className="grid h-8 w-8 place-items-center rounded-full bg-black/10 transition-transform group-hover:translate-x-1">
+          <span className="grid h-8 w-8 place-items-center bg-black/10 transition-transform group-hover:translate-x-1">
             <AppIcon
               icon={finish ? CheckmarkCircle02Icon : ArrowRight02Icon}
               size={16}

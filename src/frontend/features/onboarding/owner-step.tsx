@@ -27,7 +27,7 @@ function OwnerField({
         required
         autoComplete={autoComplete}
         placeholder={placeholder}
-        className="h-12 w-full rounded-sm border border-white/15 bg-white/5 px-3.5 text-[15px] text-white outline-none transition placeholder:text-zinc-600 hover:border-white/30 focus:border-white focus:bg-white/10 focus:ring-2 focus:ring-white/10"
+        className="h-12 w-full bg-zinc-900 px-3.5 text-[15px] text-white outline-none transition placeholder:text-zinc-600 focus:bg-zinc-800"
       />
     </label>
   );

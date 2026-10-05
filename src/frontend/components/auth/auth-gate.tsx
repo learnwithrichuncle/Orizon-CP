@@ -56,7 +56,15 @@ export function AuthGate({ children }: { children: ReactNode }) {
       });
     } catch {
       startTransition(() => {
-        setStatus(null);
+        // Provide a fallback unauthenticated status so we can redirect to /onboarding
+        // if the API is entirely down (e.g., first run setup).
+        setStatus({
+          setupComplete: false,
+          authenticated: false,
+          user: null,
+          secretKeyConfigured: false,
+          envPath: ""
+        });
         setLoading(false);
       });
     }

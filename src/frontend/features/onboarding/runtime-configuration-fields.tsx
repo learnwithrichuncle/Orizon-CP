@@ -34,7 +34,7 @@ function RuntimeField({
         placeholder={placeholder}
         required={required}
         spellCheck={false}
-        className="h-12 w-full rounded-sm border border-white/15 bg-white/5 px-3.5 font-mono text-xs text-white outline-none transition placeholder:text-zinc-600 hover:border-white/30 focus:border-white focus:bg-white/10 focus:ring-2 focus:ring-white/10"
+        className="h-12 w-full bg-zinc-900 px-3.5 font-mono text-xs text-white outline-none transition placeholder:text-zinc-600 focus:bg-zinc-800"
       />
     </label>
   );
@@ -149,7 +149,7 @@ export function RuntimeConfigurationFields({
           type="checkbox"
           checked={form.deployDryRun}
           onChange={(event) => update({ deployDryRun: event.target.checked })}
-          className="mt-1 h-4 w-4 flex-none appearance-none rounded-full border border-white/30 bg-black transition checked:border-white checked:bg-white"
+          className="mt-1 h-4 w-4 flex-none appearance-none border border-zinc-600 bg-transparent transition checked:bg-white checked:border-white"
         />
       </label>
     </div>
