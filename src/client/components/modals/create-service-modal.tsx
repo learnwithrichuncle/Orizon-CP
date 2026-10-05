@@ -1,0 +1,1262 @@
+import {
+  ArrowLeft01Icon,
+  Delete02Icon,
+  FolderOpenIcon,
+  FunctionIcon,
+  GithubIcon,
+  PackageIcon,
+  Search01Icon,
+  Settings01Icon,
+  WorkflowSquare07Icon,
+  DatabaseIcon
+} from "@hugeicons/core-free-icons";
+import { FormEvent, startTransition, useEffect, useMemo, useState } from "react";
+import {
+  api,
+  type DatabaseVariableSuggestion,
+  type EnvExampleVariableSuggestion,
+  type GitHubDirectory,
+  type GitHubRepo,
+  type GitHubStatus
+} from "../../api";
+import { ModalShell } from "./modal-shell";
+import { AppIcon, FieldLabel, FormInput } from "../ui/primitives";
+import { formatRelativeTime } from "../../lib/format";
+import { githubBranchesCache, githubDirectoriesCache, githubReposCache } from "../../lib/github-cache";
+import { compareReposByLastPush, repoLastPushedAt } from "../../lib/github-repos";
+import { DirectoryTree } from "./directory-tree";
+import type { ServiceFormPayload } from "../../features/services/service-form-types";
+import { RuntimeModeControl } from "../ui/runtime-mode-control";
+import { ImportTypeStep, type ServiceType } from "./import-type-step";
+import { DatabaseSelectStep } from "./database-select-step";
+import { DatabaseConfigureStep } from "./database-configure-step";
+import { DockerImageConfigureStep } from "./docker-image-configure-step";
+import { FunctionConfigureStep } from "./function-configure-step";
+import type { DatabaseType } from "./database-service-options";
+import {
+  EnvironmentVariableSuggestions,
+  type EnvironmentVariableSuggestionGroup
+} from "../../features/services/environment-variable-suggestions";
+import { parseEnvText, type ParsedEnvEntry } from "../../features/services/env-text-parser";
+import { RepositoryBranchPicker } from "./repository-branch-picker";
+
+type GitSourceMode = "github" | "url";
+
+function isGitUrl(value: string) {
+  const trimmed = value.trim();
+  return trimmed.startsWith("https://") || trimmed.startsWith("git@");
+}
+
+function nameFromGitUrl(value: string) {
+  const trimmed = value.trim().replace(/\/$/, "").replace(/\.git$/, "");
+  if (!trimmed) return "";
+
+  if (trimmed.startsWith("git@")) {
+    return trimmed.split(":").at(-1)?.split("/").at(-1) ?? "";
+  }
+
+  try {
+    return new URL(trimmed).pathname.split("/").filter(Boolean).at(-1) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+export function CreateServiceModal({
+  projectId,
+  open,
+  onClose,
+  onCreate
+}: {
+  projectId: string;
+  open: boolean;
+  onClose: () => void;
+  onCreate: (payload: ServiceFormPayload) => Promise<void>;
+}) {
+  const [step, setStep] = useState<"type" | "repo" | "directory" | "configure" | "database-select" | "database-configure" | "docker-image-configure" | "function-configure">("type");
+  const [serviceType, setServiceType] = useState<ServiceType | null>(null);
+  const [gitSourceMode, setGitSourceMode] = useState<GitSourceMode>("github");
+  const [selectedDbType, setSelectedDbType] = useState<DatabaseType>("postgres");
+
+  const [form, setForm] = useState<ServiceFormPayload>({
+    name: "",
+    repoFullName: "",
+    repoUrl: "",
+    branch: "main",
+    rootDir: undefined,
+    runtimeMode: "web",
+    internalPort: 8080,
+    installCommand: "",
+    prebuildCommand: "",
+    buildCommand: "",
+    startCommand: "",
+    staticOutput: ""
+  });
+  const [connected, setConnected] = useState<null | boolean>(null);
+  const [githubStatus, setGitHubStatus] = useState<null | GitHubStatus>(null);
+  const [repoQuery, setRepoQuery] = useState("");
+  const [ownerFilter, setOwnerFilter] = useState("all");
+  const [ownerMenuOpen, setOwnerMenuOpen] = useState(false);
+  const [repos, setRepos] = useState<GitHubRepo[]>([]);
+  const [branches, setBranches] = useState<string[]>([]);
+  const [loadingRepos, setLoadingRepos] = useState(false);
+  const [repoError, setRepoError] = useState("");
+  const [directoryError, setDirectoryError] = useState("");
+  const [loadingDirectories, setLoadingDirectories] = useState(false);
+  const [loadingDirectoryPaths, setLoadingDirectoryPaths] = useState<Set<string>>(new Set());
+  const [directoryNodes, setDirectoryNodes] = useState<Record<string, GitHubDirectory[]>>({});
+  const [expandedDirectories, setExpandedDirectories] = useState<Set<string>>(new Set());
+  const [buildOpen, setBuildOpen] = useState(false);
+  const [envOpen, setEnvOpen] = useState(false);
+  const [envSuggestionsOpen, setEnvSuggestionsOpen] = useState(false);
+  const [newEnvOpen, setNewEnvOpen] = useState(false);
+  const [envEntries, setEnvEntries] = useState<ParsedEnvEntry[]>([]);
+  const [envForm, setEnvForm] = useState<ParsedEnvEntry>({ key: "", value: "" });
+  const [databaseVariableSuggestions, setDatabaseVariableSuggestions] = useState<DatabaseVariableSuggestion[]>([]);
+  const [envExampleVariableSuggestions, setEnvExampleVariableSuggestions] = useState<EnvExampleVariableSuggestion[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  const owners = useMemo(() => {
+    const values = new Set<string>();
+    for (const repo of repos) {
+      const owner = repo.fullName.split("/")[0];
+      if (owner) values.add(owner);
+    }
+    return [...values].sort((left, right) => left.localeCompare(right));
+  }, [repos]);
+
+  const filteredRepos = useMemo(() => {
+    return repos
+      .filter((repo) => ownerFilter === "all" || repo.fullName.startsWith(`${ownerFilter}/`))
+      .sort(compareReposByLastPush);
+  }, [ownerFilter, repos]);
+
+  const selectedRepo = useMemo(() => repos.find((repo) => repo.fullName === form.repoFullName) ?? null, [repos, form.repoFullName]);
+
+  useEffect(() => {
+    if (!open) {
+      setStep("type");
+      setServiceType(null);
+      setGitSourceMode("github");
+      setForm({
+        name: "",
+        repoFullName: "",
+        repoUrl: "",
+        branch: "main",
+        rootDir: undefined,
+        runtimeMode: "web",
+        internalPort: 8080,
+        installCommand: "",
+        prebuildCommand: "",
+        buildCommand: "",
+        startCommand: "",
+        staticOutput: ""
+      });
+      setConnected(null);
+      setGitHubStatus(null);
+      setRepoQuery("");
+      setOwnerFilter("all");
+      setOwnerMenuOpen(false);
+      setRepos([]);
+      setBranches([]);
+      setLoadingRepos(false);
+      setLoadingDirectories(false);
+      setLoadingDirectoryPaths(new Set());
+      setRepoError("");
+      setDirectoryError("");
+      setDirectoryNodes({});
+      setExpandedDirectories(new Set());
+      setBuildOpen(false);
+      setEnvOpen(false);
+      setEnvSuggestionsOpen(false);
+      setNewEnvOpen(false);
+      setEnvEntries([]);
+      setEnvForm({ key: "", value: "" });
+      setDatabaseVariableSuggestions([]);
+      setEnvExampleVariableSuggestions([]);
+      setBusy(false);
+      setError("");
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!open || !projectId) return;
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        const result = await api.projectDatabaseVariableSuggestions(projectId);
+        if (!cancelled) setDatabaseVariableSuggestions(result.suggestions);
+      } catch {
+        if (!cancelled) setDatabaseVariableSuggestions([]);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open, projectId]);
+
+  useEffect(() => {
+    const repoFullName = form.repoFullName;
+    const branch = form.branch;
+    const rootDir = form.rootDir;
+
+    if (
+      !open ||
+      !projectId ||
+      step !== "configure" ||
+      serviceType !== "git" ||
+      gitSourceMode !== "github" ||
+      !repoFullName ||
+      !branch
+    ) {
+      setEnvExampleVariableSuggestions([]);
+      return;
+    }
+
+    let cancelled = false;
+    void (async () => {
+      try {
+        const result = await api.projectEnvExampleVariableSuggestions(projectId, {
+          repoFullName,
+          branch,
+          rootDir
+        });
+        if (!cancelled) setEnvExampleVariableSuggestions(result.suggestions);
+      } catch {
+        if (!cancelled) setEnvExampleVariableSuggestions([]);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [form.branch, form.repoFullName, form.rootDir, gitSourceMode, open, projectId, serviceType, step]);
+
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        const status = await api.githubStatus();
+        if (cancelled) return;
+        startTransition(() => {
+          setGitHubStatus(status);
+          setConnected(status.connected);
+        });
+      } catch {
+        if (cancelled) return;
+        startTransition(() => {
+          setGitHubStatus(null);
+          setConnected(false);
+        });
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (connected !== true || !open) return;
+    let cancelled = false;
+    const handle = setTimeout(() => {
+      setLoadingRepos(true);
+      void (async () => {
+        try {
+          const cacheKey = repoQuery.trim().toLowerCase();
+          const cachedRepos = githubReposCache.get(cacheKey);
+          const repoList = cachedRepos ?? (await api.githubRepos(repoQuery)).repos;
+          if (!cachedRepos) {
+            githubReposCache.set(cacheKey, repoList);
+          }
+          if (cancelled) return;
+          startTransition(() => {
+            setRepos(repoList);
+            setRepoError("");
+          });
+        } catch (issue) {
+          if (cancelled) return;
+          startTransition(() => {
+            setRepos([]);
+            setRepoError(issue instanceof Error ? issue.message : "Could not load repositories");
+          });
+        } finally {
+          if (!cancelled) setLoadingRepos(false);
+        }
+      })();
+    }, 180);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(handle);
+    };
+  }, [connected, open, repoQuery]);
+
+  useEffect(() => {
+    if (!owners.length) return;
+    if (ownerFilter === "all" || owners.includes(ownerFilter)) return;
+    setOwnerFilter("all");
+  }, [ownerFilter, owners]);
+
+  useEffect(() => {
+    const repoFullName = form.repoFullName;
+    if (!repoFullName) return;
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        const cachedBranches = githubBranchesCache.get(repoFullName);
+        const nextBranches = cachedBranches ?? (await api.githubBranches(repoFullName)).branches;
+        if (!cachedBranches) {
+          githubBranchesCache.set(repoFullName, nextBranches);
+        }
+        if (cancelled) return;
+        startTransition(() => {
+          setBranches(nextBranches);
+        });
+      } catch {
+        if (cancelled) return;
+        startTransition(() => {
+          setBranches([]);
+        });
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [form.repoFullName]);
+
+  useEffect(() => {
+    if (!form.repoFullName || !form.branch || step !== "directory") return;
+    if (directoryNodes[""]) return;
+    void loadDirectoryLevel("");
+  }, [directoryNodes, form.branch, form.repoFullName, step]);
+
+  function selectRepo(repo: GitHubRepo) {
+    setBranches([repo.defaultBranch]);
+    setForm((current) => ({
+      ...current,
+      name: current.name || repo.name,
+      repoFullName: repo.fullName,
+      repoUrl: undefined,
+      branch: repo.defaultBranch,
+      rootDir: undefined
+    }));
+    setDirectoryNodes({});
+    setExpandedDirectories(new Set());
+    setDirectoryError("");
+    setStep("directory");
+  }
+
+  async function loadDirectoryLevel(path: string) {
+    if (!form.repoFullName || !form.branch) return;
+
+    const cacheKey = `${form.repoFullName}:${form.branch}:${path}`;
+    const cachedDirectories = githubDirectoriesCache.get(cacheKey);
+    if (cachedDirectories) {
+      startTransition(() => {
+        setDirectoryNodes((current) => ({ ...current, [path]: cachedDirectories }));
+      });
+      return;
+    }
+
+    setLoadingDirectories(true);
+    setLoadingDirectoryPaths((current) => new Set(current).add(path));
+    setDirectoryError("");
+    try {
+      const nextDirectories = (await api.githubDirectories(form.repoFullName, form.branch, path)).directories;
+      githubDirectoriesCache.set(cacheKey, nextDirectories);
+      startTransition(() => {
+        setDirectoryNodes((current) => ({ ...current, [path]: nextDirectories }));
+      });
+    } catch (issue) {
+      startTransition(() => {
+        setDirectoryError(issue instanceof Error ? issue.message : "Could not load directories");
+      });
+    } finally {
+      setLoadingDirectories(false);
+      setLoadingDirectoryPaths((current) => {
+        const next = new Set(current);
+        next.delete(path);
+        return next;
+      });
+    }
+  }
+
+  async function toggleDirectory(path: string) {
+    const isExpanded = expandedDirectories.has(path);
+    if (isExpanded) {
+      startTransition(() => {
+        setExpandedDirectories((current) => {
+          const next = new Set(current);
+          next.delete(path);
+          return next;
+        });
+      });
+      return;
+    }
+
+    await loadDirectoryLevel(path);
+    startTransition(() => {
+      setExpandedDirectories((current) => new Set(current).add(path));
+    });
+  }
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    setBusy(true);
+    setError("");
+    try {
+      const isUrlSource = serviceType === "git" && gitSourceMode === "url";
+      await onCreate({
+        ...form,
+        repoFullName: isUrlSource ? null : form.repoFullName,
+        repoUrl: isUrlSource ? form.repoUrl?.trim() : undefined,
+        rootDir: form.rootDir || undefined,
+        installCommand: form.installCommand || undefined,
+        prebuildCommand: form.prebuildCommand || undefined,
+        buildCommand: form.buildCommand || undefined,
+        startCommand: form.startCommand || undefined,
+        runtimeMode: form.runtimeMode,
+        staticOutput: form.runtimeMode === "worker" ? undefined : form.staticOutput || undefined,
+        env: envEntries
+      });
+      onClose();
+    } catch (issue) {
+      setError(issue instanceof Error ? issue.message : "Could not create service");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleDatabaseSubmit(payload: {
+    name: string;
+    repoFullName: string;
+    repoUrl: string;
+    branch: string;
+    internalPort: number;
+    databasePublicEnabled: boolean;
+    databasePublicHostname?: string;
+    postgresLogicalReplicationEnabled: boolean;
+    env: Array<{ key: string; value: string }>;
+  }) {
+    setBusy(true);
+    setError("");
+    try {
+      await onCreate({
+        name: payload.name,
+        repoFullName: payload.repoFullName,
+        repoUrl: payload.repoUrl,
+        branch: payload.branch,
+        internalPort: payload.internalPort,
+        databasePublicEnabled: payload.databasePublicEnabled,
+        databasePublicHostname: payload.databasePublicHostname,
+        postgresLogicalReplicationEnabled: payload.postgresLogicalReplicationEnabled,
+        env: payload.env
+      });
+      onClose();
+    } catch (issue) {
+      setError(issue instanceof Error ? issue.message : "Could not create database service");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleDockerImageSubmit(payload: {
+    name: string;
+    repoFullName: string;
+    repoUrl: string;
+    branch: string;
+    dockerImage: string;
+    runtimeMode: "web" | "worker";
+    internalPort: number;
+    env: Array<{ key: string; value: string }>;
+  }) {
+    setBusy(true);
+    setError("");
+    try {
+      await onCreate({
+        name: payload.name,
+        repoFullName: payload.repoFullName,
+        repoUrl: payload.repoUrl,
+        branch: payload.branch,
+        dockerImage: payload.dockerImage,
+        runtimeMode: payload.runtimeMode,
+        internalPort: payload.internalPort,
+        env: payload.env
+      });
+      onClose();
+    } catch (issue) {
+      setError(issue instanceof Error ? issue.message : "Could not create Docker image service");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleFunctionSubmit(payload: ServiceFormPayload) {
+    setBusy(true);
+    setError("");
+    try {
+      await onCreate(payload);
+      onClose();
+    } catch (issue) {
+      setError(issue instanceof Error ? issue.message : "Could not create function service");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const currentDirectory = form.rootDir || "";
+  const isUrlSource = serviceType === "git" && gitSourceMode === "url";
+  const gitUrlValid = isGitUrl(form.repoUrl ?? "");
+
+  const stepItems = serviceType === "database"
+    ? ([
+        { key: "database-select", label: "Database" },
+        { key: "database-configure", label: "Configure" }
+      ] as const)
+    : serviceType === "docker-image"
+    ? ([{ key: "docker-image-configure", label: "Docker Image" }] as const)
+    : serviceType === "function"
+    ? ([{ key: "function-configure", label: "Function" }] as const)
+    : isUrlSource
+    ? ([
+        { key: "repo", label: "Git URL" },
+        { key: "configure", label: "Configure" }
+      ] as const)
+    : ([
+        { key: "repo", label: "Repository" },
+        { key: "directory", label: "Directory" },
+        { key: "configure", label: "Configure" }
+      ] as const);
+
+  const stepIndex = serviceType === "database"
+    ? step === "database-select" ? 0 : 1
+    : serviceType === "docker-image"
+    ? 0
+    : serviceType === "function"
+    ? 0
+    : isUrlSource
+    ? step === "repo" ? 0 : 1
+    : step === "repo" ? 0 : step === "directory" ? 1 : 2;
+
+  function handleEnvPaste(text: string) {
+    const entries = parseEnvText(text);
+    if (entries.length === 0) return false;
+
+    if (entries.length === 1) {
+      setNewEnvOpen(true);
+      setEnvForm(entries[0]);
+      return true;
+    }
+
+    setEnvEntries((current) => {
+      const next = new Map(current.map((entry) => [entry.key, entry.value]));
+      for (const entry of entries) next.set(entry.key, entry.value);
+      return Array.from(next.entries()).map(([key, value]) => ({ key, value }));
+    });
+    setNewEnvOpen(false);
+    setEnvForm({ key: "", value: "" });
+    return true;
+  }
+
+  function addEnvEntry() {
+    if (!envForm.key.trim()) return;
+    setEnvEntries((current) => {
+      const next = new Map(current.map((entry) => [entry.key, entry.value]));
+      next.set(envForm.key.trim(), envForm.value);
+      return Array.from(next.entries()).map(([key, value]) => ({ key, value }));
+    });
+    setEnvForm({ key: "", value: "" });
+    setNewEnvOpen(false);
+  }
+
+  function addEnvironmentVariableSuggestions(entries: ParsedEnvEntry[]) {
+    setEnvEntries((current) => {
+      const next = new Map(current.map((entry) => [entry.key, entry.value]));
+      for (const entry of entries) {
+        if (!entry.key.trim()) continue;
+        next.set(entry.key.trim(), entry.value);
+      }
+      return Array.from(next.entries()).map(([key, value]) => ({ key, value }));
+    });
+    setEnvSuggestionsOpen(false);
+  }
+
+  const modalIcon =
+    step === "type"
+      ? PackageIcon
+      : step === "database-select"
+      ? DatabaseIcon
+      : step === "database-configure"
+      ? Settings01Icon
+      : step === "docker-image-configure"
+      ? PackageIcon
+      : step === "function-configure"
+      ? FunctionIcon
+      : step === "repo"
+      ? GithubIcon
+      : step === "directory"
+      ? FolderOpenIcon
+      : Settings01Icon;
+
+  const modalTitle =
+    step === "type"
+      ? "Create a new service"
+      : step === "database-select"
+      ? "Select database engine"
+      : step === "database-configure"
+      ? "Configure database"
+      : step === "docker-image-configure"
+      ? "Configure Docker image"
+      : step === "function-configure"
+      ? "Configure function"
+      : step === "repo"
+      ? "Import Git repository"
+      : step === "directory"
+      ? "Choose root directory"
+      : "Configure service";
+
+  const modalMeta =
+    step === "type"
+      ? "Choose a service type"
+      : serviceType === "database"
+      ? step === "database-select"
+        ? "Step 1 of 2"
+        : "Step 2 of 2"
+      : serviceType === "docker-image"
+      ? "Step 1 of 1"
+      : serviceType === "function"
+      ? "Step 1 of 1"
+      : isUrlSource
+      ? step === "repo"
+        ? "Step 1 of 2"
+        : "Step 2 of 2"
+      : step === "repo"
+      ? "Step 1 of 3"
+      : step === "directory"
+      ? "Step 2 of 3"
+      : "Step 3 of 3";
+  const databaseSuggestionKeys = useMemo(() => {
+    return new Set(databaseVariableSuggestions.map((suggestion) => suggestion.key.toUpperCase()));
+  }, [databaseVariableSuggestions]);
+  const visibleEnvExampleVariableSuggestions = useMemo(() => {
+    return envExampleVariableSuggestions.filter((suggestion) => !databaseSuggestionKeys.has(suggestion.key.toUpperCase()));
+  }, [databaseSuggestionKeys, envExampleVariableSuggestions]);
+  const environmentVariableSuggestionGroups = useMemo<EnvironmentVariableSuggestionGroup[]>(() => {
+    return [
+      {
+        id: "database",
+        title: "Database variables",
+        suggestions: databaseVariableSuggestions.map((suggestion) => ({
+          id: `database:${suggestion.serviceId}:${suggestion.key}`,
+          key: suggestion.key,
+          value: `\${${suggestion.serviceSlug}.${suggestion.sourceKey}}`,
+          label: suggestion.label,
+          context: suggestion.serviceSlug
+        }))
+      },
+      {
+        id: "env-example",
+        title: ".env.example variables",
+        suggestions: visibleEnvExampleVariableSuggestions.map((suggestion) => ({
+          id: `env-example:${suggestion.sourcePath}:${suggestion.key}`,
+          key: suggestion.key,
+          value: "",
+          label: suggestion.label,
+          context: suggestion.sourcePath
+        }))
+      }
+    ];
+  }, [databaseVariableSuggestions, visibleEnvExampleVariableSuggestions]);
+  const environmentVariableSuggestionCount = environmentVariableSuggestionGroups.reduce((total, group) => total + group.suggestions.length, 0);
+
+  return (
+    <ModalShell
+      open={open}
+      onClose={onClose}
+      icon={modalIcon}
+      title={modalTitle}
+      meta={modalMeta}
+      width={step === "type" ? "max-w-xl" : "max-w-3xl"}
+      minHeight={step === "type" ? "min-h-0" : "min-h-[520px]"}
+      bodyClassName="min-h-0 flex flex-1 flex-col overflow-hidden"
+      variant="monochrome"
+    >
+      {step !== "type" && (
+        <div className="mb-4 flex shrink-0 flex-wrap items-center gap-x-5 gap-y-2 border-b border-white/10 pb-3">
+          {stepItems.map((item, index) => (
+            <div
+              key={item.key}
+              className={`flex min-w-0 items-center gap-2 font-mono text-[9px] uppercase tracking-[0.14em] ${
+                index === stepIndex ? "text-white" : index < stepIndex ? "text-zinc-400" : "text-zinc-700"
+              }`}
+            >
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <span className="truncate">{item.label}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {error ? <div className="mb-3 shrink-0 border border-rose-500/30 bg-rose-500/10 px-3 py-2.5 text-xs text-rose-200">{error}</div> : null}
+
+      {step === "type" ? (
+        <ImportTypeStep
+          onSelect={(type) => {
+            setServiceType(type);
+            if (type === "git") {
+              setStep("repo");
+            } else if (type === "docker-image") {
+              setStep("docker-image-configure");
+            } else if (type === "function") {
+              setStep("function-configure");
+            } else {
+              setStep("database-select");
+            }
+          }}
+        />
+      ) : step === "database-select" ? (
+        <DatabaseSelectStep
+          onSelect={(dbType) => {
+            setSelectedDbType(dbType);
+            setStep("database-configure");
+          }}
+          onBack={() => {
+            setServiceType(null);
+            setStep("type");
+          }}
+        />
+      ) : step === "database-configure" ? (
+        <DatabaseConfigureStep
+          dbType={selectedDbType}
+          onBack={() => setStep("database-select")}
+          onSubmit={handleDatabaseSubmit}
+          busy={busy}
+        />
+      ) : step === "docker-image-configure" ? (
+        <DockerImageConfigureStep
+          onBack={() => {
+            setServiceType(null);
+            setStep("type");
+          }}
+          onSubmit={handleDockerImageSubmit}
+          busy={busy}
+        />
+      ) : step === "function-configure" ? (
+        <FunctionConfigureStep
+          onBack={() => {
+            setServiceType(null);
+            setStep("type");
+          }}
+          onSubmit={handleFunctionSubmit}
+          busy={busy}
+        />
+      ) : step === "repo" ? (
+        <div className="flex min-h-full flex-col">
+          <div className="min-h-0 flex-1 overflow-y-auto pr-1">
+            <div className="space-y-4">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <button
+                  type="button"
+                  className={`inline-flex h-9 w-full items-center justify-start gap-2 px-3 text-xs transition ${
+                    gitSourceMode === "github"
+                      ? "bg-white text-black"
+                      : "border border-white/15 text-zinc-400 hover:border-white/35 hover:bg-white/[0.05] hover:text-white"
+                  }`}
+                  onClick={() => {
+                    setGitSourceMode("github");
+                    setForm((current) => ({ ...current, repoUrl: undefined }));
+                  }}
+                >
+                  <AppIcon icon={GithubIcon} size={15} />
+                  GitHub repository
+                </button>
+                <button
+                  type="button"
+                  className={`inline-flex h-9 w-full items-center justify-start gap-2 px-3 text-xs transition ${
+                    gitSourceMode === "url"
+                      ? "bg-white text-black"
+                      : "border border-white/15 text-zinc-400 hover:border-white/35 hover:bg-white/[0.05] hover:text-white"
+                  }`}
+                  onClick={() => {
+                    setGitSourceMode("url");
+                    setForm((current) => ({ ...current, repoFullName: "", rootDir: undefined }));
+                    setDirectoryNodes({});
+                    setExpandedDirectories(new Set());
+                    setDirectoryError("");
+                  }}
+                >
+                  <AppIcon icon={WorkflowSquare07Icon} size={15} />
+                  Git URL
+                </button>
+              </div>
+
+              {gitSourceMode === "url" ? (
+                <div className="space-y-4 border border-white/10 p-4">
+                  <div>
+                    <FieldLabel>Git URL</FieldLabel>
+                    <FormInput
+                      value={form.repoUrl ?? ""}
+                      onChange={(event) => {
+                        const repoUrl = event.target.value;
+                        const inferredName = nameFromGitUrl(repoUrl);
+                        setForm((current) => ({
+                          ...current,
+                          repoUrl,
+                          name: current.name || inferredName
+                        }));
+                      }}
+                      placeholder="https://github.com/owner/repo.git"
+                      autoComplete="off"
+                      disabled={busy}
+                      variant="monochrome"
+                      className="!h-9 border-white/15 bg-black font-mono text-xs"
+                    />
+                    {form.repoUrl?.trim() && !gitUrlValid ? (
+                      <p className="mt-2 text-xs text-rose-300">Use an HTTPS Git URL or SSH URL like git@github.com:owner/repo.git.</p>
+                    ) : (
+                      <p className="mt-2 text-xs text-zinc-500">Use this for public repos, SSH repos, or providers outside the GitHub App flow.</p>
+                    )}
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <FieldLabel>Service name</FieldLabel>
+                      <FormInput
+                        value={form.name}
+                        onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
+                        placeholder="api"
+                        required
+                        variant="monochrome"
+                        className="!h-9 border-white/15 bg-black text-xs"
+                      />
+                    </div>
+                    <div>
+                      <FieldLabel>Branch</FieldLabel>
+                      <FormInput
+                        value={form.branch}
+                        onChange={(event) => setForm((current) => ({ ...current, branch: event.target.value }))}
+                        placeholder="main"
+                        required
+                        variant="monochrome"
+                        className="!h-9 border-white/15 bg-black text-xs"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      className="inline-flex h-8 items-center justify-center bg-white px-4 text-xs text-black transition hover:bg-zinc-200 disabled:opacity-40"
+                      disabled={!gitUrlValid || !form.name.trim() || !form.branch.trim()}
+                      onClick={() => setStep("configure")}
+                    >
+                      Continue
+                    </button>
+                  </div>
+                </div>
+              ) : connected === false ? (
+                <div className="space-y-3 border border-white/10 p-4">
+                  <div className="text-xs leading-5 text-zinc-500">
+                    {githubStatus?.installUrl ? (
+                      <>
+                        Install the GitHub App first, or enter <code>owner/repo</code> manually to continue.
+                      </>
+                    ) : (
+                      <>
+                        GitHub is not connected yet. Configure a GitHub App or set <code>GITHUB_ACCESS_TOKEN</code> on the server.
+                      </>
+                    )}
+                  </div>
+                  <div className="flex gap-3">
+                    <FormInput
+                      value={form.repoFullName ?? ""}
+                      onChange={(event) => setForm((current) => ({ ...current, repoFullName: event.target.value, name: event.target.value.split("/").at(-1) || current.name }))}
+                      placeholder="owner/repo"
+                      disabled={busy}
+                      variant="monochrome"
+                      className="!h-9 border-white/15 bg-black font-mono text-xs"
+                    />
+                    <button type="button" className="inline-flex h-9 items-center justify-center bg-white px-4 text-xs text-black transition hover:bg-zinc-200 disabled:opacity-40" onClick={() => setStep("directory")} disabled={!form.repoFullName?.trim()}>
+                      Continue
+                    </button>
+                  </div>
+                </div>
+              ) : connected === null ? (
+                <div className="border border-white/10 px-4 py-5 text-center font-mono text-[9px] uppercase tracking-[0.14em] text-zinc-600">Checking GitHub connection…</div>
+              ) : (
+                <>
+                  <div className="grid gap-2 md:grid-cols-[260px_minmax(0,1fr)]">
+                    <div className="relative">
+                      <button
+                        type="button"
+                        className="flex h-9 w-full items-center justify-between border border-white/15 bg-black px-3 text-left text-xs text-zinc-300 disabled:opacity-60"
+                        onClick={() => setOwnerMenuOpen((current) => !current)}
+                        disabled={!owners.length}
+                      >
+                        <span className="truncate">{ownerFilter === "all" ? "All accounts" : ownerFilter}</span>
+                        <AppIcon icon={ArrowLeft01Icon} size={16} className={ownerMenuOpen ? "rotate-90" : "-rotate-90"} />
+                      </button>
+                      {ownerMenuOpen ? (
+                        <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-20 max-h-64 overflow-auto border border-white/15 bg-black p-1 shadow-[0_20px_40px_rgba(0,0,0,0.55)]">
+                          <button
+                            type="button"
+                            className="flex w-full items-center justify-between px-3 py-2 text-left text-xs text-zinc-300 hover:bg-white/[0.05] hover:text-white"
+                            onClick={() => {
+                              setOwnerFilter("all");
+                              setOwnerMenuOpen(false);
+                            }}
+                          >
+                            <span className="truncate">All accounts</span>
+                            {ownerFilter === "all" ? <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-zinc-500">Current</span> : null}
+                          </button>
+                          {owners.map((owner) => (
+                            <button
+                              key={owner}
+                              type="button"
+                              className="flex w-full items-center justify-between px-3 py-2 text-left text-xs text-zinc-300 hover:bg-white/[0.05] hover:text-white"
+                              onClick={() => {
+                                setOwnerFilter(owner);
+                                setOwnerMenuOpen(false);
+                              }}
+                            >
+                              <span className="truncate">{owner}</span>
+                              {ownerFilter === owner ? <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-zinc-500">Current</span> : null}
+                            </button>
+                          ))}
+                          {githubStatus?.installUrl ? (
+                            <button
+                              type="button"
+                              className="flex w-full items-center gap-2 border-t border-white/10 px-3 py-2 text-left font-mono text-[9px] uppercase tracking-[0.14em] text-zinc-500 hover:bg-white/[0.05] hover:text-white"
+                              onClick={() => {
+                                window.open(githubStatus.installUrl ?? "", "_blank", "noopener,noreferrer");
+                                setOwnerMenuOpen(false);
+                              }}
+                            >
+                              <AppIcon icon={GithubIcon} size={14} />
+                              Configure GitHub
+                            </button>
+                          ) : null}
+                        </div>
+                      ) : null}
+                    </div>
+                    <div className="relative">
+                      <AppIcon icon={Search01Icon} size={14} className="pointer-events-none absolute left-3 top-[11px] text-zinc-600" />
+                      <FormInput value={repoQuery} onChange={(event) => setRepoQuery(event.target.value)} placeholder="Search repositories" variant="monochrome" className="!h-9 border-white/15 bg-black pl-9 text-xs" />
+                    </div>
+                  </div>
+
+                  {repoError ? <div className="border border-rose-500/30 bg-rose-500/10 px-3 py-2.5 text-xs text-rose-200">GitHub is configured, but repo lookup failed: {repoError}</div> : null}
+
+                  <div className="overflow-hidden border border-white/10">
+                    <div className="max-h-[280px] overflow-auto">
+                      {filteredRepos.length === 0 ? (
+                        <div className="px-4 py-6 text-center font-mono text-[9px] uppercase tracking-[0.14em] text-zinc-600">
+                          {loadingRepos ? "Loading repositories…" : "No repositories found."}
+                        </div>
+                      ) : (
+                        filteredRepos.map((repo) => (
+                          <button key={repo.id} type="button" className="group flex w-full items-center justify-between gap-3 border-b border-white/10 px-3 py-2.5 text-left transition last:border-b-0 hover:bg-white/[0.05]" onClick={() => selectRepo(repo)}>
+                            <div className="flex min-w-0 items-center gap-2.5">
+                              <div className="grid h-7 w-7 shrink-0 place-items-center text-zinc-600 group-hover:text-white">
+                                <AppIcon icon={GithubIcon} size={15} />
+                              </div>
+                              <div className="min-w-0">
+                                <div className="truncate text-xs text-zinc-300 group-hover:text-white">{repo.name}</div>
+                                <div className="mt-0.5 truncate font-mono text-[9px] tracking-[0.08em] text-zinc-600">
+                                  {repo.fullName}
+                                  <span className="ml-2">{formatRelativeTime(repoLastPushedAt(repo))}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-zinc-600 group-hover:text-zinc-300">Select</span>
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+          <div className="mt-4 flex items-center justify-start gap-3 border-t border-white/10 pt-4">
+            <button
+              type="button"
+              className="inline-flex h-8 items-center justify-center gap-2 px-3 text-xs text-zinc-500 transition hover:bg-white/[0.05] hover:text-white"
+              onClick={() => {
+                setServiceType(null);
+                setStep("type");
+              }}
+            >
+              <AppIcon icon={ArrowLeft01Icon} size={16} />
+              Back
+            </button>
+          </div>
+        </div>
+      ) : step === "directory" ? (
+        <div className="flex min-h-full flex-col">
+          <div className="grid shrink-0 gap-4 sm:grid-cols-2">
+            <RepositoryBranchPicker
+              branch={form.branch}
+              branches={branches}
+              onChange={(branch) => {
+                setForm((current) => ({ ...current, branch, rootDir: undefined }));
+                setDirectoryNodes({});
+                setExpandedDirectories(new Set());
+                setDirectoryError("");
+              }}
+            />
+            <div>
+              <FieldLabel>Selected directory</FieldLabel>
+              <div className="flex h-9 items-center border border-white/10 px-3 font-mono text-xs text-zinc-300">
+                {currentDirectory ? `./${currentDirectory}` : "./"}
+              </div>
+            </div>
+          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto pr-1 pt-5">
+            <DirectoryTree
+              repoLabel={selectedRepo?.name ?? form.repoFullName ?? ""}
+              selectedPath={currentDirectory}
+              directoriesByPath={directoryNodes}
+              expandedPaths={expandedDirectories}
+              loadingPaths={loadingDirectoryPaths}
+              errorMessage={directoryError}
+              footerMessage={loadingDirectories ? "Loading folders..." : "Choose the folder that contains the app you want to deploy."}
+              rootLabel={`${selectedRepo?.name ?? "Repository"} (root)`}
+              onToggle={toggleDirectory}
+              onSelect={(path) => setForm((current) => ({ ...current, rootDir: path || undefined }))}
+            />
+          </div>
+          <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/10 pt-4">
+            <button type="button" className="inline-flex h-8 items-center justify-center gap-2 px-3 text-xs text-zinc-500 transition hover:bg-white/[0.05] hover:text-white" onClick={() => setStep("repo")}>
+              <AppIcon icon={ArrowLeft01Icon} size={16} />
+              Back
+            </button>
+            <button type="button" className="inline-flex h-8 items-center justify-center bg-white px-4 text-xs text-black transition hover:bg-zinc-200" onClick={() => setStep("configure")}>
+              Continue
+            </button>
+          </div>
+        </div>
+      ) : (
+        <form onSubmit={submit} className="flex min-h-full flex-col">
+          <div className="min-h-0 flex-1 overflow-y-auto pr-1">
+          <div className="space-y-5">
+          <div>
+            <FieldLabel>Root directory</FieldLabel>
+            {isUrlSource ? (
+              <FormInput
+                value={form.rootDir ?? ""}
+                onChange={(event) => setForm((current) => ({ ...current, rootDir: event.target.value || undefined }))}
+                placeholder="."
+                variant="monochrome"
+                className="!h-9 border-white/15 bg-black font-mono text-xs"
+              />
+            ) : (
+              <div className="flex h-9 items-center border border-white/10 px-3 font-mono text-xs text-zinc-300">
+                {currentDirectory ? `./${currentDirectory}` : "./"}
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-3">
+            <button
+              type="button"
+              className="flex h-10 w-full items-center justify-between border border-white/10 px-3 text-left transition hover:bg-white/[0.03]"
+              onClick={() => setBuildOpen((current) => !current)}
+            >
+              <span className="text-xs text-zinc-300">Build and output</span>
+              <AppIcon icon={ArrowLeft01Icon} size={14} className={`text-zinc-600 ${buildOpen ? "rotate-90" : "-rotate-90"}`} />
+            </button>
+            {buildOpen ? (
+              <div className="border border-white/10 p-4">
+                <div className="grid gap-3 md:grid-cols-2">
+                  <div>
+                    <FieldLabel>Service name</FieldLabel>
+                    <FormInput value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} placeholder="api" required variant="monochrome" className="!h-9 border-white/15 bg-black text-xs" />
+                  </div>
+                  <div className="md:col-span-2">
+                    <FieldLabel>Runtime mode</FieldLabel>
+                    <RuntimeModeControl
+                      value={form.runtimeMode ?? "web"}
+                      onChange={(runtimeMode) => setForm((current) => ({
+                        ...current,
+                        runtimeMode,
+                        staticOutput: runtimeMode === "worker" ? "" : current.staticOutput
+                      }))}
+                    />
+                  </div>
+                  {form.runtimeMode !== "worker" ? (
+                    <>
+                      <div>
+                        <FieldLabel>App port</FieldLabel>
+                        <FormInput type="number" min={1} max={65535} value={form.internalPort} onChange={(event) => setForm({ ...form, internalPort: Number(event.target.value) })} required variant="monochrome" className="!h-9 border-white/15 bg-black text-xs" />
+                      </div>
+                      <div>
+                        <FieldLabel>Static output</FieldLabel>
+                        <FormInput value={form.staticOutput ?? ""} onChange={(event) => setForm({ ...form, staticOutput: event.target.value })} placeholder="auto" variant="monochrome" className="!h-9 border-white/15 bg-black text-xs" />
+                      </div>
+                    </>
+                  ) : null}
+                  <div>
+                    <FieldLabel>Install command</FieldLabel>
+                    <FormInput value={form.installCommand ?? ""} onChange={(event) => setForm({ ...form, installCommand: event.target.value })} placeholder="auto" variant="monochrome" className="!h-9 border-white/15 bg-black font-mono text-xs" />
+                  </div>
+                  <div>
+                    <FieldLabel>Prebuild command</FieldLabel>
+                    <FormInput value={form.prebuildCommand ?? ""} onChange={(event) => setForm({ ...form, prebuildCommand: event.target.value })} placeholder="none" variant="monochrome" className="!h-9 border-white/15 bg-black font-mono text-xs" />
+                  </div>
+                  <div>
+                    <FieldLabel>Build command</FieldLabel>
+                    <FormInput value={form.buildCommand ?? ""} onChange={(event) => setForm({ ...form, buildCommand: event.target.value })} placeholder="auto" variant="monochrome" className="!h-9 border-white/15 bg-black font-mono text-xs" />
+                  </div>
+                  <div>
+                    <FieldLabel>Start command</FieldLabel>
+                    <FormInput value={form.startCommand ?? ""} onChange={(event) => setForm({ ...form, startCommand: event.target.value })} placeholder="auto" variant="monochrome" className="!h-9 border-white/15 bg-black font-mono text-xs" />
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex h-10 w-full items-center border border-white/10">
+              <button
+                type="button"
+                className="flex min-w-0 flex-1 items-center gap-3 px-3 text-left"
+                onClick={() => setEnvOpen((current) => !current)}
+              >
+                <span className="text-xs text-zinc-300">Environment variables</span>
+              </button>
+              {environmentVariableSuggestionCount > 0 ? (
+                <button
+                  type="button"
+                  className="mr-2 inline-flex h-6 shrink-0 items-center border border-white/15 px-2 font-mono text-[8px] uppercase tracking-[0.12em] text-zinc-500 transition hover:border-white/35 hover:text-white"
+                  onClick={() => {
+                    setEnvOpen(true);
+                    setEnvSuggestionsOpen((current) => !current);
+                  }}
+                >
+                  [{environmentVariableSuggestionCount} suggestion{environmentVariableSuggestionCount === 1 ? "" : "s"}]
+                </button>
+              ) : null}
+              <button
+                type="button"
+                className="grid h-10 w-10 place-items-center text-zinc-600 transition hover:bg-white/[0.05] hover:text-white"
+                onClick={() => setEnvOpen((current) => !current)}
+                aria-label={envOpen ? "Collapse environment variables" : "Expand environment variables"}
+              >
+                <AppIcon icon={ArrowLeft01Icon} size={16} className={envOpen ? "rotate-90" : "-rotate-90"} />
+              </button>
+            </div>
+            {envOpen ? (
+              <div className="space-y-4 border border-white/10 p-4">
+                <div className="flex items-center justify-end gap-3">
+                  <button type="button" className="inline-flex h-8 items-center justify-center border border-white/15 px-3 text-xs text-zinc-300 transition hover:border-white/35 hover:bg-white/[0.05] hover:text-white" onClick={() => setNewEnvOpen((current) => !current)}>
+                    New variable
+                  </button>
+                </div>
+
+                {envSuggestionsOpen ? (
+                  <EnvironmentVariableSuggestions
+                    groups={environmentVariableSuggestionGroups}
+                    onAdd={addEnvironmentVariableSuggestions}
+                  />
+                ) : null}
+
+                {newEnvOpen ? (
+                  <div className="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)_auto]">
+                    <div>
+                      <FieldLabel>Key</FieldLabel>
+                      <FormInput
+                        value={envForm.key}
+                        onChange={(event) => setEnvForm({ ...envForm, key: event.target.value })}
+                        onPaste={(event) => {
+                          const text = event.clipboardData.getData("text");
+                          if (handleEnvPaste(text)) event.preventDefault();
+                        }}
+                        placeholder="KEY"
+                        autoComplete="off"
+                        variant="monochrome"
+                        className="!h-9 border-white/15 bg-black font-mono text-xs"
+                      />
+                    </div>
+                    <div>
+                      <FieldLabel>Value</FieldLabel>
+                      <FormInput
+                        value={envForm.value}
+                        onChange={(event) => setEnvForm({ ...envForm, value: event.target.value })}
+                        onPaste={(event) => {
+                          const text = event.clipboardData.getData("text");
+                          if (handleEnvPaste(text)) event.preventDefault();
+                        }}
+                        placeholder="VALUE"
+                        autoComplete="new-password"
+                        variant="monochrome"
+                        className="!h-9 border-white/15 bg-black font-mono text-xs"
+                      />
+                    </div>
+                    <div className="flex items-end gap-2">
+                      <button type="button" className="inline-flex h-9 items-center justify-center bg-white px-3 text-xs text-black transition hover:bg-zinc-200" onClick={addEnvEntry}>
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        className="inline-flex h-9 items-center justify-center px-3 text-xs text-zinc-500 transition hover:bg-white/[0.05] hover:text-white"
+                        onClick={() => {
+                          setNewEnvOpen(false);
+                          setEnvForm({ key: "", value: "" });
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+
+                <div className="overflow-hidden border border-white/10">
+                  {envEntries.length === 0 ? (
+                    <div className="px-3 py-5 text-xs text-zinc-500">No environment variables yet.</div>
+                  ) : (
+                    envEntries.map((item) => (
+                      <div key={item.key} className="grid grid-cols-[minmax(0,1fr)_120px_36px] items-center gap-3 border-b border-white/10 px-3 py-2.5 last:border-b-0">
+                        <div className="flex min-w-0 items-center">
+                          <span className="truncate font-mono text-[10px] tracking-[0.08em] text-zinc-300">{item.key}</span>
+                        </div>
+                        <div className="font-mono text-xs text-zinc-600">••••••••</div>
+                        <button
+                          type="button"
+                          className="ml-auto inline-flex h-7 w-7 items-center justify-center text-zinc-600 transition hover:bg-rose-500/10 hover:text-rose-300"
+                          aria-label={`Delete ${item.key}`}
+                          onClick={() => setEnvEntries((current) => current.filter((entry) => entry.key !== item.key))}
+                        >
+                          <AppIcon icon={Delete02Icon} size={16} />
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          </div>
+          </div>
+          <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/10 pt-4">
+            <button type="button" className="inline-flex h-8 items-center justify-center gap-2 px-3 text-xs text-zinc-500 transition hover:bg-white/[0.05] hover:text-white" onClick={() => setStep(isUrlSource ? "repo" : "directory")}>
+              <AppIcon icon={ArrowLeft01Icon} size={16} />
+              Back
+            </button>
+            <button type="submit" className="inline-flex h-8 items-center justify-center bg-white px-4 text-xs text-black transition hover:bg-zinc-200 disabled:opacity-40" disabled={busy}>
+              {busy ? "Creating…" : "Create service"}
+            </button>
+          </div>
+        </form>
+      )}
+    </ModalShell>
+  );
+}
